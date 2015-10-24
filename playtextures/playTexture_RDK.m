@@ -1,12 +1,14 @@
 function playTexture_RDK
 
+%play random dot stimuli
+
 global Mstate screenPTR screenNum loopTrial
 
-global daq  %Created in makeAngleTexture
+global daq  
 
 global Stxtr %Created in makeSyncTexture
 
-global DotFrame %created in makeRandomDots
+global DotFrame %created in makeTexture_RDK
 
 
 %Wake up the daq:

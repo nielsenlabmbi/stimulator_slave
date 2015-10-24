@@ -24,4 +24,6 @@ Mlist{9} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
 
 Mlist{10} = {'MG' '' '' 'playTexture_PerGratingManual'};
 Mlist{11} = {'MM' '' '' 'playTexture_Mapper'};
+Mlist{11} = {'MR' '' '' 'playTexture_RDKManual'};
+
 

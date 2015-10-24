@@ -35,9 +35,6 @@ newtext = [symbol ' ' num2str(val)];
 
 
 Screen(screenPTR, 'FillRect', valdom{5}(state.valId(5)))
-
-%%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-
 Screen(screenPTR,'DrawText','ori 0',40,30,1-floor(valdom{5}(state.valId(5))));
 Screen('Flip', screenPTR);
 
@@ -96,7 +93,7 @@ while ~keyIsDown
         
         newtext = [symbol ' ' num2str(val)];
         
-        Screen(screenPTR,'DrawText',newtext,40,30,1-1*floor(valdom{5}(state.valId(5))));
+        Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
         Screen('Flip', screenPTR);
     end
     
@@ -124,7 +121,7 @@ while ~keyIsDown
         
         newtext = [symbol ' ' num2str(val)];
         
-        Screen(screenPTR,'DrawText',newtext,40,30,1-1*floor(valdom{5}(state.valId(5))));
+        Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
         Screen('Flip', screenPTR);
     end
    
@@ -135,9 +132,9 @@ while ~keyIsDown
     stimDst=CenterRectOnPoint(stimSrc,mx,my);
     
     Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst,ori);    
-    Screen(screenPTR,'DrawText',newtext,40,30,1-1*floor(valdom{5}(state.valId(5))));
+    Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
     xypos = ['x ' num2str(mx) '; y ' num2str(my)];
-    Screen(screenPTR,'DrawText',xypos,40,55,1-1*floor(valdom{5}(state.valId(5))));
+    Screen(screenPTR,'DrawText',xypos,40,55,1-floor(valdom{5}(state.valId(5))));
     Screen('Flip', screenPTR);
     
     bLast = b;
