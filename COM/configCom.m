@@ -10,7 +10,7 @@ rip = '172.30.11.140';  %remote host IP address
 
 % close all open serial port objects on the same port and remove
 % the relevant object from the workspace
-port=instrfindall('RemoteHost',rip);
+port=instrfindall('RemoteHost',rip); 
 if length(port) > 0; 
     fclose(port); 
     delete(port);
