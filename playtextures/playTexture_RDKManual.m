@@ -79,6 +79,7 @@ while ~keyIsDown
             state.valId(state.symId) = state.valId(state.symId) - 1;
         end       
         
+        
         val = valdom{state.symId}(state.valId(state.symId));
         
         updatePstate(symbol,num2str(val));  
@@ -87,7 +88,7 @@ while ~keyIsDown
         
         if strcmp(symbol,'mask_radius')
             %update size
-            xsize = 2*valdom{4}(state.valId(4));  %width = 2*radius
+            xsize = 2*valdom{6}(state.valId(6));  %width = 2*radius
             ysize = xsize;
             updatePstate('x_size',num2str(xsize));
             updatePstate('y_size',num2str(ysize));
@@ -139,7 +140,7 @@ while ~keyIsDown
         
         if strcmp(symbol,'mask_radius')
             %update size
-            xsize = 2*valdom{4}(state.valId(4));  %width = 2*radius
+            xsize = 2*valdom{6}(state.valId(6));  %width = 2*radius
             ysize = xsize;
             updatePstate('x_size',num2str(xsize));
             updatePstate('y_size',num2str(ysize));
@@ -160,12 +161,14 @@ while ~keyIsDown
     FrameIdx = mod(FrameIdx,length(DotFrame))+1;
    
     sizeDotsPx=deg2pix(valdom{3}(state.valId(3)),'round');
-    Screen('DrawDots', screenPTR, DotFrame{FrameIdx}, sizeDotsPx, [1 1 1],[mx my],1);
+    if ~isempty(DotFrame{FrameIdx})
+        Screen('DrawDots', screenPTR, DotFrame{FrameIdx}, sizeDotsPx, [1 1 1],[mx my],1);
+    end
     
     %add text
     Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{7}(state.valId(7))));
     xypos = ['x ' num2str(mx) '; y ' num2str(my)];
-    Screen(screenPTR,'DrawText',xypos,40,30,1-floor(valdom{7}(state.valId(7))));
+    Screen(screenPTR,'DrawText',xypos,40,55,1-floor(valdom{7}(state.valId(7))));
     Screen('Flip', screenPTR);
     
     bLast = b;

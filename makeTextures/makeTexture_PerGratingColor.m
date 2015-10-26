@@ -72,7 +72,10 @@ gratingTemp=gratingTemp.*P.contrast/100;
 %the color settings
 grating=zeros([size(gratingTemp) 3]);
 for i=1:3
-    grating(:,:,i)=(gratingTemp*gainvec(i)+1)/2-(.5-basevec(i));
+    tmp=(gratingTemp.*gainvec(i)+1)/2 -0.5+basevec(i);
+    disp(min(tmp(:)))
+    disp(max(tmp(:)))
+    grating(:,:,i)=tmp;
 end
 
 

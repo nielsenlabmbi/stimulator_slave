@@ -28,9 +28,9 @@ Pstate.param{16} = {'t_period'    'int'       20       0                'frames'
 Pstate.param{17} = {'redgain' 'float'   1       0             ''};
 Pstate.param{18} = {'greengain' 'float'   1       0             ''};
 Pstate.param{19} = {'bluegain' 'float'   1       0             ''};
-Pstate.param{20} = {'redbase' 'float'   .5       0             ''};
-Pstate.param{21} = {'greenbase' 'float'   .5       0             ''};
-Pstate.param{22} = {'bluebase' 'float'   .5       0             ''};
+Pstate.param{20} = {'redbase' 'float'   0       0             ''};
+Pstate.param{21} = {'greenbase' 'float'   0       0             ''};
+Pstate.param{22} = {'bluebase' 'float'   0       0             ''};
 Pstate.param{23} = {'colormod'    'int'   1       0                ''};
 
 Pstate.param{24} = {'Leye_bit'    'int'   1       0                ''};
