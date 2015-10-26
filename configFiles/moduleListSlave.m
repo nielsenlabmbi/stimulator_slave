@@ -20,10 +20,12 @@ Mlist{6} = {'OF' 'configPstate_OpticFlow' 'makeTexture_OpticFlow' 'playTexture_O
 Mlist{7} = {'IM' 'configPstate_Img' 'makeTexture_Img' 'playTexture_Img' };
 Mlist{8} = {'GA' 'configPstate_GA' 'makeTexture_GA' 'playTexture_GA' };
 Mlist{9} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
+Mlist{10} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
 
 
-Mlist{10} = {'MG' '' '' 'playTexture_PerGratingManual'};
-Mlist{11} = {'MM' '' '' 'playTexture_Mapper'};
-Mlist{11} = {'MR' '' '' 'playTexture_RDKManual'};
+
+Mlist{11} = {'MG' '' '' 'playTexture_PerGratingManual'};
+Mlist{12} = {'MM' '' '' 'playTexture_Mapper'};
+Mlist{13} = {'MR' '' '' 'playTexture_RDKManual'};
 
 
