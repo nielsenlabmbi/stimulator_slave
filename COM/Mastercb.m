@@ -1,7 +1,7 @@
 function Mastercb(obj,event)
 %Callback function 'Stimulator' PC
 
-global comState screenPTR loopTrial
+global comState screenPTR loopTrial vSyncState
 
 
 try
@@ -117,7 +117,9 @@ try
             %disp(eye)
             pos = str2num(paramstring(delims(2)+1:delims(3)-1)); %setting of RE shutter
             moveShutter(eye,pos);
-            
+        
+        case 'V' %flag to indicate sync ventilator and stim
+            vSyncState=str2num(modID);    
             
             
     end

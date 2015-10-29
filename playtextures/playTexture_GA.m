@@ -8,6 +8,8 @@ global  daq  %Created in makeGratingTexture
 
 global Stxtr %Created in makeSyncTexture
 
+global vSyncState %ventilator sync
+
 Pstruct = getParamStruct;
 
 %get stimulus size
@@ -40,6 +42,10 @@ Screen(screenPTR, 'Flip');
 if loopTrial ~= -1
     digWord = 1;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
+    %stop ventilator
+    if vSyncState==1
+        setVentilator(0);
+    end
 end
 for i = 2:Npreframes
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
@@ -68,6 +74,10 @@ for i = 1:Npostframes-1
     if i==1 && loopTrial ~= -1
         digWord = 1;  %toggle 2nd bit to signal stim off
         DaqDOut(daq, 0, digWord);
+        %start ventilator
+        if vSyncState==1
+            setVentilator(1);
+        end
     end
 end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);

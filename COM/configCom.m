@@ -1,12 +1,20 @@
-function configCom
+function configCom(setup)
+
+%configures UDP communication with master
+%accepts:
+%  setup: string identifier of setup
+%returns:
+%  sets global variable comState
 
 global comState
 
-%Modification of MP285Config, for configuration of udp port connection to visual stimulus PC (pep) 	
-
-%comState is not initialized in the .ini file, nor is it saved in the
-%state.headerString
-rip = '172.30.11.140';  %remote host IP address 
+%remote host IP address
+setup=getMacIP;
+if strcmp(setup,'172.30.11.130') %2p
+    rip = '172.30.11.131';  
+elseif strcmp(setup,'172.30.11.142') %ephys
+    rip = '172.30.11.141'; 
+end
 
 % close all open serial port objects on the same port and remove
 % the relevant object from the workspace

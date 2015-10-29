@@ -34,7 +34,7 @@ Pstate.param{22} = {'y_size2'      'float'      3       1                'deg'};
 Pstate.param{23} = {'mask_type2'   'string'   'none'       0                ''};
 Pstate.param{24} = {'mask_radius2' 'float'      6       1                'deg'};
 
-Pstate.param{25} = {'contrast2'    'float'     10       0                '%'};
+Pstate.param{25} = {'contrast2'    'float'     100       0                '%'};
 Pstate.param{26} = {'ori2'         'int'        90       0                'deg'};
 Pstate.param{27} = {'phase2'         'float'        0       0                'deg'};
 Pstate.param{28} = {'s_freq2'      'float'      1      -1                 'cyc/deg'};
