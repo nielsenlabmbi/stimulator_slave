@@ -82,6 +82,17 @@ end
 for i = 2:Npreframes
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
+    if P.avg_bit==1 && loopTrial ~=-1
+        if i==Npreframes/4
+            digWord = 3; %digital 11 - 1st and 2nd high
+            DaqDOut(daq, 0, digWord);
+        elseif i==3*Npreframes/4
+            digWord=1; %go back to only first high
+            DaqDOut(daq, 0, digWord);
+        end
+    end
+
+
 end
 
 
