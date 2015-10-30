@@ -34,6 +34,8 @@ stimsizeN=deg2pix(stimsize,'round');
 stimDst=[P.x_pos-floor(stimsizeN/2)+1 P.y_pos-floor(stimsizeN/2)+1 ...
     P.x_pos+ceil(stimsizeN/2) P.y_pos+ceil(stimsizeN/2)]';
 
+
+
 %grating 1 parameters
 pixpercycle=deg2pix(1/P.s_freq,'none');
 shiftperframe=pixpercycle/P.t_period;

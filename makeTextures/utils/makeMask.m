@@ -3,6 +3,8 @@ function mask=makeMask(screenRes,x_pos,y_pos,xsizeN,ysizeN,maskradiusN,mask_type
 %compute stimulus mask - one large aperture only
 %these masks are screen size to allow correct cropping of rotated stimuli
 %1 outside of stimulus, 0 where stimulus should appear
+%we're generating a mask with screen size rather than stimulus size because
+%it makes the generation independent of size (and faster)
 
 %parameters:
 %screenRes: screen height and width
@@ -24,8 +26,10 @@ if strcmp(mask_type,'gauss')
 elseif strcmp(mask_type,'disc') %disc is the default
     maskT =1-(r<=maskradiusN);
 else
-    xran = [x_pos-floor(xsizeN/2)+1  x_pos+ceil(xsizeN/2)];
-    yran = [y_pos-floor(ysizeN/2)+1  y_pos+ceil(ysizeN/2)];
+    xran(1) = max(x_pos-floor(xsizeN/2)+1,1);  
+    xran(2) = min(x_pos+ceil(xsizeN/2),screenRes.width);
+    yran(1) = max(y_pos-floor(ysizeN/2)+1,1);  
+    yran(2) = min(y_pos+ceil(ysizeN/2),screenRes.height);
     maskT=ones(size(r));
     maskT(yran(1):yran(2),xran(1):xran(2))=0;
 end
