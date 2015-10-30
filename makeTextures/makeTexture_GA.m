@@ -18,7 +18,7 @@ P = getParamStruct;
 
 
 
-folderName = [Mstate.anim '_r-' num2str(P.GArun)];
+folderName = [Mstate.anim '_r-' num2str(P.runNum)];
 
 
 c=P.contrast/100;
@@ -27,25 +27,24 @@ if c==0
     fore_col=P.background;
 end
 
-
-if P.useBubbles == 0
+if P.genNum > 0
     fullFolderName = [folderName '_g-' num2str(P.genNum)];
-    load([P.stimpath fullFolderName '/stimParams.mat']);
+    load([P.stimPathSlave '/' fullFolderName '_stim.mat']);
     
-    stim = stimuli{P.linNum,P.stimnr};
+    stim = stimuli{P.linNum,P.stimNum};
     cPts = [stim.cPts(:,1) -stim.cPts(:,2)];   
     cPts = movePts(cPts,stim.xPos,stim.yPos,deg2pix(stim.siz,'none'),stim.ori); 
     
     concatenatedSplines = drawSpline(cPts,200);
 else
     fullFolderName = [folderName '_p'];
-    load([P.stimpath fullFolderName '/maskParams.mat']);
+    load([P.stimpath '/' fullFolderName '_maskStim.mat']);
     
-    if P.stimnr>length(stimuli{P.linNum})
-        disp('incorrect stimulus number selected!!!!!')
+    if P.stimNum>length(stimuli{P.linNum})
+        disp('Stimulus number exceeds the number of stimuli in that lineage.')
     end
     
-    stim = stimuli{P.linNum}{P.stimnr};
+    stim = stimuli{P.linNum}{P.stimNum};
     
     cPts = [stim.cPts(:,1) -stim.cPts(:,2)];
     cPts = movePts(cPts,stim.xPos,stim.yPos,deg2pix(stim.siz,'none'),stim.ori); 
@@ -108,6 +107,6 @@ end
 
 Screen(screenPTROff, 'FillRect', P.background);
 Screen('FillPoly',screenPTROff,fore_col, concatenatedSplines);
-if P.useBubbles == 1
+if P.genNum < 0
     Screen('PutImage',screenPTROff,mask);
 end
