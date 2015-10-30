@@ -1,4 +1,4 @@
-function configCom(setup)
+function configCom()
 
 %configures UDP communication with master
 %accepts:
@@ -13,7 +13,7 @@ setup=getMacIP;
 if strcmp(setup,'172.30.11.130') %2p
     rip = '172.30.11.131';  
 elseif strcmp(setup,'172.30.11.142') %ephys
-    rip = '172.30.11.141'; 
+    rip = '172.30.11.140'; 
 end
 
 % close all open serial port objects on the same port and remove
