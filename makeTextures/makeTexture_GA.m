@@ -7,19 +7,13 @@ function makeTexture_GA
 
 global   screenPTROff screenNum Mstate
 
-
-
-
 %get screen size
 screenRes = Screen('Resolution',screenNum);
 
 %get parameters set in GUI
 P = getParamStruct;
 
-
-
 folderName = [Mstate.anim '_r-' num2str(P.runNum)];
-
 
 c=P.contrast/100;
 fore_col = [P.fore_r P.fore_g P.fore_b];
@@ -31,14 +25,14 @@ if P.genNum > 0
     fullFolderName = [folderName '_g-' num2str(P.genNum)];
     load([P.stimPathSlave '/' fullFolderName '_stim.mat']);
     
-    stim = stimuli{P.linNum,P.stimNum};
+    stim = stimuli{P.linNum,P.stimNum}; %#ok<USENS>
     cPts = [stim.cPts(:,1) -stim.cPts(:,2)];   
     cPts = movePts(cPts,stim.xPos,stim.yPos,deg2pix(stim.siz,'none'),stim.ori); 
     
     concatenatedSplines = drawSpline(cPts,200);
 else
     fullFolderName = [folderName '_p'];
-    load([P.stimpath '/' fullFolderName '_maskStim.mat']);
+    load([P.stimPathSlave '/' fullFolderName '_maskStim.mat']);
     
     if P.stimNum>length(stimuli{P.linNum})
         disp('Stimulus number exceeds the number of stimuli in that lineage.')
@@ -58,7 +52,7 @@ else
     mask=ones(maskheight,maskwidth,4);
     
     for i=1:3
-        mask(:,:,i)=round(mask(:,:,i)*P.maskcolor);
+        mask(:,:,i)=round(mask(:,:,i)*P.maskColor);
     end
     
     masktmp=zeros(maskheight,maskwidth);
@@ -79,7 +73,7 @@ else
         masktmp = temp + masktmp;
     end
     masktmp(masktmp>1) = 1;
- %   save('/Users/nielsenlab/Desktop/temp.mat','masktmp');
+%     save('/Users/nielsenlab/Desktop/temp1.mat','masktmp');
 
     maskWindowCenter = round(min(concatenatedSplines) + (max(concatenatedSplines) - min(concatenatedSplines)) / 2);
     maskWindowSize = round(max(max(concatenatedSplines) - min(concatenatedSplines)));
@@ -95,15 +89,13 @@ else
     masktmp(maskWindowYLims,:) = 1;
     masktmp(:,maskWindowXLims) = 1;
 
-    %save('/Users/nielsenlab/Desktop/temp.mat','masktmp','maskWindowXLims','maskWindowYLims');
-    
+%     save('/Users/nielsenlab/Desktop/temp2.mat','masktmp','maskWindowXLims','maskWindowYLims');
     
     masktmp=1-masktmp; %everything that is 1 in the mask will be set to the mask color
-%    save('/Users/nielsenlab/Desktop/temp2.mat','masktmp');
+%     save('/Users/nielsenlab/Desktop/temp3.mat','masktmp');
     
     mask(:,:,4)=masktmp;
 end
-
 
 Screen(screenPTROff, 'FillRect', P.background);
 Screen('FillPoly',screenPTROff,fore_col, concatenatedSplines);
