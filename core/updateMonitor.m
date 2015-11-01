@@ -11,6 +11,7 @@ switch Mstate.monitor
         Mstate.screenXcm = 54.5; %1920 pixel
         Mstate.screenYcm = 30; %1080 pixel
         
+        load('/Stimulator_slave/calibration/ACER 3-24-15/luminance.mat','bufLUT')
 %        load('/Stimulator_slave/calibration/ACER 2-4-13/luminance.mat','bufLUT')
 %         load('/Stimulator_slave/calibration/LCD 5-3-10 PR650/luminance.mat','bufLUT')
         

@@ -49,10 +49,10 @@ else
     
     [wmat,hmat]=meshgrid(1:maskwidth,1:maskheight);
     
-    mask=ones(maskheight,maskwidth,4);
+    mask=ones(maskheight,maskwidth,3);
     
     for i=1:3
-        mask(:,:,i)=round(mask(:,:,i)*P.maskColor);
+        mask(:,:,i)=mask(:,:,i).*P.maskColor;
     end
     
     masktmp=zeros(maskheight,maskwidth);
@@ -73,7 +73,7 @@ else
         masktmp = temp + masktmp;
     end
     masktmp(masktmp>1) = 1;
-%     save('/Users/nielsenlab/Desktop/temp1.mat','masktmp');
+%     save('/Users/nielsenlab/Desktop/temp1.mat','masktmp','mask');
 
     maskWindowCenter = round(min(concatenatedSplines) + (max(concatenatedSplines) - min(concatenatedSplines)) / 2);
     maskWindowSize = round(max(max(concatenatedSplines) - min(concatenatedSplines)));
@@ -99,6 +99,7 @@ end
 
 Screen(screenPTROff, 'FillRect', P.background);
 Screen('FillPoly',screenPTROff,fore_col, concatenatedSplines);
+% Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 if P.genNum < 0
     Screen('PutImage',screenPTROff,mask);
 end
