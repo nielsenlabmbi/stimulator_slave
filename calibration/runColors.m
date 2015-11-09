@@ -1,3 +1,5 @@
+clear;
+
 screens=Screen('Screens');
 screenNumber=max(screens);
 mults=8;
@@ -5,12 +7,10 @@ mults=8;
 
 colmat=round(linspace(0,255,20));
 
-
 for c=1:3
-    for i=1:length(colmat)
-        
+    for ii=1:length(colmat)
         cm=[0 0 0];
-        cm(c)=colmat(i);
+        cm(c)=colmat(ii);
         
         Screen(w, 'FillRect', cm);
 
@@ -20,8 +20,6 @@ for c=1:3
     end
 end
 
-
 KbWait;
 Screen('CloseAll');
-
 
