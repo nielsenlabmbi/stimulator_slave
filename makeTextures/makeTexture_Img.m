@@ -2,7 +2,7 @@ function makeTexture_Img
 
 %loads images, and scrambles if selected
 
-global screenPTR Gtxtr loopTrial Mstate 
+global screenPTR Gtxtr loopTrial Mstate IDim
 
 if ~isempty(Gtxtr)
     Screen('Close',Gtxtr);  %First clean up: Get rid of all textures/offscreen windows
@@ -16,8 +16,15 @@ P = getParamStruct;
 
 
 %read image
-img=imread(['/' P.imgpath '/' P.imgbase num2str(P.imgnr) '.tif']);
+img=imread(['/' P.imgpath '/' P.imgbase num2str(P.imgnr) '.' P.filetype]);
 img=double(img);
+
+IDim = size(img);
+
+if max(img(:)) > 1
+    % assume that the image is 0-255 scale
+    img = img/255;
+end
 
 %turn to black/white if requested
 if P.color==0

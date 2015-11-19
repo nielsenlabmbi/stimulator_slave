@@ -3,7 +3,7 @@ function playTexture_Img
 %play basic images (tifs)
 
 
-global Mstate screenPTR screenNum loopTrial %IDim
+global Mstate screenPTR screenNum loopTrial IDim
 
 global Gtxtr daq  %Created in makeGratingTexture
 
@@ -22,13 +22,20 @@ syncWY = round(pixpercmY*Mstate.syncSize);
 syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
-
-
 xN=deg2pix(P.x_size,'round');
-yN=deg2pix(P.y_size,'round');
+if P.keepaspectratio
+    yN = round((xN*IDim(1))/IDim(2));
+else 
+    yN=deg2pix(P.y_size,'round');
+end
 
-%stimSrc=[0 0 IDim(1)-1 IDim(2)-1];
-stimDst=CenterRectOnPoint([0 0 xN-1 yN-1],P.x_pos,P.y_pos);
+if P.usenativesize
+    stimSrc = [0 0 IDim(2)-1 IDim(1)-1];
+else
+    stimSrc = [0 0 xN-1 yN-1];
+end
+
+stimDst=CenterRectOnPoint(stimSrc,P.x_pos,P.y_pos);
 
 
 Npreframes = ceil(P.predelay*screenRes.hz);

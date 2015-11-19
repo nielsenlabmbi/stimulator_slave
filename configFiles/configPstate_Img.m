@@ -13,18 +13,20 @@ Pstate.param{4} = {'x_pos'       'int'      600       0                'pixels'}
 Pstate.param{5} = {'y_pos'       'int'      400       0                'pixels'};
 Pstate.param{6} = {'x_size'      'float'      3       1                'deg'};
 Pstate.param{7} = {'y_size'      'float'      3       1                'deg'};
+Pstate.param{8} = {'usenativesize'    'int'        0       0             'binary'};
+Pstate.param{9} = {'keepaspectratio'    'int'        0       0             'binary'};
 
+Pstate.param{10} = {'imgpath'      'string'     'animal pics'       1                ''};
+Pstate.param{11} = {'imgbase'      'string'     'Image'       1                ''};
+Pstate.param{12} = {'imgnr'      'int'     1       1                ''};
+Pstate.param{13} = {'filetype'      'string'     'tif'       1                ''};
 
-Pstate.param{8} = {'imgpath'      'string'     'animal pics'       1                ''};
-Pstate.param{9} = {'imgbase'      'string'     'Image'       1                ''};
-Pstate.param{10} = {'imgnr'      'int'     1       1                ''};
+Pstate.param{14} = {'color'      'int'     1       1                ''};
 
-Pstate.param{11} = {'color'      'int'     1       1                ''};
+Pstate.param{15} = {'scramble'      'int'     0       1                ''};
+Pstate.param{16} = {'nrblocks'      'int'     8       1                ''};
 
-Pstate.param{12} = {'scramble'      'int'     1       1                ''};
-Pstate.param{13} = {'nrblocks'      'int'     8       1                ''};
-
-Pstate.param{14} = {'background'      'float'   0.5       0                ''};
-Pstate.param{15} = {'contrast' 'float'   100       0             '%'};
+Pstate.param{17} = {'background'      'float'   0.5       0                ''};
+Pstate.param{18} = {'contrast' 'float'   100       0             '%'};
 
 
