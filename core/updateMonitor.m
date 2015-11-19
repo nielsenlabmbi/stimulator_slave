@@ -57,7 +57,7 @@ switch Mstate.monitor
         
 %        load('/Stimulator_slave/calibration/ACER 2-4-13/luminance.mat','bufLUT')
 %         load('/Stimulator_slave/calibration/LCD 5-3-10 PR650/luminance.mat','bufLUT')
-        load('/Stimulator_slave/calibration/ViewSonic150605/ViewSonic150605.mat')
+        load('/Stimulator_slave/calibration/ViewSonic151109/luminance.mat')
         
 %         bufLUT = (0:255)/255;
 %         bufLUT = bufLUT'*[1 1 1];
