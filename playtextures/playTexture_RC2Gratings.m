@@ -37,6 +37,10 @@ Npostframes = ceil(P.postdelay*screenRes.hz);
 N_Im = round(P.stim_time*screenRes.hz/P.h_per); %number of images to present
 
 
+
+%set background
+Screen(screenPTR, 'FillRect', 0.5)
+
 %set sync to black 
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
 Screen(screenPTR, 'Flip');

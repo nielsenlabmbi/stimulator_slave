@@ -15,13 +15,12 @@ Mstate.hemi = 'left';
 Mstate.screenDist = 60;
 
 %remote host IP address
-setup=getMacIP;
-if strcmp(setup,'172.30.11.130') %2p
+[setup,~]=getSetup;
+if strcmp(setup,'2P') 
     Mstate.monitor = 'LCD';   
-elseif strcmp(setup,'172.30.11.142') %ephys
+elseif strcmp(setup,'EP') 
     Mstate.monitor = 'VSN';
 end
-
     
 %'updateMonitor.m' happens in 'screenconfig.m' at startup
 

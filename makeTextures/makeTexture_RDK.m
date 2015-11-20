@@ -197,7 +197,7 @@ for i=1:nrFrames
      
     
         %generate new positions - everybody moves according to their direction
-        xypos2(1,:)=xypos2(1,:)+deltaFrame2*cos(dotdir2*pi/180);
+        xypos2(1,:)=xypos2(1,:)-deltaFrame2*cos(dotdir2*pi/180);
         xypos2(2,:)=xypos2(2,:)-deltaFrame2*sin(dotdir2*pi/180);
 
         
@@ -208,7 +208,7 @@ for i=1:nrFrames
         rvec=rand(s,size(idx));
         for j=1:length(idx)
             %get projection of movement vector onto axes not assuming 100% coherence
-            xproj=cos(dotdir2(idx(j))*pi/180);
+            xproj=-cos(dotdir2(idx(j))*pi/180);
             yproj=-sin(dotdir2(idx(j))*pi/180);
             if rvec(j)<= abs(xproj)/(abs(xproj)+abs(yproj))
                 %y axis chosen, so place stimulus at the other x axis and a

@@ -44,11 +44,8 @@ stimDst2=[P.x_pos2-floor(stimsizeN2/2)+1 P.y_pos2-floor(stimsizeN2/2)+1 ...
 %grating 2 parameters
 pixpercycle2=deg2pix(1/P.s_freq2,'none');
 shiftperframe2=pixpercycle2/P.t_period2;
-if P.contrast==0 %this is to account for blanks
-    ctr2=0;
-else
-    ctr2=P.contrast2/100*0.5;
-end
+ctr2=P.contrast2/100*0.5;
+
 
 
 

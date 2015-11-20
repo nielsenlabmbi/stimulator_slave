@@ -9,12 +9,8 @@ function configCom()
 global comState
 
 %remote host IP address
-setup=getMacIP;
-if strcmp(setup,'172.30.11.130') %2p
-    rip = '172.30.11.131';  
-elseif strcmp(setup,'172.30.11.142') %ephys
-    rip = '172.30.11.140'; 
-end
+[~,rip]=getSetup;
+
 
 % close all open serial port objects on the same port and remove
 % the relevant object from the workspace

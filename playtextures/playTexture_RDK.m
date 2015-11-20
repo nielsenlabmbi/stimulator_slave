@@ -34,19 +34,10 @@ sizeDotsPx=deg2pix(P.sizeDots,'round');
 
 
 
-%dot color - this handles the blank
-if P.contrast==0
-    r=P.background;
-    g=P.background;
-    b=P.background;
-else
-    r=P.redgun;
-    g=P.greengun;
-    b=P.bluegun;
-end
-
-
-
+%dot color 
+r=P.redgun;
+g=P.greengun;
+b=P.bluegun;
 
 Npreframes = ceil(P.predelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
