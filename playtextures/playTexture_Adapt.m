@@ -101,7 +101,7 @@ for i = 1:Nadaptframes
     %generate event - we're using channel 3 to indicate the adaptation
     %stimulus
     if i==1 && loopTrial ~= -1
-        digWord = 4;  %toggle 3rd bit high to signal stim on
+        digWord = 1;  %toggle 3rd bit high to signal stim on
         DaqDOut(daq, 0, digWord);
     elseif i==Nadaptframes
         digWord = 0;  %toggle all bits off
