@@ -42,9 +42,10 @@ Pstate.param{29} = {'s_profile2'   'string'   'sin'       0                ''};
 Pstate.param{30} = {'s_duty2'      'float'   0.5       0                ''};
 Pstate.param{31} = {'t_period2'    'int'       20       0                'frames'};
 
-Pstate.param{32} = {'adapt_only'    'int'       0       0                ''};
+Pstate.param{32} = {'adapt_only'    'int'       0       0                'binary'};
+Pstate.param{33} = {'use_ch3'    'int'       0       0                'binary'};
 
-Pstate.param{33} = {'Leye_bit'    'int'   1       0                ''};
-Pstate.param{34} = {'Reye_bit'    'int'   1       0                ''};
+Pstate.param{34} = {'Leye_bit'    'int'   1       0                'binary'};
+Pstate.param{35} = {'Reye_bit'    'int'   1       0                'binary'};
 
 

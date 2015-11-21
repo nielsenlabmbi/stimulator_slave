@@ -1,6 +1,6 @@
 function screenconfig
 
-global screenPTR screenPTROff screenNum Mstate 
+global screenPTR screenPTROff screenNum Mstate Gtxtr Masktxtr
 
 %screens=Screen('Screens');
 %screenNum=max(screens);
@@ -16,6 +16,10 @@ InitializeMatlabOpenGL;
 screenNum=0;
 
 screenRes = Screen('Resolution',screenNum);
+
+%initialize pointers to textures generated in makeTexture
+Gtxtr=[]; 
+Masktxtr=[];
 
 [screenPTR,~] = PsychImaging('OpenWindow', screenNum, 0.5);
 Screen(screenPTR,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
