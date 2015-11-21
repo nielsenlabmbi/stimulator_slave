@@ -1,5 +1,6 @@
 function playstimulus(modID)
 
+global blankFlag
 
 HideCursor
 
@@ -15,8 +16,13 @@ for i=1:length(mList)
     end
 end
 
-%run config file
-eval(mList{idx}{4});
-
+if blankFlag==0
+    %run playTexture file
+    eval(mList{idx}{4});
+else
+    %play generic blank trial
+    eval(mList{end}{4});
+end
+    
 ShowCursor
     

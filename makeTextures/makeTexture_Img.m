@@ -10,18 +10,16 @@ end
 
 Gtxtr = [];
 
-
 %get parameters
 P = getParamStruct;
-
 
 %read image
 img=imread(['/' P.imgpath '/' P.imgbase num2str(P.imgnr) '.' P.filetype]);
 img=double(img);
 
-IDim = size(img);
-
-if max(img(:)) > 1
+%%%hack: necessary to run the same code on the 2 setups
+[setup,~]=getSetup;
+if strcmp(setup,'2P') && max(img(:))>1
     % assume that the image is 0-255 scale
     img = img/255;
 end
@@ -33,8 +31,6 @@ end
 
 %make output image
 imgout=img;
-
-
 
 %if selected, scramble the image by reordering blocks
 if P.scramble==1
@@ -84,10 +80,13 @@ if P.scramble==1
     end
 end
 
-c=P.contrast/100;
-imgout=imgout.*c+P.background*(1-c);
+%c=P.contrast/100;
+%imgout=imgout.*c+P.background*(1-c);
 
-%IDim=size(imgout);
+
+% save('/Users/NielsenLab/Desktop/temp.mat','imgout');
+
+IDim=size(imgout);
 
 %generate texture
 Gtxtr = Screen(screenPTR, 'MakeTexture', imgout);

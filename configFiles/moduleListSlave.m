@@ -10,6 +10,9 @@ function Mlist = moduleListSlave
 %for the manualMapper, the makeTexture file and config file are not used
 %ordering of modules here is independent of ordering of modules on master
 %(identification is via the code)
+%similarly, the blanks only have the playTexture file. blank file is listed here
+%so that all make/play/config files are listed in the same place. blank
+%should always be the last entry in Mlist
 
 Mlist{1} = {'PG' 'configPstate_PerGrating' 'makeTexture_PerGrating' 'playTexture_PerGrating' };
 Mlist{2} = {'RD' 'configPstate_RDK' 'makeTexture_RDK' 'playTexture_RDK' };
@@ -23,9 +26,12 @@ Mlist{9} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
 Mlist{10} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
 
 
-
+%playfile for the manual mapper
 Mlist{11} = {'MG' '' '' 'playTexture_PerGratingManual'};
 Mlist{12} = {'MM' '' '' 'playTexture_Mapper'};
 Mlist{13} = {'MR' '' '' 'playTexture_RDKManual'};
+
+%playfile for blanks
+Mlist{end+1} = {'' '' '' 'playTexture_Blank'};
 
 

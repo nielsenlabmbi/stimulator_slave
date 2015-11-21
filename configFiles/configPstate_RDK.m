@@ -45,10 +45,9 @@ Pstate.param{28} = {'dotCoherence2'      'int'     100       1                '%
 Pstate.param{29} = {'redgun' 'float'   1       0             ''};
 Pstate.param{30} = {'greengun' 'float'   1       0             ''};
 Pstate.param{31} = {'bluegun' 'float'   1       0             ''};
-Pstate.param{32} = {'contrast'    'float'     100       0                '%'};
 
-Pstate.param{33} = {'Leye_bit'    'int'   1       0                ''};
-Pstate.param{34} = {'Reye_bit'    'int'   1       0                ''};
+Pstate.param{32} = {'Leye_bit'    'int'   1       0                ''};
+Pstate.param{33} = {'Reye_bit'    'int'   1       0                ''};
 
 
 

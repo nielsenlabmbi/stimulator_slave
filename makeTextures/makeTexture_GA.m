@@ -15,11 +15,9 @@ P = getParamStruct;
 
 folderName = [Mstate.anim '_r-' num2str(P.runNum)];
 
-c=P.contrast/100;
+
 fore_col = [P.fore_r P.fore_g P.fore_b];
-if c==0
-    fore_col=P.background;
-end
+
 
 if P.genNum > 0
     fullFolderName = [folderName '_g-' num2str(P.genNum)];

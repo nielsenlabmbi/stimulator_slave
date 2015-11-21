@@ -62,7 +62,7 @@ for i = 2:Npreframes
 end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-Screen('DrawTexture', screenPTR, Gtxtr, [], stimDst);
+Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst);
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 if loopTrial ~= -1

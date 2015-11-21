@@ -26,7 +26,7 @@ Pstate.param{15} = {'background'      'float'   0.5       0                ''};
 Pstate.param{16} = {'redgun' 'float'   1       0             ''};
 Pstate.param{17} = {'greengun' 'float'   1       0             ''};
 Pstate.param{18} = {'bluegun' 'float'   1       0             ''};
-Pstate.param{19} = {'contrast'    'float'     100       0                '%'};
+
 
 
 

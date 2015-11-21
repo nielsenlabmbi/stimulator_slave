@@ -1,7 +1,7 @@
 function Mastercb(obj,event)
 %Callback function 'Stimulator' PC
 
-global comState screenPTR loopTrial vSyncState
+global comState screenPTR loopTrial vSyncState blankFlag
 
 
 try
@@ -19,7 +19,7 @@ try
     
     delims = find(inString == ';');
     msgID = inString(1:delims(1)-1);  %Tells what button was pressed at master
-    if strcmp(msgID,'M') || strcmp(msgID,'C') || strcmp(msgID,'S')
+    if strcmp(msgID,'M') || strcmp(msgID,'C') || strcmp(msgID,'S') || strcmp(msgID,'L') 
         paramstring = inString(delims(1):end); %list of parameters and their values
     elseif strcmp(msgID,'B')        
         modID = inString(delims(1)+1:delims(2)-1); %The stimulus module (e.g. 'grater')
@@ -64,20 +64,13 @@ try
                 psymbol = dumstr(1:id-1);
                 pval = dumstr(id+1:end);
                 updatePstate(psymbol,pval)
+                
             end
             
-            %'if' statement so that it only builds/buffers the random ensemble
-            %on first trial. e.g. we want to reset the looper variables
-            %(above) for variables like 'rseed', but not build the ensemble
-            %all over again. 
-            %if ~strcmp(modID,'FG') || loopTrial == 1 || loopTrial == -1
-                makeTexture(modID)
-            %end
+            blankFlag=0;
+            makeTexture(modID)
             makeSyncTexture
-            
-            %loop Trial = -1 signifies 'sample' stimulus, which is
-            %necessary to stop shutter control.
-            
+                        
             
         case 'G'  %Go Stimulus
             
@@ -119,7 +112,11 @@ try
             moveShutter(eye,pos);
         
         case 'V' %flag to indicate sync ventilator and stim
-            vSyncState=str2num(modID);    
+            vSyncState=str2num(modID);
+            
+        case 'L' %blanks
+            makeSyncTexture
+            blankFlag=1;
             
             
     end

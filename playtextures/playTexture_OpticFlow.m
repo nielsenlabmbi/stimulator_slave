@@ -41,15 +41,10 @@ Npostframes = ceil(P.postdelay*screenRes.hz);
 
 Screen(screenPTR, 'FillRect', P.background)
 
-if P.contrast==0
-    r=P.background;
-    g=P.background;
-    b=P.background;
-else
-    r=P.redgun;
-    g=P.greengun;
-    b=P.bluegun;
-end
+r=P.redgun;
+g=P.greengun;
+b=P.bluegun;
+
 
 %%%Play predelay %%%%
 if ~isempty(DotFrame{1})

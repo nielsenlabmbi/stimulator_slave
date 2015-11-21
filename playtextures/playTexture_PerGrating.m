@@ -47,11 +47,7 @@ if P.plaid_bit==1 || P.surround_bit==1
     stimDst2=[P.x_pos-floor(stimsizeN2/2)+1 P.y_pos-floor(stimsizeN2/2)+1 ...
         P.x_pos+ceil(stimsizeN2/2) P.y_pos+ceil(stimsizeN2/2)]';
     
-    if P.contrast==0 %this is to account for blanks
-        ctr2=0;
-    else
-        ctr2=P.contrast2/100*0.5;
-    end
+    ctr2=P.contrast2/100*0.5;
     pixpercycle2=deg2pix(1/P.s_freq2,'none');
     shiftperframe2=pixpercycle2/P.t_period2;
 end
@@ -61,6 +57,9 @@ Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
 
+
+%set background
+Screen(screenPTR, 'FillRect', 0.5)
 
 %set sync to black 
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
