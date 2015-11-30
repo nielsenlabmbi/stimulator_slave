@@ -30,6 +30,7 @@ Mlist{10} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' '
 Mlist{11} = {'MG' '' '' 'playTexture_PerGratingManual'};
 Mlist{12} = {'MM' '' '' 'playTexture_Mapper'};
 Mlist{13} = {'MR' '' '' 'playTexture_RDKManual'};
+Mlist{14} = {'MI' '' '' 'playTexture_ImgManual'};
 
 %playfile for blanks
 Mlist{end+1} = {'' '' '' 'playTexture_Blank'};
