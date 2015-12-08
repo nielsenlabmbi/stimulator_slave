@@ -83,6 +83,13 @@ try
                 fwrite(comState.serialPortHandle,'nextS~') %playing sample
             end
             
+        case 'MM'  %Go for manual mapper - necessary because the blankflag otherwise remains unset
+            
+            blankFlag=0;
+            playstimulus(modID)
+            fwrite(comState.serialPortHandle,'nextS~') %playing sample
+            
+            
         case 'MON'  %Monitor info
             
             global Mstate

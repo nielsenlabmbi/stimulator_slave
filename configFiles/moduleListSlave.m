@@ -24,13 +24,13 @@ Mlist{7} = {'IM' 'configPstate_Img' 'makeTexture_Img' 'playTexture_Img' };
 Mlist{8} = {'GA' 'configPstate_GA' 'makeTexture_GA' 'playTexture_GA' };
 Mlist{9} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
 Mlist{10} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
-Mlist{11} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole'};
 
 
 %playfile for the manual mapper
-Mlist{12} = {'MG' '' '' 'playTexture_PerGratingManual'};
-Mlist{13} = {'MM' '' '' 'playTexture_Mapper'};
-Mlist{14} = {'MR' '' '' 'playTexture_RDKManual'};
+Mlist{11} = {'MG' '' '' 'playTexture_PerGratingManual'};
+Mlist{12} = {'MM' '' '' 'playTexture_Mapper'};
+Mlist{13} = {'MR' '' '' 'playTexture_RDKManual'};
+Mlist{14} = {'MI' '' '' 'playTexture_ImgManual'};
 
 %playfile for blanks
 Mlist{end+1} = {'' '' '' 'playTexture_Blank'};
