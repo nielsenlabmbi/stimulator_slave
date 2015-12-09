@@ -63,16 +63,20 @@ end
 
 
 %%%%%Play stimuli%%%%%%%%%%
-
 for i = 1:Nstimframes
     
     %get stimulus location - bar drifts from start position (x_pos, y_pos)
     %to a maximum of max_delta, then relocates to the starting position
-    deltaX=(i-1)*deltaFrame*cos(P.ori*pi/180);
-    deltaY=(i-1)*deltaFrame*sin(P.ori*pi/180);
-    if sqrt(deltaX.^2+deltaY.^2)>max_delta
+    if i==1
         deltaX=0;
         deltaY=0;
+    else
+        deltaX=deltaX+deltaFrame*cos(P.ori*pi/180);
+        deltaY=deltaY+deltaFrame*sin(P.ori*pi/180);
+        if sqrt(deltaX.^2+deltaY.^2)>max_delta
+            deltaX=0;
+            deltaY=0;
+        end
     end  
     stimDst=CenterRectOnPoint(stimSrc,P.x_pos-deltaX,P.y_pos-deltaY);
    
