@@ -9,7 +9,7 @@ Pstate = struct; %clear it
 Pstate.param{1} = {'predelay'  'float'      2       0                'sec'};
 Pstate.param{2} = {'postdelay'  'float'     2       0                'sec'};
 Pstate.param{3} = {'stat_time'  'float'     0.5       0                'sec'};
-Pstate.param{4} = {'mov_time'  'float'     1       0                'sec'};
+Pstate.param{4} = {'stim_time'  'float'     1       0                'sec'};
 
 Pstate.param{5} = {'x_pos'       'int'      600       0                'pixels'};
 Pstate.param{6} = {'y_pos'       'int'      400       0                'pixels'};

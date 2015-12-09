@@ -46,7 +46,7 @@ ctr=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and
 Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstatframes = ceil(P.stat_time*screenRes.hz);
-Nmovframes = ceil(P.mov_time*screenRes.hz);
+Nmovframes = ceil(P.stim_time*screenRes.hz);
 
 %set background
 Screen(screenPTR, 'FillRect', 0.5)
