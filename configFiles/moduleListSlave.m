@@ -25,6 +25,7 @@ Mlist{8} = {'GA' 'configPstate_GA' 'makeTexture_GA' 'playTexture_GA' };
 Mlist{9} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
 Mlist{10} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
 Mlist{11} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
+Mlist{12} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
 
 
 %playfile for the manual mapper
