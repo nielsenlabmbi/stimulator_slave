@@ -75,6 +75,8 @@ while ~keyIsDown
         symbol = symbList{state.symId};
         if state.valId(state.symId) > 1
             state.valId(state.symId) = state.valId(state.symId) - 1;
+        elseif state.symId == 1
+            state.valId(state.symId) = length(valdom{state.symId});
         end       
         
         val = valdom{state.symId}(state.valId(state.symId));
@@ -121,6 +123,8 @@ while ~keyIsDown
         symbol = symbList{state.symId};
         if state.valId(state.symId) < length(valdom{state.symId})
             state.valId(state.symId) = state.valId(state.symId) + 1;
+        elseif state.symId == 1
+            state.valId(state.symId) = 1;
         end
       
         val = valdom{state.symId}(state.valId(state.symId));        

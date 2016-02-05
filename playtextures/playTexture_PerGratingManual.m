@@ -216,5 +216,3 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Screen(screenPTR, 'FillRect', 0.5)
 Screen(screenPTR, 'Flip');
-
-
