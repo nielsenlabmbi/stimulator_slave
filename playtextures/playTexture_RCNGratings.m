@@ -91,9 +91,9 @@ for i = 1:N_Im
         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
         
         %add gratings
-        for g=1:P.n_gratings
+        for g=1:P.n_grating
             xoffset = mod((j-1)*shiftperframe+p(g)/360*pixpercycle,pixpercycle);
-            stimSrc=[xoffset 0 xoffset1 + stimsizeN stimsizeN];
+            stimSrc=[xoffset 0 xoffset + stimsizeN stimsizeN];
             Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst,ori(g),[],ctr(g));
         end
     

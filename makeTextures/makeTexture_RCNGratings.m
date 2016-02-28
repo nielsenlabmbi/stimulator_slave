@@ -65,8 +65,10 @@ if P.blankProb > 0
     bidx=find(dumseq<=nblanks);
     
     %blank condition is identified with the following indices
-    oriseq(bidx) = length(oridom)+1;
-    phaseseq(bidx) = 1;
+    for i=1:P.n_grating
+        oriseq{i}(bidx) = length(oridom)+1;
+        phaseseq{i}(bidx) = 1;
+    end
     blankflag(bidx) = 1;
 end
 
@@ -90,7 +92,7 @@ stimsize=2*sqrt((P.x_size/2).^2+(P.y_size/2).^2);
 %we also need to add extra so that we can slide the window to generate
 %motion - need one extra cycle; to keep all stimuli the same size, we'll go
 %with the lowest spatial frequency here
-stimsize=stimsize+1/min(sfdom);
+stimsize=stimsize+1/P.s_freq;
 
 stimsizeN=deg2pix(stimsize,'ceil');
 
