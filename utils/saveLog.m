@@ -7,10 +7,12 @@ function saveLog(seq,seed,trialno)
 global Mstate
 
 root = '/log_files/';
+root2 = '/Volumes/NielsenHome/Ephys/log_files/';
 
 expt = [Mstate.anim '_' Mstate.unit '_' Mstate.expt];
 
 fname = [root expt '.mat'];
+fname2 = [root2 expt '.mat'];
 
 
 seq.frate = Mstate.refresh_rate;
@@ -23,3 +25,10 @@ else
     eval(['save ' fname ' rseed' num2str(seed) ' -append'])    
 end
 
+if exist(root2,'dir')
+    if trialno==1
+        eval(['save ' fname2 ' rseed' num2str(seed)])    
+    else
+        eval(['save ' fname2 ' rseed' num2str(seed) ' -append'])    
+    end
+end

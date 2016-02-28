@@ -15,15 +15,16 @@ screenRes = Screen('Resolution',screenNum);
 
 %define the list of parameters that can be accessed with the mouse and
 %their settings
-symbList = {'ori','s_freq','t_period','mask_radius'};
+symbList = {'ori','s_freq','t_period','mask_radius','contrast'};
 valdom{1} = 0:15:359;
 valdom{2} = logspace(log10(.01),log10(10),20);
 valdom{3} = logspace(log10(.5),log10(10),20);  %Hz
 valdom{3} = round(fliplr(screenRes.hz./valdom{3}));  %frames
 valdom{4} = logspace(log10(.5),log10(60),20);
+valdom{5} = [5 15 50 100];
 
 %set starting value and symbol 
-state.valId = [7 10 5 8];  %Current index for each value domain
+state.valId = [7 10 5 8 4];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
 %update the parameters
@@ -78,6 +79,8 @@ while ~keyIsDown
         symbol = symbList{state.symId};
         if state.valId(state.symId) > 1
             state.valId(state.symId) = state.valId(state.symId) - 1;
+        elseif state.symId == 1
+            state.valId(state.symId) = length(valdom{state.symId});
         end       
         
         val = valdom{state.symId}(state.valId(state.symId));
@@ -137,6 +140,8 @@ while ~keyIsDown
         symbol = symbList{state.symId};
         if state.valId(state.symId) < length(valdom{state.symId})
             state.valId(state.symId) = state.valId(state.symId) + 1;
+        elseif state.symId == 1
+            state.valId(state.symId) = 1;
         end
       
         val = valdom{state.symId}(state.valId(state.symId));        
