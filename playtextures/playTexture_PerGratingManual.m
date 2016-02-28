@@ -180,6 +180,7 @@ while ~keyIsDown
     
     %current grating parameters
     ori = valdom{1}(state.valId(1));
+    contrast = valdom{5}(state.valId(5))/100*0.5;
     s_freq = valdom{2}(state.valId(2));
     t_period = valdom{3}(state.valId(3));
     
@@ -198,7 +199,7 @@ while ~keyIsDown
     
     
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-    Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,ori,[],0.5);
+    Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,ori,[],contrast);
     
     %add mask
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

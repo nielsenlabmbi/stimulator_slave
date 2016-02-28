@@ -19,13 +19,14 @@ Mlist{2} = {'RD' 'configPstate_RDK' 'makeTexture_RDK' 'playTexture_RDK' };
 Mlist{3} = {'RG' 'configPstate_RCGrating' 'makeTexture_RCGrating' 'playTexture_RCGrating' };
 Mlist{4} = {'RT' 'configPstate_RC2Gratings' 'makeTexture_RC2Gratings' 'playTexture_RC2Gratings' };
 Mlist{5} = {'RP' 'configPstate_RCGratPlaid' 'makeTexture_RCGratPlaid' 'playTexture_RCGratPlaid' };
-Mlist{6} = {'OF' 'configPstate_OpticFlow' 'makeTexture_OpticFlow' 'playTexture_OpticFlow' };
-Mlist{7} = {'IM' 'configPstate_Img' 'makeTexture_Img' 'playTexture_Img' };
-Mlist{8} = {'GA' 'configPstate_GA' 'makeTexture_GA' 'playTexture_GA' };
-Mlist{9} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
-Mlist{10} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
-Mlist{11} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
-Mlist{12} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
+Mlist{6} = {'RN' 'configPstate_RCNGratings' 'makeTexture_RCNGratings' 'playTexture_RCNGratings' };
+Mlist{7} = {'OF' 'configPstate_OpticFlow' 'makeTexture_OpticFlow' 'playTexture_OpticFlow' };
+Mlist{8} = {'IM' 'configPstate_Img' 'makeTexture_Img' 'playTexture_Img' };
+Mlist{9} = {'GA' 'configPstate_GA' 'makeTexture_GA' 'playTexture_GA' };
+Mlist{10} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
+Mlist{11} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
+Mlist{12} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
+Mlist{13} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
 
 
 %playfile for the manual mapper
