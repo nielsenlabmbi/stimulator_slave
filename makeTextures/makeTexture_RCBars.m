@@ -5,12 +5,13 @@ function makeTexture_RCBars
 
 global Mstate screenPTR screenNum 
 
-global Gseq Gtxtr
+global Gseq Gtxtr barTxtr
 
 
-if ~isempty(Gtxtr)
-    Screen('Close',Gtxtr);  %First clean up: Get rid of all textures/offscreen windows
+if ~isempty(barTxtr)
+    Screen('Close',barTxtr);  %First clean up: Get rid of all textures/offscreen windows
 end
+barTxtr = [];
 Gtxtr = [];  
 Gseq=[];
 
@@ -90,7 +91,7 @@ Gseq.bwseq=bwseq;
 deltaFrame = deg2pix(P.speed,'none')/fps;
 for n=1:P.N_bar
     %get the position sequence for each image
-    xloc=xdom(xseq(n,:));
+    xloc=xdom(xseq(n,:)); %xloc: positions for 1 bar, all images
     yloc=ydom(yseq(n,:));
     
     %get the orientation sequence
@@ -104,6 +105,7 @@ for n=1:P.N_bar
         xloc = xlocRot+P.x_pos;
         yloc = ylocRot+P.y_pos;
     end
+    disp(size(xloc))
     
     %now loop through images and determine locations and colors
     for i=1:N_Im
@@ -114,7 +116,7 @@ for n=1:P.N_bar
             dx = (j-1)*xinc;
             dy = (j-1)*yinc;
             
-            stimDst{i,j}(:,n)=CenterRectOnPoint([0 0 barW barL],xloc+dx,yloc+dy); 
+            stimDst{i,j}(:,n)=CenterRectOnPoint([0 0 barW barL],xloc(i)+dx,yloc(i)+dy); 
         end
 
         Gtxtr{i}(n) = barTxtr(bwseq(n,i));

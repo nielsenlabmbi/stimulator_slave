@@ -19,7 +19,7 @@ end
 
 Gtxtr = [];  
 Masktxtr=[];
-
+Gseq = [];
 
 %get parameters
 P = getParamStruct;
