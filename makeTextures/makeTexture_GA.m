@@ -21,7 +21,7 @@ fore_col = [P.fore_r P.fore_g P.fore_b];
 
 if P.genNum > 0
     fullFolderName = [folderName '_g-' num2str(P.genNum)];
-    load([P.stimPathSlave '/' fullFolderName '_stim.mat']);
+    load([P.stimPathSlave '/' fullFolderName '/stimParams.mat']);
     
     stim = stimuli{P.linNum,P.stimNum}; %#ok<USENS>
     cPts = [stim.cPts(:,1) -stim.cPts(:,2)];   
