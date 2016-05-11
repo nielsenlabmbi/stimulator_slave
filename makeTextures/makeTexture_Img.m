@@ -14,7 +14,7 @@ Gtxtr = [];
 P = getParamStruct;
 
 %read image
-img=imread(['/' P.imgpath '/' P.imgbase num2str(P.imgnr) '.' P.filetype]);
+img=imread(['/' P.imgpath '/' P.imgbase '_' num2str(P.imgnr) '.' P.filetype]);
 img=double(img);
 
 %%%hack: necessary to run the same code on the 2 setups

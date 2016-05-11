@@ -22,10 +22,10 @@ valdom{2} = 1:20;
 valdom{3} = logspace(log10(2),log10(100),20);
 
 
-imgbase={'2dRandom_','lsRandom_','lsNatural_','maRandom_','obj_','face_'};
+imgbase={'2dRandom','lsRandom','lsNatural','maRandom','obj','faceRhesus'};
 
 %set starting value and symbol 
-state.valId = [4 1 3];  %Current index for each value domain
+state.valId = [1 1 3];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
 %update the parameters - we only need imgbase and imgnr to make the image
@@ -35,7 +35,7 @@ updatePstate('imgnr',num2str(valdom{2}(state.valId(2))));
 
 %set correct filetype and oath
 updatePstate('filetype','png');
-updatePstate('imgpath','manualImg');
+updatePstate('imgpath',['manualImg/' imgbase{state.valId(1)}]);
 
 
 %initialize texture
@@ -80,6 +80,7 @@ while ~keyIsDown
             if strcmp(symbol,'imgbase')
                 valT = imgbase{val};
                 updatePstate(symbol,valT);
+                updatePstate('imgpath',['manualImg/' valT]);
             else
                 updatePstate(symbol,num2str(val)); 
             end
@@ -126,6 +127,7 @@ while ~keyIsDown
             if strcmp(symbol,'imgbase')
                 valT = imgbase{val};
                 updatePstate(symbol,valT);
+                updatePstate('imgpath',['manualImg/' valT]);
             else
                 updatePstate(symbol,num2str(val)); 
             end

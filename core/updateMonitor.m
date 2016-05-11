@@ -61,6 +61,18 @@ switch Mstate.monitor
         
 %         bufLUT = (0:255)/255;
 %         bufLUT = bufLUT'*[1 1 1];
+
+    case 'VPX' %120Hz
+        
+        Mstate.screenXcm = 52; %1920 pixel
+        Mstate.screenYcm = 29.5; %1080 pixel
+        
+%        load('/Stimulator_slave/calibration/ACER 2-4-13/luminance.mat','bufLUT')
+%         load('/Stimulator_slave/calibration/LCD 5-3-10 PR650/luminance.mat','bufLUT')
+        
+        bufLUT = (0:255)/255;
+         bufLUT = bufLUT'*[1 1 1];
+         bufLUT=bufLUT.^(1/2.2);
         
 end
 

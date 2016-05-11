@@ -59,7 +59,8 @@ Nstimframes = ceil(P.stim_time*screenRes.hz);
 
 
 %set background
-Screen(screenPTR, 'FillRect', 0.5)
+%Screen(screenPTR, 'FillRect', 0.5)
+Screen(screenPTR, 'FillRect', P.background)
 
 %set sync to black 
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
@@ -98,6 +99,8 @@ end
 
 
 %%%%%Play stimuli%%%%%%%%%%
+Screen(screenPTR, 'FillRect', 0.5) %hack
+
 for i = 1:Nstimframes
     
     %get parameters for grating 1
@@ -170,6 +173,7 @@ end
     
 
 %%%Play postdelay %%%%
+Screen(screenPTR, 'FillRect', P.background) %hack
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');

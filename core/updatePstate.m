@@ -2,6 +2,7 @@ function updatePstate(psymbol,pval)
 
 global Pstate
 
+%disp(psymbol)
 
 for i = 1:length(Pstate.param)
     

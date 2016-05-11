@@ -28,6 +28,7 @@ Mlist{11} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' '
 Mlist{12} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
 Mlist{13} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
 Mlist{14} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars' };
+Mlist{15} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTexture_RadialFreq' };
 
 
 %playfile for the manual mapper
