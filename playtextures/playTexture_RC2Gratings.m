@@ -69,6 +69,8 @@ for i = 1:N_Im
    
     p1=Gseq.phasedom(Gseq.phaseseq1(i));
     p2=Gseq.phasedom(Gseq.phaseseq2(i));
+    
+    cr=Gseq.contrastdom(Gseq.contrastseq(i));
 
     %adjust contrast for blank
     if Gseq.blankflag(i)==1
@@ -78,7 +80,7 @@ for i = 1:N_Im
     else
         ori1=Gseq.pairdom(Gseq.pairseq(i),1);
         ori2=Gseq.pairdom(Gseq.pairseq(i),2);
-        ctr=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
+        ctr=P.contrast/100*0.5*cr;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
     end
     
     %get shift per frame

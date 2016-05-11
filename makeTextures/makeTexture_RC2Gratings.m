@@ -50,17 +50,21 @@ oridom = oridom(1:end-1);
 
 %get valid combination of orientations - takes symmetry into account
 c=1;
+pairdom=[];
 for i=1:length(oridom)
     for j=i:length(oridom)
         pairdom(c,1)=oridom(i); 
         pairdom(c,2)=oridom(j); 
-        c=c+1;
+        c=c+1;       
     end
 end
 
 %make phase domain
 phasedom = linspace(0,360,P.n_phase+1);
 phasedom = phasedom(1:end-1); 
+
+%make contrast domain
+contrastdom = [.5 1];
 
 %number of images to present per trial
 N_Im = round(P.stim_time*screenRes.hz/P.h_per); 
@@ -71,6 +75,18 @@ pairseq = randi(s,[1 size(pairdom,1)],1,N_Im);
 phaseseq1 = randi(s,[1 length(phasedom)],1,N_Im); 
 phaseseq2 = randi(s,[1 length(phasedom)],1,N_Im); 
 
+
+%fix phase settings for the conditions with 2 gratings moving in the same
+%direction
+idx=find(pairdom(pairseq,1)==pairdom(pairseq,2));
+phaseseq2(idx)=phaseseq1(idx);
+
+%set contrast - for all plaids, use preset contrast; half of the gratings
+%should have half the contrast
+contrastseq=ones(size(pairseq))*2;
+Nhalf=round(length(idx)/2);
+rIdx=Shuffle(idx);
+contrastseq(rIdx(1:Nhalf))=1;
 
 %add blanks
 blankflag = zeros(1,N_Im);
@@ -83,6 +99,7 @@ if P.blankProb > 0
     pairseq(bidx) = size(pairdom,1)+1;
     phaseseq1(bidx) = 1;
     phaseseq2(bidx) = 1;
+    contrastseq(bidx) = 1;
     blankflag(bidx) = 1;
 end
 
@@ -91,9 +108,11 @@ end
 %save these in global structure for use by playTexture
 Gseq.pairdom=pairdom;
 Gseq.phasedom=phasedom;
+Gseq.contrastdom=contrastdom;
 Gseq.pairseq=pairseq;
 Gseq.phaseseq1=phaseseq1;
 Gseq.phaseseq2=phaseseq2;
+Gseq.contrastseq=contrastseq;
 Gseq.blankflag=blankflag;
 
 %now generate texture - we only need one as sf is fixed
