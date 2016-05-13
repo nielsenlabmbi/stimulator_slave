@@ -19,12 +19,11 @@ Gtxtr = [];
 P = getParamStruct;
 
 
-%convert stimulus size to pixel
-xN=deg2pix(P.x_stimsize,'round');
-yN=deg2pix(P.y_stimsize,'round');
 
 %convert base radius to pixel
 rN=deg2pix(P.r0,'round');
+xN=5*rN;
+yN=5*rN;
 
 %generate texture
 xcoord=linspace(-xN/2,xN/2,xN);

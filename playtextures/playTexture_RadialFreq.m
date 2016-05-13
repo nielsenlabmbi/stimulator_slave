@@ -36,9 +36,10 @@ ygrid=round(ygrid(2:end-1)); %get rid of the end points
 xgrid=xgrid(:)+P.x_pos;
 ygrid=ygrid(:)+P.y_pos;
 
-xstimsize=deg2pix(P.x_stimsize,'round');
-ystimsize=deg2pix(P.y_stimsize,'round');
-stimSrc=[0 0 xstimsize ystimsize];
+rN=deg2pix(P.r0,'round');
+xS=5*rN;
+yS=5*rN;
+stimSrc=[0 0 xS yS];
 
 %get timing information
 Npreframes = ceil(P.predelay*screenRes.hz);
