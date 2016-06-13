@@ -24,11 +24,12 @@ Mlist{7} = {'OF' 'configPstate_OpticFlow' 'makeTexture_OpticFlow' 'playTexture_O
 Mlist{8} = {'IM' 'configPstate_Img' 'makeTexture_Img' 'playTexture_Img' };
 Mlist{9} = {'GA' 'configPstate_GA' 'makeTexture_GA' 'playTexture_GA' };
 Mlist{10} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' };
-Mlist{11} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
-Mlist{12} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
-Mlist{13} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
-Mlist{14} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars' };
-Mlist{15} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTexture_RadialFreq' };
+Mlist{11} = {'RA' 'configPstate_RCAdaptGrating' 'makeTexture_RCAdaptGrating' 'playTexture_RCAdaptGrating' };
+Mlist{12} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
+Mlist{13} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
+Mlist{14} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
+Mlist{15} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars' };
+Mlist{16} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTexture_RadialFreq' };
 
 
 %playfile for the manual mapper
