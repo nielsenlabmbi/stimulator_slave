@@ -1,7 +1,13 @@
 function [setupID,masterIP]=getSetup
 
 %remote host IP address
-setupIP=getMacIP;
+if ismac==1
+    setupIP=getMacIP;
+else
+    setupIP=getLinuxIP;
+end
+
+%disp(setupIP)
 
 switch setupIP
     case '172.30.11.130'

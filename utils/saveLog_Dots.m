@@ -2,7 +2,7 @@ function saveLog_Dots(x,loopTrial)
 
 global Mstate
 
-root = '/log_files/';
+root = '/home/nielsenlab/log_files/';
 
 
 expt = [Mstate.anim '_' Mstate.unit '_' Mstate.expt];

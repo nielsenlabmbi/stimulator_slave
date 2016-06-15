@@ -81,7 +81,7 @@ if P.blankProb > 0
 end
 
 %insert adapatation stimulus; we will keep the original phase
-adaptflag=zeros(1,N_im);
+adaptflag=zeros(1,N_Im);
 
 adaptidx=[1:P.adapt_interv:N_Im];
 adaptflag(adaptidx)=1;
@@ -100,7 +100,7 @@ Gseq.oriseq=oriseq;
 Gseq.sfseq=sfseq;
 Gseq.phaseseq=phaseseq;
 Gseq.blankflag=blankflag;
-Gseq.adaptflab=adaptflag;
+Gseq.adaptflag=adaptflag;
 
 %now generate textures - we need one per spatial frequency
 

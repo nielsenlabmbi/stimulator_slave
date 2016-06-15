@@ -59,6 +59,17 @@ Screen(screenPTR, 'FillRect', valdom{7}(state.valId(7)))
 Screen(screenPTR,'DrawText','ori 0',40,30,1-floor(valdom{7}(state.valId(7))));
 Screen('Flip', screenPTR);
 
+%mac and linux assign mouse buttons differently
+if ismac
+    leftB=[1 0 0];
+    middleB=[0 0 1];
+    rightB=[0 1 0];
+else
+    leftB=[1 0 0];
+    middleB=[0 1 0];
+    rightB=[0 0 1];
+end
+
 
 %start the actual loop
 bLast = [0 0 0];
@@ -72,7 +83,7 @@ while ~keyIsDown
     db = bLast - b; %'1' is a button release
            
     %%%Case 1: Left Button:  decrease value%%%
-    if ~sum(abs([1 0 0]-db))  
+    if ~sum(abs(leftB-db))  
         
         symbol = symbList{state.symId};
         if state.valId(state.symId) > 1
@@ -106,7 +117,7 @@ while ~keyIsDown
     end
     
     %%%Case 2: Middle Button:  change parameter%%%
-    if ~sum(abs([0 0 1]-db))  % [0 0 1] is the scroll bar in the middle
+    if ~sum(abs(middleB-db))  % [0 0 1] is the scroll bar in the middle
         
         state.symId = state.symId+1; %update the symbol
         if state.symId > length(symbList)
@@ -125,7 +136,7 @@ while ~keyIsDown
     end
     
     %%%Case 3: Right Button: increase value%%%
-    if ~sum(abs([0 1 0]-db))  %  [0 1 0]  is right click
+    if ~sum(abs(rightB-db))  %  [0 1 0]  is right click
         
         symbol = symbList{state.symId};
         if state.valId(state.symId) < length(valdom{state.symId})
@@ -173,7 +184,7 @@ while ~keyIsDown
     
     bLast = b;
     
-    keyIsDown = KbCheck(-1);
+    keyIsDown = KbCheck;
     
 end
 

@@ -6,7 +6,7 @@ function saveLog(seq,seed,trialno)
 
 global Mstate
 
-root = '/log_files/';
+root = '/home/nielsenlab/log_files/';
 root2 = '/Volumes/NielsenHome/Ephys/log_files/';
 
 expt = [Mstate.anim '_' Mstate.unit '_' Mstate.expt];
