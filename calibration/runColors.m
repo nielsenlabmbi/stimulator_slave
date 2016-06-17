@@ -13,7 +13,8 @@ for c=1:3
         cm(c)=colmat(ii);
         
         Screen(w, 'FillRect', cm);
-
+        colstr=['C: ' num2str(c) ', step: ' num2str(ii)];
+        Screen(w,'DrawText',colstr,40,30,255);
         Screen(w, 'Flip');
 
         pause;
