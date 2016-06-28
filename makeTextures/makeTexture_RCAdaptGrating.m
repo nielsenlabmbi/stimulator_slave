@@ -8,7 +8,7 @@ function makeTexture_RCAdaptGrating
 
 global Mstate screenPTR screenNum loopTrial
 
-global Gtxtr  Masktxtr  Gseq %'play' will use these
+global Gtxtr  Masktxtr  Gseq N_Im1 %'play' will use these
 
 %clean up
 if ~isempty(Gtxtr)
@@ -57,50 +57,133 @@ phasedom = phasedom(1:end-1);
 %number of images to present per trial
 N_Im = round(P.stim_time*screenRes.hz/P.h_per); 
 
-%create random stream for trial
-s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2double(Mstate.unit)+str2double(Mstate.expt)+P.rseed);
+% %create random stream for trial
+% s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2double(Mstate.unit)+str2double(Mstate.expt)+P.rseed);
+% 
+% %randi: randi(stream,[imin imax},N) generates N integers between imin and
+% %imax
+% oriseq = randi(s,[1 length(oridom)],1,N_Im); 
+% sfseq = randi(s,[1 length(sfdom)],1,N_Im); 
+% phaseseq = randi(s,[1 length(phasedom)],1,N_Im); 
 
-%randi: randi(stream,[imin imax},N) generates N integers between imin and
-%imax
-oriseq = randi(s,[1 length(oridom)],1,N_Im); 
-sfseq = randi(s,[1 length(sfdom)],1,N_Im); 
-phaseseq = randi(s,[1 length(phasedom)],1,N_Im); 
+%%
+% determine number of stimuli possible such that ori,sf,and phase are
+% presented an equal number of times in each trial.
+adapt_ratio = P.adapt_interv;
+ori = 1:length(oridom);
+sf = 1:length(sfdom);
+ph = 1:length(phasedom);
 
-%add blanks
-blankflag = zeros(1,N_Im);
-if P.blankProb > 0
-    nblanks = round(P.blankProb*N_Im);
-    dumseq = randperm(s,N_Im);
-    bidx=find(dumseq<=nblanks);
-    
-    %blank condition is identified with the following indices
-    oriseq(bidx) = 1;
-    sfseq(bidx) = length(sfdom) + 1;
-    phaseseq(bidx) = 1;
-    blankflag(bidx) = 1;
-end
+mult=lcm(lcm(length(oridom), length(sfdom)), length(phasedom)); %least common multiple 
+mult = mult + round((mult - (1-P.blankProb)*mult)/(1-P.blankProb));
+
+ntrials = round((1-P.blankProb)*floor((N_Im - N_Im/adapt_ratio)/mult)*mult);
+
+N_Im = ceil((ntrials)/(1-P.blankProb)*(adapt_ratio)/(adapt_ratio - 1));
+
+trials.oriseq = NaN(N_Im,1);
+trials.phaseseq = NaN(N_Im,1);
+trials.sfseq = NaN(N_Im,1);
+
+% fill matrix with adapted and blanks
 
 %insert adapatation stimulus; we will keep the original phase
 adaptflag=zeros(1,N_Im);
 
 adaptidx=[1:P.adapt_interv:N_Im];
 adaptflag(adaptidx)=1;
-oriseq(adaptidx)=1;
-sfseq(adaptidx)=length(sfdom)+2;
+trials.oriseq(adaptidx)=1;
+trials.sfseq(adaptidx)=length(sfdom)+2;
+trials.phaseseq(adaptidx) = randi(length(phasedom),length(adaptidx),1);
+
+%add blanks
+blankflag = zeros(1,N_Im);
 blankflag(adaptidx)=0;
 
+if P.blankProb > 0
+    nblanks = N_Im - ntrials - length(adaptidx);
+    free = find(isnan(trials.oriseq));
+    dumseq = randperm(length(trials.oriseq(free)));
+    bidx=find(dumseq<=nblanks);
+    
+    %blank condition is identified with the following indices
+    trials.oriseq(free(bidx)) = 1;
+    trials.sfseq(free(bidx)) = length(sfdom) + 1;
+    trials.phaseseq(free(bidx)) = 1;
+    blankflag(free(bidx)) = 1;
+end
 
 
+% given the total number of stimuli, determine how many cycles through the
+% differend domains
+ori_mult = ntrials/length(oridom);
+sf_mult = ntrials/length(sfdom);
+ph_mult = ntrials/length(phasedom);
+
+% get the oriseq, phaseseq, and sfseq by choosing a random sample of
+% permutations
+ori_perms = perms(ori);    
+stim = randsample(length(ori_perms),min(ori_mult,length(ori_perms)));
+oriseq = ori_perms(stim,:);
+
+% this if loop deals with the case when the number of possible permutations
+% is less than the number of cycles needed by iteratively resampling from
+% the permutation space.
+if length(ori_perms)>1 && length(ori_perms)<ori_mult
+  for i = 1:ceil(ori_mult/length(ori_perms))-1  
+stim = randsample(length(ori_perms),min(length(ori_perms),ori_mult - i*length(ori_perms)));
+oriseq =[oriseq; ori_perms(stim,:)];
+  end
+end
+if length(ori_perms)==1
+oriseq = ori*ones(1,ori_mult);
+end
+oriseq = oriseq(:);
+
+
+sf_perms = perms(sf);    
+stim = randsample(length(sf_perms),min(sf_mult,length(sf_perms)));
+sfseq = sf_perms(stim,:);
+if length(sf_perms)>1 && length(sf_perms)<sf_mult
+  for i = 1:ceil(sf_mult/length(sf_perms))-1  
+stim = randsample(length(sf_perms),min(length(sf_perms),sf_mult - i*length(sf_perms)));
+sfseq =[sfseq; sf_perms(stim,:)];
+  end
+end
+if length(sf_perms)==1
+sfseq = sf*ones(1,sf_mult);
+end
+sfseq = sfseq(:);
+
+ph_perms = perms(ph);    
+stim = randsample(length(ph_perms),min(ph_mult,length(ph_perms)));
+phseq = ph_perms(stim,:);
+if length(ph_perms)>1 && length(ph_perms)<ph_mult
+  for i = 1:ceil(ph_mult/length(ph_perms))-1  
+stim = randsample(length(ph_perms),min(length(ph_perms),ph_mult - i*length(ph_perms)));
+phseq =[phseq; ph_perms(stim,:)];
+  end
+end
+if length(ph_perms)==1
+phseq = ph*ones(1,ph_mult);
+end
+phseq = phseq(:);
+
+trials.oriseq(isnan(trials.oriseq)) = oriseq;
+trials.phaseseq(isnan(trials.phaseseq)) = phseq;
+trials.sfseq(isnan(trials.sfseq)) = sfseq;
+%%
 
 %save these in global structure for use by playTexture
 Gseq.oridom=oridom;
 Gseq.sfdom=sfdom;
 Gseq.phasedom=phasedom;
-Gseq.oriseq=oriseq;
-Gseq.sfseq=sfseq;
-Gseq.phaseseq=phaseseq;
+Gseq.oriseq=trials.oriseq;
+Gseq.sfseq=trials.sfseq;
+Gseq.phaseseq=trials.phaseseq;
 Gseq.blankflag=blankflag;
 Gseq.adaptflag=adaptflag;
+N_Im1 = N_Im;
 
 %now generate textures - we need one per spatial frequency
 

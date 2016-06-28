@@ -5,7 +5,7 @@ function playTexture_RCAdaptGrating
 
 global Mstate screenPTR screenNum daq loopTrial
 
-global Gtxtr Masktxtr Gseq  %Created in makeTexture
+global Gtxtr Masktxtr Gseq  N_Im1 %Created in makeTexture
 
 global Stxtr %Created in makeSyncTexture
 
@@ -34,7 +34,7 @@ stimDst=[P.x_pos-floor(stimsizeN/2)+1 P.y_pos-floor(stimsizeN/2)+1 ...
 %get timing information
 Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
-N_Im = round(P.stim_time*screenRes.hz/P.h_per); %number of images to present
+% N_Im = round(P.stim_time*screenRes.hz/P.h_per); %number of images to present
 
 
 
@@ -63,7 +63,7 @@ end
 
 %%%%%Play stimuli%%%%%%%%%%
 
-for i = 1:N_Im
+for i = 1:N_Im1
     
     %get orientation and spatial frequency
     ori=Gseq.oridom(Gseq.oriseq(i));
