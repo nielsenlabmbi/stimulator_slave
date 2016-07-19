@@ -71,18 +71,11 @@ for i = 1:length(tdom)
     Im2 = Im2*P.contrast2/100;
     
     %basic plaid
-    if P.plaid_bit==1
-        Im = Im1+Im2; 
-    else
-        Im=Im1;
-    end
-    Im = (Im+1)/2;
+    Im = Im1+Im2; 
     Im=double(Im);
     
-    if P.plaid_bit==1
-        %now find the minima and change their color
-        Im(Im==min(Im(:)))=P.lum_intersect;    
-    end
+    %now find the minima and change their color
+    Im(Im==min(Im(:)))=P.lum_intersect;
     
    
     %generate texture
