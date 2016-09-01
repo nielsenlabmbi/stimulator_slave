@@ -1,4 +1,4 @@
-function mask=makeMask(screenRes,x_pos,y_pos,xsizeN,ysizeN,maskradiusN,mask_type)
+function mask=makeMask(screenRes,x_pos,y_pos,xsizeN,ysizeN,maskradiusN,mask_type,varargin)
 
 %compute stimulus mask - one large aperture only
 %these masks are screen size to allow correct cropping of rotated stimuli
@@ -12,7 +12,13 @@ function mask=makeMask(screenRes,x_pos,y_pos,xsizeN,ysizeN,maskradiusN,mask_type
 %xsizeN, ysizeN: size in pixel
 %maskradiusN: radius in pixel
 %mask_type: gauss, disc or non
+%varargin: mask_color (0.5 default)
 
+if isempty(varargin)
+    background=0.5;
+else
+    background=varargin{1};
+end
 
 
 xdom=[1:screenRes.width]-x_pos;
@@ -34,5 +40,5 @@ else
     maskT(yran(1):yran(2),xran(1):xran(2))=0;
 end
 
-mask = 0.5*ones(screenRes.height,screenRes.width,2);
+mask = background*ones(screenRes.height,screenRes.width,2);
 mask(:,:,2) = maskT;

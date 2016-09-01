@@ -34,7 +34,7 @@ end
 stimSrc=[0 0 xN yN];
 
 %diplacement per frame in pixels
-deltaFrame = deg2pix(P.speed,'none')/fps;   
+deltaFrame = P.speed/fps;   
 
 %set orientation based on axis and direction
 ori=P.axis*90 + P.dir*180;

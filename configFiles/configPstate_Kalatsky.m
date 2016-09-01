@@ -13,7 +13,7 @@ Pstate.param{4} = {'width'      'float'      3       1                'deg'};
 
 Pstate.param{5} = {'axis'      'int'     0       1                'binary'};
 Pstate.param{6} = {'dir'      'int'     0       1                'binary'};
-Pstate.param{7} = {'speed'      'float'     0       1                'deg/s'};
+Pstate.param{7} = {'speed'      'float'     400       1                'pix/s'};
 
 Pstate.param{8} = {'background'      'float'   0       0                ''};
 Pstate.param{9} = {'redgun' 'float'   1       0             ''};

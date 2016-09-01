@@ -45,7 +45,7 @@ end
 
 %create the masks 
 mN=deg2pix(P.mask_radius,'round');
-mask=makeMask(screenRes,P.x_pos,P.y_pos,xN,yN,mN,P.mask_type);
+mask=makeMask(screenRes,P.x_pos,P.y_pos,xN,yN,mN,P.mask_type,P.background);
 
 %we need to invert the mask if this is a surround stimulus
 if P.surround_bit==1 && P.plaid_bit==0
@@ -56,7 +56,7 @@ Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify 
 
 if P.plaid_bit==1 || P.surround_bit==1
     mN=deg2pix(P.mask_radius2,'round');
-    mask=makeMask(screenRes,P.x_pos,P.y_pos,xN2,yN2,mN,P.mask_type2);
+    mask=makeMask(screenRes,P.x_pos,P.y_pos,xN2,yN2,mN,P.mask_type2,P.background);
     Masktxtr(2) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
 end
 
