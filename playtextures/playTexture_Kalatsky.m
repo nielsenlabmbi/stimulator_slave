@@ -1,9 +1,10 @@
-function playTexture_TransparentPlaid
-%play transparent plaid stimuli
+function playTexture_Kalatsky
+%play bar stimulus
+%assumes normalized color
 
 global Mstate screenPTR screenNum daq loopTrial
 
-global Gtxtr Masktxtr   %Created in makeTexture
+global Gtxtr    %Created in makeTexture
 
 global Stxtr %Created in makeSyncTexture
 
@@ -12,6 +13,7 @@ global Stxtr %Created in makeSyncTexture
 P = getParamStruct;
 
 screenRes = Screen('Resolution',screenNum);
+fps=screenRes.hz;      % frames per second
 pixpercmX = screenRes.width/Mstate.screenXcm;
 pixpercmY = screenRes.height/Mstate.screenYcm;
 
@@ -21,19 +23,45 @@ syncWY = round(pixpercmY*Mstate.syncSize);
 syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
-%stimulus size and position 
-xN=deg2pix(P.x_size,'round');
-yN=deg2pix(P.y_size,'round');
+%stimulus source window (destination happens below to incorporate movement)
+if P.axis==0
+    yN=screenRes.width;
+    xN=deg2pix(P.width,'round');
+else
+    xN=screenRes.width;
+    yN=deg2pix(P.width,'round');
+end
+stimSrc=[0 0 xN yN];
 
-stimSrc=[0 0 xN-1 yN-1]';
-stimDst=[P.x_pos-floor(xN/2)+1 P.y_pos-floor(yN/2)+1 ...
-    P.x_pos+ceil(xN/2) P.y_pos+ceil(yN/2)]';
+%diplacement per frame in pixels
+deltaFrame = deg2pix(P.speed,'none')/fps;   
 
+%set orientation based on axis and direction
+ori=P.axis*90 + P.dir*180;
+
+%set starting position
+if P.axis==0 %vertical grating, dir=0: moving right to left
+    if P.dir==0
+        xpos=screenRes.width-xN/2;
+    else
+        xpos=xN/2;
+    end
+    ypos=screenRes.height/2;
+else %horizontal grating, dir=0: moving up
+    xpos=screenRes.width/2;
+    if P.dir==0
+        ypos=screenRes.height-yN/2;
+    else
+        ypos=yN/2;
+    end
+end
+    
 
 %get timing information
 Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
+
 
 %set background
 Screen(screenPTR, 'FillRect', P.background)
@@ -62,14 +90,32 @@ end
 %%%%%Play stimuli%%%%%%%%%%
 for i = 1:Nstimframes
     
-    grIdx=mod(i-1,length(Gtxtr))+1;
-    disp(grIdx)
-     
-    %drawing grating
-    %Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    %Screen('DrawTexture', screenPTR, Gtxtr(grIdx), stimSrc, stimDst);
-    %Screen('DrawTexture', screenPTR, Masktxtr);
+    %get stimulus location - bar drifts from one edge of the screen to the next, 
+    %then relocates to the starting position
+    if i>1
+        xpos=xpos-deltaFrame*cos(ori*pi/180);
+        ypos=ypos-deltaFrame*sin(ori*pi/180);
         
+        if xpos<0
+            xpos=screenRes.width;
+        end
+        if xpos>screenRes.width
+            xpos=0;
+        end
+        if ypos<0
+            ypos=screenRes.height;
+        end
+        if ypos>screenRes.height
+            ypos=0;
+        end
+            
+        
+    end  
+    stimDst=CenterRectOnPoint(stimSrc,xpos,ypos);
+   
+    %draw bar
+    Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst);
+    
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     
@@ -77,11 +123,15 @@ for i = 1:Nstimframes
     Screen(screenPTR, 'Flip');
         
     %generate event
-    if i==1 && loopTrial ~= -1
-     %    digWord=3;
-     %    DaqDOut(daq, 0, digWord);
-    % end
-    
+    if loopTrial ~=-1
+        if (deltaX==0 && deltaY==0)
+            digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
+            DaqDOut(daq, 0, digWord);
+        else
+            digWord=3;
+            DaqDOut(daq, 0, digWord);
+        end
+    end
 end
     
 
