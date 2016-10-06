@@ -29,8 +29,11 @@ Mlist{12} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' '
 Mlist{13} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
 Mlist{14} = {'TP' 'configPstate_TransparentPlaid' 'makeTexture_TransparentPlaid' 'playTexture_TransparentPlaid' };
 Mlist{15} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
-Mlist{16} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars' };
-Mlist{17} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTexture_RadialFreq' };
+Mlist{16} = {'BK' 'configPstate_Kalatsky' 'makeTexture_Kalatsky' 'playTexture_Kalatsky' };
+Mlist{17} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars' };
+Mlist{18} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTexture_RadialFreq' };
+Mlist{19} = {'PM' 'configPstate_Pacman' 'makeTexture_Pacman' 'playTexture_Pacman' };
+Mlist{20} = {'GL' 'configPstate_Glass' 'makeTexture_Glass' 'playTexture_Glass' };
 
 
 %playfile for the manual mapper

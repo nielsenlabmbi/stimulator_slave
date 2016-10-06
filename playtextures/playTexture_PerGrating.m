@@ -99,7 +99,7 @@ end
 
 
 %%%%%Play stimuli%%%%%%%%%%
-Screen(screenPTR, 'FillRect', 0.5) %hack
+Screen(screenPTR, 'FillRect', 0.5) %mask takes care of the rest
 
 for i = 1:Nstimframes
     
@@ -127,6 +127,7 @@ for i = 1:Nstimframes
     end
     
     if P.surround_bit==0 || P.plaid_bit==1
+        
         %for individual grating or plaid, plot grating1
         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
         Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctr);
