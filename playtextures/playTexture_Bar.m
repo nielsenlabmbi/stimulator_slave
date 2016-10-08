@@ -32,6 +32,10 @@ stimSrc=[0 0 xN yN];
 deltaFrame = deg2pix(P.speed,'none')/fps;   
 max_delta = deg2pix(P.max_posdelta,'round');
 
+%initial offset
+offsetX=deg2pix(P.offset,'round')*cos(P.ori*pi/180);
+offsetY=deg2pix(P.offset,'round')*sin(P.ori*pi/180);
+
 %get timing information
 Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
@@ -78,7 +82,7 @@ for i = 1:Nstimframes
             deltaY=0;
         end
     end  
-    stimDst=CenterRectOnPoint(stimSrc,P.x_pos-deltaX,P.y_pos-deltaY);
+    stimDst=CenterRectOnPoint(stimSrc,P.x_pos+offsetX-deltaX,P.y_pos+offsetY-deltaY);
    
     %draw bar
     Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst,P.ori);

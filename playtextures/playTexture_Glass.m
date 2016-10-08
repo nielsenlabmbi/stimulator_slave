@@ -9,7 +9,7 @@ global daq
 
 global Stxtr %Created in makeSyncTexture
 
-global DotPos %created in makeTexture_Glass
+global DotFrame %created in makeTexture_Glass
 
 
 %Wake up the daq:
@@ -21,7 +21,7 @@ P = getParamStruct;
 screenRes = Screen('Resolution',screenNum);
 pixpercmX = screenRes.width/Mstate.screenXcm;
 pixpercmY = screenRes.height/Mstate.screenYcm;
-fps=screenRes.hz;      % frames per second
+
 %get sync size and position
 syncWX = round(pixpercmX*Mstate.syncSize);
 syncWY = round(pixpercmY*Mstate.syncSize);
@@ -58,28 +58,19 @@ end
 %size of dots
 sizeDotsPx=deg2pix(P.dotSizes,'round');
 
-%dot color 
-r=P.redgun;
-g=P.greengun;
-b=P.bluegun;
 
 %%%%%Play stimulus
 for i = 1:Nstimframes
-    if P.dotType == 0,
-Screen('DrawDots', screenPTR, DotPos, sizeDotsPx, [r g b],...
-        [P.x_pos P.y_pos],4);
-    else
-    Screen('DrawDots', screenPTR, DotPos, sizeDotsPx, [r g b],...
-        [P.x_pos P.y_pos],1);
+    Screen('DrawDots', screenPTR, DotFrame, sizeDotsPx, [P.redgun P.greengun P.bluegun],...
+        [P.x_pos P.y_pos],P.dotType);
+    Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    
+    if loopTrial ~= -1
+        digWord = 3;  %Make 1st bit high
+        DaqDOut(daq, 0, digWord);
     end
-Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
-Screen(screenPTR, 'Flip');
-
-if loopTrial ~= -1
-    digWord = 3;  %Make 1st bit high
-    DaqDOut(daq, 0, digWord);
-end
-
+    
 end
 
 %%%Play postdelay %%%%

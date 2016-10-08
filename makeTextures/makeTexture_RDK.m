@@ -11,6 +11,10 @@ function makeTexture_RDK
 %for wrap around calculations, we treat the stimuli like rectangles, so
 %area is also calculated based on a rectangle, not a circle
 
+%10/7/16: added option to remove net noise movement; this will not be
+%perfect for limited lifetimes; at the beginning, directions are balanced, 
+%but small imbalances may arise over time when dots are reassigned new
+%directions after the lifetime ends
 
 global Mstate DotFrame screenNum loopTrial 
 
@@ -73,34 +77,56 @@ s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2do
 
 
 %initialize dot positions, lifetime etc for main grating
-randpos=rand(s,2,nrDots); %this gives numbers between 0 and 1
-randpos(1,:)=(randpos(1,:)-0.5)*stimSizePx(1); %now we have between -stimsize/2 and +stimsize/2
-randpos(2,:)=(randpos(2,:)-0.5)*stimSizePx(2);
-xypos=randpos; %this is what we will work with in the frame loop
+xypos=rand(s,2,nrDots); %this gives numbers between 0 and 1
+xypos(1,:)=(xypos(1,:)-0.5)*stimSizePx(1); %now we have between -stimsize/2 and +stimsize/2
+xypos(2,:)=(xypos(2,:)-0.5)*stimSizePx(2);
 
 if P.dotLifetime>0
     lifetime=randi(s,P.dotLifetime,1,nrDots); %between 1 and dotLifetime
 end
 
 nrSignal=round(nrDots*P.dotCoherence/100); %nr of signal dots (dots moving with preset orientation)
-dotdir=round(360*rand(s,1,nrDots));
-dotdir(1:nrSignal)=P.ori; %we can pick the first N dots here because dot position is randomized
+
+if P.noNetNoise==0
+    dotdir=round(360*rand(s,1,nrDots));
+    dotdir(1:nrSignal)=P.ori; %we can pick the first N dots here because dot position is randomized
+else %try to eliminate net noise motion
+    %first make sure that there is an even number of noise dots, keeping
+    %the overall nr of dots the same
+    nrNoise=nrDots-nrSignal;
+    nrNoise=nrNoise-rem(nrNoise,2);
+    
+    dotdir=ones(1,nrDots)*P.ori;
+    tmp=round(360*rand(s,1,nrNoise/2));
+    dotdir(1:nrNoise/2)=tmp;
+    dotdir(nrNoise/2+1:nrNoise)=mod(tmp+180,360);
+end
 
 
 %initialize dot positions, lifetime etc for second grating, if necessary
 if P.motionopp_bit==1 || P.surround_bit==1
-    randpos2=rand(s,2,nrDots2);
-    randpos2(1,:)=(randpos2(1,:)-0.5)*stimSizePx2(1);
-    randpos2(2,:)=(randpos2(2,:)-0.5)*stimSizePx2(2);
-    xypos2=randpos2;
+    xypos2=rand(s,2,nrDots2);
+    xypos2(1,:)=(xypos2(1,:)-0.5)*stimSizePx2(1);
+    xypos2(2,:)=(xypos2(2,:)-0.5)*stimSizePx2(2);
     
     if P.dotLifetime2>0 
         lifetime2=randi(s,P.dotLifetime2,1,nrDots2);
     end
 
     nrSignal2=round(nrDots2*P.dotCoherence2/100);
-    dotdir2=round(360*rand(s,1,nrDots2));
-    dotdir2(1:nrSignal2)=P.ori2;
+      
+    if P.noNetNoise==0
+        dotdir2=round(360*rand(s,1,nrDots2));
+        dotdir2(1:nrSignal2)=P.ori2; 
+    else %try to eliminate net noise motion
+        nrNoise2=nrDots2-nrSignal2;
+        nrNoise2=nrNoise2-rem(nrNoise2,2);
+    
+        dotdir2=ones(1,nrDots2)*P.ori2;
+        tmp=round(360*rand(s,1,nrNoise2/2));
+        dotdir2(1:nrNoise2/2)=tmp;
+        dotdir2(nrNoise2/2+1:nrNoise2)=mod(tmp+180,360);
+    end
 end
 
 
@@ -117,11 +143,26 @@ for i=1:nrFrames
     if P.dotLifetime>0         
         idx=find(lifetime==0);
         
-        signalid=rand(s,1,length(idx))<P.dotCoherence/100; 
-        randdir=round(360*rand(s,1,length(idx)));
+        signalid=rand(s,1,length(idx))<P.dotCoherence/100; %id=1: signal
         
-        dotdir(idx(signalid==1))=P.ori;
-        dotdir(idx(signalid==0))=randdir(signalid==0);
+        if P.noNetNoise==0
+            randdir=round(360*rand(s,1,length(idx)));
+        
+            dotdir(idx(signalid==1))=P.ori;
+            dotdir(idx(signalid==0))=randdir(signalid==0);
+        else
+            nrNoise=length(find(signalid==0));
+            if rem(nrNoise,2)==1
+                nrNoise=nrNoise-1;
+                tmp=find(signalid==0);
+                signalid(tmp(1))=1;
+            end
+            dotdir(idx(signalid==1))=P.ori;
+            
+            randdir=round(360*rand(s,1,nrNoise/2));
+            randdir=[randdir mod(randdir+180,360)];
+            dotdir(idx(signalid==0))=randdir;
+        end
   
         lifetime=lifetime-1;
         lifetime(idx)=P.dotLifetime;
@@ -186,10 +227,26 @@ for i=1:nrFrames
             idx=find(lifetime2==0);
         
             signalid=rand(s,1,length(idx))<P.dotCoherence2/100;
-            randdir=round(360*rand(s,1,length(idx)));
+            
+            if P.noNetNoise==0
+                randdir=round(360*rand(s,1,length(idx)));
         
-            dotdir2(idx(signalid==1))=P.ori2;
-            dotdir2(idx(signalid==0))=randdir(signalid==0);
+                dotdir2(idx(signalid==1))=P.ori2;
+                dotdir2(idx(signalid==0))=randdir(signalid==0);
+            else
+                nrNoise=length(find(signalid==0));
+                if rem(nrNoise,2)==1
+                    nrNoise=nrNoise-1;
+                    tmp=find(signalid==0);
+                    signalid(tmp(1))=1;
+                end
+            
+                dotdir2(idx(signalid==1))=P.ori2;
+            
+                randdir=round(360*rand(s,1,nrNoise/2));
+                randdir=[randdir mod(randdir+180,360)];
+                dotdir2(idx(signalid==0))=randdir;
+            end
   
             lifetime2=lifetime2-1;
             lifetime2(idx)=P.dotLifetime2;
