@@ -1,12 +1,11 @@
-function playTexture_Bar
+function playTexture_Pacman
 %play bar stimulus
 %assumes normalized color
 
-global Mstate screenPTR screenNum daq loopTrial
+global Mstate screenPTR screenNum daq loopTrial DotCoord
 
-global Gtxtr    %Created in makeTexture
 
-global Stxtr %Created in makeSyncTexture
+global Masktxtr Stxtr %Created in makeSyncTexture
 
 
 %get basic parameters
@@ -23,18 +22,6 @@ syncWY = round(pixpercmY*Mstate.syncSize);
 syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
-%stimulus source window (destination happens below to incorporate movement)
-xN=deg2pix(P.x_size,'round');
-yN=deg2pix(P.y_size,'round');
-stimSrc=[0 0 xN yN];
-
-%diplacement per frame in pixels
-deltaFrame = deg2pix(P.speed,'none')/fps;   
-max_delta = deg2pix(P.max_posdelta,'round');
-
-%initial offset
-offsetX=deg2pix(P.offset,'round')*cos(P.ori*pi/180);
-offsetY=deg2pix(P.offset,'round')*sin(P.ori*pi/180);
 
 %get timing information
 Npreframes = ceil(P.predelay*screenRes.hz);
@@ -43,7 +30,7 @@ Nstimframes = ceil(P.stim_time*screenRes.hz);
 
 
 %set background
-Screen(screenPTR, 'FillRect', P.background)
+Screen(screenPTR, 'FillRect',  P.background)
 
 %set sync to black 
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
@@ -69,43 +56,59 @@ end
 %%%%%Play stimuli%%%%%%%%%%
 for i = 1:Nstimframes
     
-    %get stimulus location - bar drifts from start position (x_pos, y_pos)
-    %to a maximum of max_delta, then relocates to the starting position
-    if i==1
-        deltaX=0;
-        deltaY=0;
-    else
-        deltaX=deltaX+deltaFrame*cos(P.ori*pi/180);
-        deltaY=deltaY+deltaFrame*sin(P.ori*pi/180);
-        if sqrt(deltaX.^2+deltaY.^2)>max_delta
-            deltaX=0;
-            deltaY=0;
-        end
-    end  
-    stimDst=CenterRectOnPoint(stimSrc,P.x_pos+offsetX-deltaX,P.y_pos+offsetY-deltaY);
-   
-    %draw bar
-    Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst,P.ori);
+    %coloring
+    pacColor = [P.redgun P.greengun P.bluegun];
+    pacColor2 = [P.redgun P.greengun P.bluegun 1];
     
+    
+    
+    if (P.stim_type == 3),
+        penWidth = P.lineWidth;
+        %0.005*deg2pix(P.r_size,'round');%to scale with size 1 to 200 radius ratio
+        Screen('FramePoly',screenPTR, pacColor2, [DotCoord(1,:); DotCoord(2,:)]', penWidth);
+        
+        % Make a base Rect of size of circle to block outline
+        baseRect = [0 0 2.1*deg2pix(P.r_size,'round') 2.1*deg2pix(P.r_size,'round')];
+        penWidth_circ= 5*penWidth;
+        
+        % Center the rectangle on the centre of the screen
+        centeredRect = CenterRectOnPointd(baseRect, P.x_pos, P.y_pos);
+        
+        % Set the color of the circle
+        circColor = P.background;
+        
+        % Draw the rect to the screen
+        Screen('FrameOval', screenPTR, circColor, centeredRect,penWidth_circ);
+    else
+        % Cue to tell PTB that the polygon is convex (concave polygons require much
+        % more processing)
+        if P.sharp == 0,
+            isConvex = 0;
+        else
+            isConvex = 1;
+        end
+       % Draw the rect to the screen
+        Screen('FillPoly', screenPTR, pacColor, [DotCoord(1,:); DotCoord(2,:)]', isConvex);
+    end
+  
+%     %add mask
+    Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Screen('DrawTexture', screenPTR, Masktxtr(1)); 
+
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     
     %flip
     Screen(screenPTR, 'Flip');
-        
+    
     %generate event
     if loopTrial ~=-1
-        if (deltaX==0 && deltaY==0)
-            digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
-            DaqDOut(daq, 0, digWord);
-        else
-            digWord=3;
-            DaqDOut(daq, 0, digWord);
-        end
+        digWord=3;
+        DaqDOut(daq, 0, digWord);
     end
-end
-    
 
+    
+end
 %%%Play postdelay %%%%
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
