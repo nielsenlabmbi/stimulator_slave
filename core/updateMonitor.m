@@ -51,6 +51,17 @@ switch Mstate.monitor
         bufLUT = bufLUT'*[1 1 1];
         bufLUT=bufLUT.^(1/2.2);
         
+    case 'LG43'
+        
+        Mstate.screenXcm = 94.755; %1920 pixel
+        Mstate.screenYcm = 53.4; %1080 pixel
+        
+        if ismac
+            load('/Stimulator_slave/calibration/LG43_161013/luminance.mat')
+        else
+            load('/home/nielsenlab/stimulator_slave/calibration/LG43_161013/luminance.mat')
+        end
+        
 end
 
 
