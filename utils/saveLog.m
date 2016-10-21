@@ -1,8 +1,8 @@
 function saveLog(seq,seed,trialno)
 
-%this function saves the sequence structure and domains; 
+%this function saves the sequence structure and domains for flashed stimuli; 
 %we're keeping everything in one file, so it needs to
-%save every trial with a unique name
+%save every trial as a structure with a unique name
 
 global Mstate
 
@@ -11,8 +11,8 @@ root2 = '/Volumes/NielsenHome/Ephys/log_files/';
 
 expt = [Mstate.anim '_' Mstate.unit '_' Mstate.expt];
 
-fname = [root expt '.mat'];
-fname2 = [root2 expt '.mat'];
+fname = [root expt '.log'];
+fname2 = [root2 expt '.log'];
 
 
 seq.frate = Mstate.refresh_rate;
