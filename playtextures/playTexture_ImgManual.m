@@ -11,15 +11,12 @@ global Gtxtr IDim
 %manual mappers
 configPstate_Img;
 
-
-
-
 %define the list of parameters that can be accessed with the mouse and
 %their settings
 symbList = {'imgbase','imgnr','x_size'};
 valdom{1} = 1:6;
-valdom{2} = 1:20;
-valdom{3} = logspace(log10(2),log10(100),20);
+valdom{2} = 1:200;
+valdom{3} = logspace(log10(20),log10(500),30);
 
 
 imgbase={'2dRandom','lsRandom','lsNatural','maRandom','obj','faceRhesus'};
@@ -31,12 +28,6 @@ state.symId = 1;  %Current symbol index
 %update the parameters - we only need imgbase and imgnr to make the image
 updatePstate('imgbase',imgbase{valdom{1}(state.valId(1))});
 updatePstate('imgnr',num2str(valdom{2}(state.valId(2))));
-
-
-%set correct filetype and oath
-updatePstate('filetype','png');
-updatePstate('imgpath',['manualImg/' imgbase{state.valId(1)}]);
-
 
 %initialize texture
 makeTexture_Img %this populates Gtxtr and IDim

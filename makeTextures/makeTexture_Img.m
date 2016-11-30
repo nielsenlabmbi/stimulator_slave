@@ -14,15 +14,19 @@ Gtxtr = [];
 P = getParamStruct;
 
 %read image
-img=imread(['/' P.imgpath '/' P.imgbase '_' num2str(P.imgnr) '.' P.filetype]);
+img=imread([P.imgpath '/' P.imgbase '/' P.imgbase '_' num2str(P.imgnr) '.' P.filetype]);
 img=double(img);
 
-%%%hack: necessary to run the same code on the 2 setups
-[setup,~]=getSetup;
-if strcmp(setup,'2P') && max(img(:))>1
-    % assume that the image is 0-255 scale
-    img = img/255;
-end
+% this hack is not required anymore because both setups are the same and
+% will be for the forseeable future. 
+% %%%hack: necessary to run the same code on the 2 setups
+% [setup,~]=getSetup;
+% if strcmp(setup,'2P') && max(img(:))>1
+%     % assume that the image is 0-255 scale
+%     img = img/255;
+% end
+
+img = img/255;
 
 %turn to black/white if requested
 if P.color==0
