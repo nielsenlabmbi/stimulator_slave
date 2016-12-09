@@ -15,20 +15,24 @@ screenRes = Screen('Resolution',screenNum);
 
 %define the list of parameters that can be accessed with the mouse and
 %their settings
-symbList = {'ori','s_freq','t_period','mask_radius','contrast'};
+symbList = {'ori','s_freq','t_period','mask_radius','contrast','visible'};
 valdom{1} = 0:15:359;
 valdom{2} = logspace(log10(.01),log10(10),20);
 valdom{3} = logspace(log10(.5),log10(10),20);  %Hz
 valdom{3} = round(fliplr(screenRes.hz./valdom{3}));  %frames
 valdom{4} = logspace(log10(.5),log10(60),20);
 valdom{5} = [5 15 50 100];
+valdom{6} = [0 1];
 
 %set starting value and symbol 
-state.valId = [7 10 5 8 4];  %Current index for each value domain
+state.valId = [7 10 5 8 4 2];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
+%shorthand indices
+vID=6; %visible
+
 %update the parameters
-for i = 1:length(valdom)
+for i = 1:length(valdom)-1
     symbol = symbList{i};
     val = valdom{i}(state.valId(i));
     updatePstate(symbol,num2str(val));
@@ -37,6 +41,7 @@ xsize = 2*valdom{4}(state.valId(4));  %width = 2*radius
 ysize = xsize;
 updatePstate('x_size',num2str(xsize));
 updatePstate('y_size',num2str(ysize));
+
 
 %initialize texture
 makeTexture_PerGrating %this populates Gtxtr and Masktxtr
@@ -55,6 +60,7 @@ mask=makeMask(maskSize,round(maskSize.height/2),round(maskSize.height/2),...
     deg2pix(xsize,'round'),deg2pix(ysize,'round'),1,'none');
 mtxtr = Screen(screenPTR, 'MakeTexture', mask,[],[],2); 
 maskSrc=[0 0 maskSize.height maskSize.height];
+
 
 %initialize screen
 Screen(screenPTR, 'FillRect', 0.5)
@@ -96,7 +102,10 @@ while ~keyIsDown
         
         val = valdom{state.symId}(state.valId(state.symId));
         
-        updatePstate(symbol,num2str(val));  
+        if state.symId~=vID
+            updatePstate(symbol,num2str(val));
+        end
+        
         newtext = [symbol ' ' num2str(val)];
         
         
@@ -120,10 +129,7 @@ while ~keyIsDown
         
         
         makeTexture_PerGrating
-        TextrIdx = 1;
-               
-        Screen(screenPTR,'DrawText',newtext,40,30,1);
-        Screen('Flip', screenPTR);
+        TextrIdx = 1;               
     end
     
     %%%Case 2: Middle Button:  change parameter%%%
@@ -140,9 +146,6 @@ while ~keyIsDown
         newtext = [symbol ' ' num2str(val)];
         
         TextrIdx = 1;
-        
-        Screen(screenPTR,'DrawText',newtext,40,30,1);
-        Screen('Flip', screenPTR);
     end
     
     %%%Case 3: Right Button: increase value%%%
@@ -157,7 +160,10 @@ while ~keyIsDown
       
         val = valdom{state.symId}(state.valId(state.symId));        
         
-        updatePstate(symbol,num2str(val));
+        if state.symId~=vID
+            updatePstate(symbol,num2str(val));
+        end
+            
         newtext = [symbol ' ' num2str(val)];
        
         
@@ -182,9 +188,7 @@ while ~keyIsDown
         TextrIdx = 1;
         
         makeTexture_PerGrating
-        
-        Screen(screenPTR,'DrawText',newtext,40,30,1);
-        Screen('Flip', screenPTR);
+
     end
     
     TextrIdx = TextrIdx+1;
@@ -208,13 +212,15 @@ while ~keyIsDown
     %determine mask placement
     maskDst=CenterRectOnPoint(maskSrc,mx,my);
     
+    %only draw if visible
+    if valdom{vID}(state.valId(vID))==1
+        Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
+        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,ori,[],contrast);
     
-    Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-    Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,ori,[],contrast);
-    
-    %add mask
-    Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    Screen('DrawTexture', screenPTR, mtxtr,maskSrc,maskDst);
+        %add mask
+        Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        Screen('DrawTexture', screenPTR, mtxtr,maskSrc,maskDst);
+    end
     
     %add text
     Screen(screenPTR,'DrawText',newtext,40,30,1);

@@ -37,8 +37,6 @@ Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
 
-%randomize starting polarity (is this useful/necessary?)
-light_dark = mod(light_dark + (rand < 0.5),2);
 
 %set blend function
 Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

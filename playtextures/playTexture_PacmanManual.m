@@ -26,10 +26,10 @@ valdom{7} = 1:9;
 valdom{8} = [0 1];
 
 %shorthand indices
-smID=5;
-bgID=6;
-sID=7;
-vID=8;
+smID=5; %sharp
+bID=6; %background
+sID=7; %color
+vID=8; %visible
 
 
 %these are the colors for the stimulus
@@ -54,6 +54,10 @@ for i = 1:5
     val = valdom{i}(state.valId(i));
     updatePstate(symbol,num2str(val));
 end
+
+%also update position (we need to handle offset here)
+updatePstate('x_pos','0');
+updatePstate('y_pos','0');
 
 %initialize texture
 makeTexture_Pacman %this populates Gtxtr and Masktxtr
@@ -108,7 +112,7 @@ while ~keyIsDown
         
         if state.symId<bID
             updatePstate(symbol,num2str(val));
-            if state.symID==smID %need to set convexity setting correctly
+            if state.symId==smID %need to set convexity setting correctly
                 isConvex=val;
             end
         elseif state.symId==bID %background
@@ -116,6 +120,8 @@ while ~keyIsDown
         end
         
         makeTexture_Pacman
+        %reset position matrix
+        DotCoord2=DotCoord;
         
         newtext = [symbol ' ' num2str(val)];
     end
@@ -153,14 +159,19 @@ while ~keyIsDown
         end
         
         makeTexture_Pacman
+        %reset position matrix
+        DotCoord2=DotCoord;
         
         newtext = [symbol ' ' num2str(val)];
     end
     
+    %shift position
+    DotCoord2(1,:) =mx+DotCoord(1,:);
+    DotCoord2(2,:) =my+DotCoord(2,:); 
     
     % Draw the shape to the screen
     if valdom{vID}(state.valId(vID))==1
-        Screen('FillPoly', screenPTR, colorvec(valdom{sID}(state.valId(sID)),:), [DotCoord(1,:); DotCoord(2,:)]', isConvex);
+        Screen('FillPoly', screenPTR, colorvec(valdom{sID}(state.valId(sID)),:), [DotCoord2(1,:); DotCoord2(2,:)]', isConvex);
     end
     
     %add text

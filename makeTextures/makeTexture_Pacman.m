@@ -40,6 +40,7 @@ else
 end
 
 anglesRad = anglesDeg * (pi / 180);
+radius=1;
 yPosVector = sin(anglesRad);
 xPosVector = cos(anglesRad);
 

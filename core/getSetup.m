@@ -1,21 +1,27 @@
-function [setupID,masterIP]=getSetup
+function setupDefault=getSetup
 
-%remote host IP address
-if ismac==1
-    setupIP=getMacIP;
-else
-    setupIP=getLinuxIP;
+%get the default parameters for this setup
+
+%location of setup file
+filePath='/usr/local/';
+fileName='setupDefault.txt';
+
+%open file
+fId=fopen(fullfile(filePath,fileName));
+
+%read the text (logic: parameter name: parameter setting)
+c=textscan(fId,'%s %s');
+
+%transform into structure
+setupDefault=struct;
+for i=1:length(c{1})
+    %get parameter name minus the trailing colon
+    pn=c{1}{i}(1:end-1);
+    
+    %get parameter value
+    vn=c{2}{i};
+    
+    eval(['setupDefault.' pn '=vn;']);
 end
 
-%disp(setupIP)
-
-switch setupIP
-    case '172.30.11.130'
-        setupID='2P';
-        masterIP='172.30.11.131';
-        
-    case '172.30.11.142'
-        setupID='EP';
-        masterIP='172.30.11.140';
-
-end
+fclose(fId);

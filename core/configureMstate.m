@@ -15,12 +15,9 @@ Mstate.hemi = 'left';
 Mstate.screenDist = 60;
 
 %remote host IP address
-[setup,~]=getSetup;
-if strcmp(setup,'2P') 
-    Mstate.monitor = 'LCD';   
-elseif strcmp(setup,'EP') 
-    Mstate.monitor = 'VSN';
-end
+s=getSetup;
+Mstate.monitor=s.defaultMonitor;
+
     
 %'updateMonitor.m' happens in 'screenconfig.m' at startup
 

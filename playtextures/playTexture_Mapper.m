@@ -8,12 +8,13 @@ global  screenPTR
 
 %%%%%%%%%%%%%%%%%%
 
-symbList = {'ori','width','length','barColor','background'};
+symbList = {'ori','width','length','barColor','background','visible'};
 valdom{1} = 0:15:359;
 valdom{2} = logspace(log10(.1),log10(60),30);
 valdom{3} = logspace(log10(.1),log10(60),30);
 valdom{4} = 1:9;
 valdom{5} = 0:0.2:1;
+valdom{6} = [0 1];
 
 %these are the colors for the bar
 colorvec=[1 1 1;... %white
@@ -27,12 +28,11 @@ colorvec=[1 1 1;... %white
     0 1 1];   %cyan
 
 
-state.valId = [1 8 15 1 1];  %Current index for each value domain
+state.valId = [1 8 15 1 1 2];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
-%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%
 
-
+%shorthand index
+vID=6; %visible
 
 %initialize the texture
 L=deg2pix(valdom{2}(state.valId(2)),'round');
@@ -106,9 +106,6 @@ while ~keyIsDown
         end
         
         newtext = [symbol ' ' num2str(val)];
-        
-        Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
-        Screen('Flip', screenPTR);
     end
     
     %%%Case 2: Middle Button%%%
@@ -122,9 +119,6 @@ while ~keyIsDown
         val = valdom{state.symId}(state.valId(state.symId));
         
         newtext = [symbol ' ' num2str(val)];
-        
-        Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
-        Screen('Flip', screenPTR);
     end
     
     %%%Case 3: Right Button%%%
@@ -154,9 +148,7 @@ while ~keyIsDown
         end
         
         newtext = [symbol ' ' num2str(val)];
-        
-        Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
-        Screen('Flip', screenPTR);
+
     end
    
  
@@ -165,7 +157,11 @@ while ~keyIsDown
     stimSrc=[0 0 W L];
     stimDst=CenterRectOnPoint(stimSrc,mx,my);
     
-    Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst,ori);    
+    %only draw if visible
+    if valdom{vID}(state.valId(vID))==1
+        Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst,ori);
+    end
+    
     Screen(screenPTR,'DrawText',newtext,40,30,1-floor(valdom{5}(state.valId(5))));
     xypos = ['x ' num2str(mx) '; y ' num2str(my)];
     Screen(screenPTR,'DrawText',xypos,40,55,1-floor(valdom{5}(state.valId(5))));
