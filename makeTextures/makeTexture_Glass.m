@@ -4,7 +4,7 @@ function makeTexture_Glass
 %dots share the same orientation off the original or not.
 %edited 9/29/16 by Cynthia Steinhardt
 
-global Mstate DotFrame screenNum loopTrial 
+global Mstate DotFrame loopTrial 
 
 %clean up
 DotFrame=[];

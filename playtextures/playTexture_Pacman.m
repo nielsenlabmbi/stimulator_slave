@@ -2,17 +2,15 @@ function playTexture_Pacman
 %play bar stimulus
 %assumes normalized color
 
-global Mstate screenPTR screenNum daq loopTrial DotCoord
+global Mstate screenPTR screenNum daq loopTrial 
 
-
-global Masktxtr Stxtr %Created in makeSyncTexture
+global Masktxtr Stxtr DotCoord %Created in makeSyncTexture
 
 
 %get basic parameters
 P = getParamStruct;
 
 screenRes = Screen('Resolution',screenNum);
-fps=screenRes.hz;      % frames per second
 pixpercmX = screenRes.width/Mstate.screenXcm;
 pixpercmY = screenRes.height/Mstate.screenYcm;
 
@@ -59,12 +57,9 @@ for i = 1:Nstimframes
     %coloring
     pacColor = [P.redgun P.greengun P.bluegun];
     pacColor2 = [P.redgun P.greengun P.bluegun 1];
-    
-    
-    
-    if (P.stim_type == 3),
+        
+    if (P.stim_type == 3), %line stimulus
         penWidth = P.lineWidth;
-        %0.005*deg2pix(P.r_size,'round');%to scale with size 1 to 200 radius ratio
         Screen('FramePoly',screenPTR, pacColor2, [DotCoord(1,:); DotCoord(2,:)]', penWidth);
         
         % Make a base Rect of size of circle to block outline
@@ -90,8 +85,8 @@ for i = 1:Nstimframes
        % Draw the rect to the screen
         Screen('FillPoly', screenPTR, pacColor, [DotCoord(1,:); DotCoord(2,:)]', isConvex);
     end
-  
-%     %add mask
+    
+    %add mask
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     Screen('DrawTexture', screenPTR, Masktxtr(1)); 
 

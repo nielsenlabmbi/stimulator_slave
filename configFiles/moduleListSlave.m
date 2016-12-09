@@ -34,6 +34,7 @@ Mlist{17} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars
 Mlist{18} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTexture_RadialFreq' };
 Mlist{19} = {'PM' 'configPstate_Pacman' 'makeTexture_Pacman' 'playTexture_Pacman' };
 Mlist{20} = {'GL' 'configPstate_Glass' 'makeTexture_Glass' 'playTexture_Glass' };
+Mlist{21} = {'CK' 'configPstate_CheckerBoard' 'makeTexture_CheckerBoard' 'playTexture_CheckerBoard' };
 
 
 %playfile for the manual mapper
@@ -41,6 +42,8 @@ Mlist{end+1} = {'MG' '' '' 'playTexture_PerGratingManual'};
 Mlist{end+1} = {'MM' '' '' 'playTexture_Mapper'};
 Mlist{end+1} = {'MR' '' '' 'playTexture_RDKManual'};
 Mlist{end+1} = {'MI' '' '' 'playTexture_ImgManual'};
+Mlist{end+1} = {'MP' '' '' 'playTexture_PacmanManual'};
+
 
 %playfile for blanks
 Mlist{end+1} = {'' '' '' 'playTexture_Blank'};
