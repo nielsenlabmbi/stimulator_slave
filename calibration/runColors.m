@@ -4,7 +4,6 @@ screens=Screen('Screens');
 screenNumber=max(screens);
 mults=8;
 [w, rect] = Screen('OpenWindow', screenNumber, [],[],[],[],[],mults,[]);
-
 colmat=round(linspace(0,255,20));
 
 for c=1:3
