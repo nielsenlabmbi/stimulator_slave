@@ -1,6 +1,12 @@
 function setupDefault=getSetup
-
 %get the default parameters for this setup
+%format of setupDefault.txt for slave:
+%setupID: XXX
+%masterIP: XXX
+%defaultMonitor: XXX
+%
+%do not change the names of these fields!!!
+
 
 %location of setup file
 filePath='/usr/local/';
@@ -21,7 +27,7 @@ for i=1:length(c{1})
     %get parameter value
     vn=c{2}{i};
     
-    eval(['setupDefault.' pn '=vn;']);
+    setupDefault.(pn)=vn;
 end
 
 fclose(fId);
