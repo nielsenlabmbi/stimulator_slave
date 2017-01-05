@@ -53,7 +53,7 @@ switch Mstate.monitor
         
     case 'LG43'
         
-        Mstate.screenXcm = 94.755; %1920 pixel
+        Mstate.screenXcm = 94.3; %1920 pixel
         Mstate.screenYcm = 53.4; %1080 pixel
         
         if ismac
