@@ -65,13 +65,13 @@ end
 %generate texture
 
 %stimuli will need to be larger to deal with rotation
-stimsize=2*sqrt((P.x_size/2).^2+(P.y_size/2).^2);
+stimsize=2*sqrt((P.x_size/2).^2+(P.y_size/2).^2); %deg
 
 %add extra so that we can slide the window to generate motion 
-stimsize=stimsize+1/P.s_freq;
+stimsize=stimsize+1/P.s_freq; %deg
 
 %use ceil to make sure that we definitely have enough pixels
-stimsizeN=deg2pix(stimsize,'ceil');
+stimsizeN=deg2pix(stimsize,'ceil'); %pixel
 
 if P.plaid_bit==1 || P.surround_bit==1
     stimsize2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
@@ -82,7 +82,7 @@ end
 
 
 %generate first grating
-x_ecc=linspace(-stimsize/2,stimsize/2,stimsizeN);
+x_ecc=linspace(-stimsize/2,stimsize/2,stimsizeN); %deg
 sdom = x_ecc*P.s_freq*2*pi; %radians
 grating = cos(sdom);
 

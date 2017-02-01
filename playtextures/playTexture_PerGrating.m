@@ -59,7 +59,6 @@ Nstimframes = ceil(P.stim_time*screenRes.hz);
 
 
 %set background
-%Screen(screenPTR, 'FillRect', 0.5)
 Screen(screenPTR, 'FillRect', P.background)
 
 %set sync to black 

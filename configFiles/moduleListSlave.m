@@ -35,6 +35,8 @@ Mlist{18} = {'FR' 'configPstate_RadialFreq' 'makeTexture_RadialFreq' 'playTextur
 Mlist{19} = {'PM' 'configPstate_Pacman' 'makeTexture_Pacman' 'playTexture_Pacman' };
 Mlist{20} = {'GL' 'configPstate_Glass' 'makeTexture_Glass' 'playTexture_Glass' };
 Mlist{21} = {'CK' 'configPstate_CheckerBoard' 'makeTexture_CheckerBoard' 'playTexture_CheckerBoard' };
+Mlist{22} = {'WG' 'configPstate_WarpedGrating' 'makeTexture_WarpedGrating' 'playTexture_WarpedGrating' };
+Mlist{23} = {'WC' 'configPstate_WarpedChecker' 'makeTexture_WarpedChecker' 'playTexture_WarpedChecker' };
 
 
 %playfile for the manual mapper
