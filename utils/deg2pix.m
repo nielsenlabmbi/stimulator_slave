@@ -23,7 +23,7 @@ end
 if screenProfile==1
     xcm = 2*pi*Mstate.screenDist*xdeg/360;  
 else
-    xcm = 2*Mstate.screenDist*tan(P.x_size/2*pi/180);  
+    xcm = 2*Mstate.screenDist*tan(xdeg/2*pi/180);  
 end
 
 %stimulus width in pixels

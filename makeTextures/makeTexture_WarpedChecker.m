@@ -25,6 +25,7 @@ Gtxtr = [];
 P = getParamStruct;
 screenRes = Screen('Resolution',screenNum);
 
+
 %depending on whether or not the screen is rotated, need to change x and y
 if P.rotated==0
     xPx=screenRes.width;
@@ -87,6 +88,10 @@ switch P.altazimuth
         s_freq=1/(yDeg);
         s_duty=P.width/yDeg;
         
+        %determine t_period for grating
+        %it will take the ydeg*speed seconds for 1 period
+        t_period=yDeg/P.speed*screenRes.hz;
+        
     case 'azimuth'      
         
         %change orientation (we don't need the transformed y for the rest)
@@ -97,14 +102,20 @@ switch P.altazimuth
         
         %determine spatial frequency
         s_freq=1/(xDeg);
-        s_duty=P.widthBand/xDeg;
+        s_duty=P.width/xDeg;
+        
+        %determine t_period for grating
+        %it will take the xdeg*speed seconds for 1 period
+        t_period=xDeg/P.speed*screenRes.hz;
 end
 
 sdom = sdom*s_freq*2*pi; %radians
 
+
 %compute shift of grating per frame
-tdom = single(linspace(0,2*pi,P.t_period+1));
+tdom = linspace(0,2*pi,round(t_period)+1);
 tdom = tdom(1:end-1);
+
         
 %generate noise pattern
 sdomAlt = atan(y_ecc.*cos(atan(x_ecc/Mstate.screenDist))/Mstate.screenDist)*180/pi; %deg
@@ -118,7 +129,8 @@ noiseIm = xor(rem(sdomAz,2),rem(sdomAlt,2));  %xor produces the checker pattern
 %now loop through frames
 for i = 1:length(tdom)
         
-    grating = cos(sdom - tdom(i));
+    %grating = cos(sdom - tdom(i)-P.phase*pi/180);
+    grating = cos(sdom);
     thresh = cos(s_duty*pi);
     grating=sign(grating-thresh);
     
@@ -130,6 +142,11 @@ for i = 1:length(tdom)
     %add checkerboard pattern   
     grating = grating - 2*noiseIm;
     grating(grating<-1) = -1;
+    
+    %if screen is rotated, need to turn these back for display purposes
+    if P.rotated==1
+        grating=rot90(grating);
+    end
     
     Gtxtr(i) = Screen('MakeTexture',screenPTR, grating,[],[],2);
     

@@ -11,7 +11,7 @@ switch monitorID
         monitorPar.screenYcm = 30;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Acer160617/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/Acer160617/luminance.mat';
         
     case {'Viewsonic','VSN'} %120 hz viewsonic
         
@@ -21,7 +21,7 @@ switch monitorID
         monitorPar.screenYcm = 30;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/ViewSonic151109/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/ViewSonic151109/luminance.mat';
         
     case {'Viewpixx','VPX'} %Viewpixx 120Hz monitor
         
@@ -51,5 +51,5 @@ switch monitorID
         monitorPar.screenYcm = 53.4;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/LG43_161013/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/LG43_161013/luminance.mat';
 end

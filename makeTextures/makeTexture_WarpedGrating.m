@@ -35,7 +35,7 @@ yN=deg2pix(P.y_size,'round',2); %pixel
 %create the mask
 mN=deg2pix(P.mask_radius,'round',2);
 mask=makeMask(screenRes,P.x_pos,P.y_pos,xN,yN,mN,P.mask_type);
-Masktxtr = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
+Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
 
 
 %generate grid for screen locatoin
@@ -83,9 +83,9 @@ end
 sdom = sdom*P.s_freq*2*pi; %radians
 
 %compute shift of grating per frame
-tdom = single(linspace(0,2*pi,P.t_period+1));
+tdom = linspace(0,2*pi,P.t_period+1);
 tdom = tdom(1:end-1);
-        
+
 %now loop through frames
 for i = 1:length(tdom)
         
@@ -96,9 +96,8 @@ for i = 1:length(tdom)
         grating=sign(grating-thresh);
     end
     
-    Gtxtr(i) = Screen('MakeTexture',screenPTR, grating,[],[],2);
+    Gtxtr(i) = Screen(screenPTR,'MakeTexture', grating,[],[],2);
     
 end
-
 
 

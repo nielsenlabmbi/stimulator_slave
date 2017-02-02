@@ -8,6 +8,7 @@ global Gtxtr  Masktxtr   %'play' will use these
 
 %clean up
 if ~isempty(Gtxtr)
+    disp(Gtxtr)
     Screen('Close',Gtxtr);  %First clean up: Get rid of all textures/offscreen windows
 end
 
@@ -35,7 +36,7 @@ bN = deg2pix(P.block_size,'round');
 mN=deg2pix(P.mask_radius,'round');
 mask=makeMask(screenRes,P.x_pos,P.y_pos,xN,yN,mN,P.mask_type);
 
-Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
+Masktxtr(1) = Screen('MakeTexture',screenPTR, mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
 
 %generate texture
 rN = ceil(yN/bN);

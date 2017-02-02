@@ -23,14 +23,10 @@ syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
 
-%depending on whether or not the screen is rotated, need to change x and y
-if P.rotated==0
-    xPx=screenRes.width;
-    yPx=screenRes.height;
-else
-    yPx=screenRes.width;
-    xPx=screenRes.height;
-end
+%display is independent of rotation, so rtoation is handled in makeTexture part
+xPx=screenRes.width;
+yPx=screenRes.height;
+
     
 
 %Determine stimulus size in pixel, assuming (in contrast to usual) a projection of spherical 
@@ -50,7 +46,7 @@ Nstimframes = ceil(P.stim_time*screenRes.hz);
 
 
 %set background
-Screen(screenPTR, 'FillRect', P.background)
+Screen(screenPTR, 'FillRect', 0)
 
 %set sync to black
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
@@ -69,32 +65,22 @@ end
 for i = 2:Npreframes
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if P.avg_bit==1 && loopTrial ~=-1
-        if i==Npreframes/4
-            digWord = 3; %digital 11 - 1st and 2nd high
-            DaqDOut(daq, 0, digWord);
-        elseif i==3*Npreframes/4
-            digWord=1; %go back to only first high
-            DaqDOut(daq, 0, digWord);
-        end
-    end
 end
 
 
 %%%%%Play stimuli%%%%%%%%%%
-Screen(screenPTR, 'FillRect', 0.5) %mask takes care of the rest
-
 count=1;
 for i = 1:Nstimframes
     
     %set polarity
-    if mod(i,length(Gtxtr))==0
+    if mod(i,length(Gtxtr))==1
         count=1;
     end
     
     %plot grating
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
     Screen('DrawTexture', screenPTR, Gtxtr(count), stimSrc, stimDst,[],[],0.5);
+    count=count+1;
     
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
@@ -122,7 +108,6 @@ end
 
 
 %%%Play postdelay %%%%
-Screen(screenPTR, 'FillRect', P.background) %hack
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');

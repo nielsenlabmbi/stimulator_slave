@@ -27,7 +27,13 @@ for i=1:length(c{1})
     %get parameter value
     vn=c{2}{i};
     
-    setupDefault.(pn)=vn;
+    %need to deal with multiple entries under one name
+    if isfield(setupDefault,pn)==0
+        setupDefault.(pn)=vn;
+    else
+        tmp=setupDefault.(pn);
+        setupDefault.(pn)=[tmp '; ' vn];
+    end
 end
 
 fclose(fId);

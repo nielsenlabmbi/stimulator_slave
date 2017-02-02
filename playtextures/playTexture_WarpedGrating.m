@@ -57,32 +57,25 @@ end
 for i = 2:Npreframes
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if P.avg_bit==1 && loopTrial ~=-1
-        if i==Npreframes/4
-            digWord = 3; %digital 11 - 1st and 2nd high
-            DaqDOut(daq, 0, digWord);
-        elseif i==3*Npreframes/4
-            digWord=1; %go back to only first high
-            DaqDOut(daq, 0, digWord);
-        end
-    end
 end
 
 
 %%%%%Play stimuli%%%%%%%%%%
 Screen(screenPTR, 'FillRect', 0.5) %mask takes care of the rest
-
 count=1;
 for i = 1:Nstimframes
     
-    %set polarity
-    if mod(i,length(Gtxtr))==0
+    %set cycle (need to account for static - tperiod = 1)
+    if length(Gtxtr)>1 && mod(i,length(Gtxtr))==1
         count=1;
     end
     
     %plot grating
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
     Screen('DrawTexture', screenPTR, Gtxtr(count), stimSrc, stimDst,[],[],ctr);
+    if length(Gtxtr)>1
+        count=count+1;
+    end
     
     %add mask
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

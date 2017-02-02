@@ -30,7 +30,7 @@ yN=ceil(deg2pix(P.y_size,'round')/bN)*bN;
 stimSrc=[0 0 xN-1 yN-1];
 
 %diplacement per frame in pixels
-deltaFrame = deg2pix(P.speed,'none')/fps;   
+deltaFrame = deg2pix(P.speed,'none')/screenRes.hz;   
 max_delta = deg2pix(P.max_posdelta,'round');
 
 %initial offset
@@ -108,11 +108,14 @@ for i = 1:Nstimframes
     end  
     stimDst=CenterRectOnPoint(stimSrc,P.x_pos+offsetX-deltaX,P.y_pos+offsetY-deltaY);
     
+    
     %draw checkerboard
     Screen('DrawTexture', screenPTR, Gtxtr(polarity), stimSrc, stimDst);
     
     %add mask
-    Screen('DrawTexture', screenPTR, Masktxtr(1));
+    if ~strcmp(P.mask_type,'none')
+        Screen('DrawTexture', screenPTR, Masktxtr(1));
+    end
     
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
@@ -165,6 +168,5 @@ end
 %set sync to black for next stimulus
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-
 
 

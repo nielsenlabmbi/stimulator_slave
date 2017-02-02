@@ -18,7 +18,7 @@ Pstate.param{8} = {'mask_type'   'string'   'none'       0                ''};
 Pstate.param{9} = {'mask_radius' 'float'      6       1                'deg'};
 
 Pstate.param{10} = {'contrast'    'float'     100       0                '%'};
-Pstate.param{11} = {'ori'         'int'        0       0                'deg'};
+Pstate.param{11} = {'ori'         'float'        0       0                'deg'};
 Pstate.param{12} = {'phase'         'float'        0       0                'deg'};
 Pstate.param{13} = {'s_freq'      'float'      1      -1                 'cyc/deg'};
 Pstate.param{14} = {'s_profile'   'string'   'sin'       0                ''};
@@ -33,7 +33,7 @@ Pstate.param{20} = {'y_size2'      'float'      3       1                'deg'};
 Pstate.param{21} = {'mask_type2'   'string'   'none'       0                ''};
 Pstate.param{22} = {'mask_radius2' 'float'      6       1                'deg'};
 Pstate.param{23} = {'contrast2'    'float'     10       0                '%'};
-Pstate.param{24} = {'ori2'         'int'        90       0                'deg'};
+Pstate.param{24} = {'ori2'         'float'        90       0                'deg'};
 Pstate.param{25} = {'phase2'         'float'        0       0                'deg'};
 Pstate.param{26} = {'s_freq2'      'float'      1      -1                 'cyc/deg'};
 Pstate.param{27} = {'s_profile2'   'string'   'sin'       0                ''};

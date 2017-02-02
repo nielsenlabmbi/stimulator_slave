@@ -21,14 +21,17 @@ Pstate.param{9} = {'dy_perpbis'         'float'        0       0                
 Pstate.param{10} = {'rotated'   'int'   0       0                ''};
 
 Pstate.param{11} = {'ori'         'int'        0       0                'deg'};
-Pstate.param{12} = {'t_period'    'int'       100       0                'frames'};
-Pstate.param{13} = {'noise_lifetime'    'int'       20       0                'frames'};
-Pstate.param{14} = {'noise_width'    'float'       10       0                'deg'};
+Pstate.param{12} = {'speed'    'float'       10       0                'deg/s'};
+Pstate.param{13} = {'phase'    'float'       0       0                'deg'};
+Pstate.param{14} = {'noise_lifetime'    'int'       20       0                'frames'};
+Pstate.param{15} = {'noise_width'    'float'       10       0                'deg'};
 
-Pstate.param{15} = {'Leye_bit'    'int'   1       0                ''};
-Pstate.param{16} = {'Reye_bit'    'int'   1       0                ''};
-Pstate.param{17} = {'use_ch3'    'int'   0       0                'binary'};
-Pstate.param{18} = {'background'    'float'   0.5       0                ''};
+Pstate.param{16} = {'x_zoom'    'int'       1       0                ''};
+Pstate.param{17} = {'y_zoom'    'int'       1       0                ''};
+
+Pstate.param{18} = {'Leye_bit'    'int'   1       0                ''};
+Pstate.param{19} = {'Reye_bit'    'int'   1       0                ''};
+Pstate.param{20} = {'use_ch3'    'int'   0       0                'binary'};
 
 
 
