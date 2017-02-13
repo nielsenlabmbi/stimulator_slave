@@ -129,8 +129,8 @@ noiseIm = xor(rem(sdomAz,2),rem(sdomAlt,2));  %xor produces the checker pattern
 %now loop through frames
 for i = 1:length(tdom)
         
-    %grating = cos(sdom - tdom(i)-P.phase*pi/180);
-    grating = cos(sdom);
+    grating = cos(sdom - tdom(i)-P.phase*pi/180);
+    %grating = cos(sdom);
     thresh = cos(s_duty*pi);
     grating=sign(grating-thresh);
     
