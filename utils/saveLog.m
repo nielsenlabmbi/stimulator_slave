@@ -4,10 +4,8 @@ function saveLog(seq,seed,trialno)
 %we're keeping everything in one file, so it needs to
 %save every trial as a structure with a unique name
 
-global Mstate
+global Mstate setupDefault
 
-%get save directories
-setupDefault=getSetup;
 
 rootDirs=strtrim(strsplit(setupDefault.logRoot));
 

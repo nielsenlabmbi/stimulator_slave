@@ -6,15 +6,12 @@ function configCom()
 %returns:
 %  sets global variable comState
 
-global comState
-
-%get remote host IP address
-s=getSetup;
+global comState setupDefault
 
 
 % close all open serial port objects on the same port and remove
 % the relevant object from the workspace
-port=instrfindall('RemoteHost',s.masterIP); 
+port=instrfindall('RemoteHost',setupDefault.masterIP); 
 if length(port) > 0; 
     fclose(port); 
     delete(port);
@@ -22,7 +19,7 @@ if length(port) > 0;
 end
 
 % make udp object named 'stim'
-comState.serialPortHandle = udp(s.masterIP,'RemotePort',9000,'LocalPort',8000);
+comState.serialPortHandle = udp(setupDefault.masterIP,'RemotePort',9000,'LocalPort',8000);
 
 %For unknown reasons, the output buffer needs to be set to the amount that the input
 %buffer needs to be.  For example, we never exptect to send a packet higher

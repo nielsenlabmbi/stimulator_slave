@@ -5,7 +5,7 @@ function configureMstate
 %accepts:
 %  setup: string identifier of setup
 
-global Mstate
+global Mstate setupDefault
 
 Mstate.anim = 'xxxx0';
 Mstate.unit = '000';
@@ -15,8 +15,7 @@ Mstate.hemi = 'left';
 Mstate.screenDist = 60;
 
 %remote host IP address
-s=getSetup;
-Mstate.monitor=s.defaultMonitor;
+Mstate.monitor=setupDefault.defaultMonitor;
 
     
 %'updateMonitor.m' happens in 'screenconfig.m' at startup

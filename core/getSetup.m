@@ -1,11 +1,17 @@
-function setupDefault=getSetup
+function getSetup
 %get the default parameters for this setup
 %format of setupDefault.txt for slave:
 %setupID: XXX
 %masterIP: XXX
 %defaultMonitor: XXX
+%logRoot: root folder for log file
+%useDaq: use measurement computing daq device?
 %
 %do not change the names of these fields!!!
+
+global setupDefault
+
+setupDefault=struct;
 
 
 %location of setup file
@@ -19,7 +25,7 @@ fId=fopen(fullfile(filePath,fileName));
 c=textscan(fId,'%s %s');
 
 %transform into structure
-setupDefault=struct;
+
 for i=1:length(c{1})
     %get parameter name minus the trailing colon
     pn=c{1}{i}(1:end-1);

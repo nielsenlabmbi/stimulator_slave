@@ -1,6 +1,7 @@
 function Stimulator2
 
 %prepares the setup
+getSetup;
 
 
 Priority(5);  %Make sure priority is set to "real-time"  

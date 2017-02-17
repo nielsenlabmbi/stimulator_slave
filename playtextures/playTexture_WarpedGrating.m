@@ -45,12 +45,14 @@ Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 
 %Wake up the daq to improve timing later
-DaqDOut(daq, 0, 0);
+if ~isempty(daq)
+    DaqDOut(daq, 0, 0);
+end
 
 %%%Play predelay %%%%
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
+if loopTrial ~= -1 && ~isempty(daq)
     digWord = 1;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
 end
@@ -88,18 +90,20 @@ for i = 1:Nstimframes
     Screen(screenPTR, 'Flip');
     
     %generate event
-    if P.use_ch3==1   %indicate cycles using the 3rd channel
-        if mod(i-1,P.t_period)==0 && loopTrial ~= -1
-            digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
-            DaqDOut(daq, 0, digWord);
-        elseif mod(i-1,P.t_period)==10 && loopTrial ~=-1
-            digWord=3;
-            DaqDOut(daq, 0, digWord);
-        end
-    else %just signal stimulus on/off
-        if i==1 && loopTrial ~= -1
-            digWord=3;
-            DaqDOut(daq, 0, digWord);
+    if ~isempty(daq)
+        if P.use_ch3==1   %indicate cycles using the 3rd channel
+            if mod(i-1,P.t_period)==0 && loopTrial ~= -1
+                digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
+                DaqDOut(daq, 0, digWord);
+            elseif mod(i-1,P.t_period)==10 && loopTrial ~=-1
+                digWord=3;
+                DaqDOut(daq, 0, digWord);
+            end
+        else %just signal stimulus on/off
+            if i==1 && loopTrial ~= -1
+                digWord=3;
+                DaqDOut(daq, 0, digWord);
+            end
         end
     end
     
@@ -111,7 +115,7 @@ Screen(screenPTR, 'FillRect', P.background) %hack
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if i==1 && loopTrial ~= -1
+    if i==1 && loopTrial ~= -1 && ~isempty(daq)
         digWord = 1;  %toggle 2nd bit to signal stim on
         DaqDOut(daq, 0, digWord);
     end
@@ -120,7 +124,7 @@ Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 
 
-if loopTrial ~= -1
+if loopTrial ~= -1 && ~isempty(daq)
     DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
 end
 
