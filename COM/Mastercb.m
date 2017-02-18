@@ -130,9 +130,8 @@ try
     end
     
     if ~strcmp(msgID,'G')
-        disp('send a');
         fwrite(comState.serialPortHandle,'a')  %dummy so that Master knows it finished
-        disp('send b');
+        disp('send a');
     end
     
     

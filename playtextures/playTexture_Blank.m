@@ -34,37 +34,26 @@ end
     
 Screen(screenPTR, 'FillRect', P.background)
 
-DaqDOut(daq, 0, 0); 
-
+if ~isempty(daq)
+    DaqDOut(daq, 0, 0); 
+end
 
 %%%Play predelay %%%%
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
+if loopTrial ~= -1 && ~isempty(daq)
     digWord = 1;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
 end
 for i = 2:Npreframes
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    
-    if isfield(P,'avg_bit') 
-        if P.avg_bit==1 && loopTrial ~=-1
-            if i==Npreframes/4
-                digWord = 3; %digital 11 - 1st and 2nd high
-                DaqDOut(daq, 0, digWord);
-            elseif i==3*Npreframes/4
-                digWord=1; %go back to only first high
-                DaqDOut(daq, 0, digWord);
-            end
-        end
-    end
 end
 
 %%%%%Play "stimulus"
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
+if loopTrial ~= -1 && ~isempty(daq)
     digWord = 3;  %toggle 2nd bit to signal stim on
     DaqDOut(daq, 0, digWord);
 end
@@ -78,14 +67,14 @@ end
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if i==1 && loopTrial ~= -1
+    if i==1 && loopTrial ~= -1 && ~isempty(daq)
         digWord = 1;  %toggle 2nd bit to signal stim off
         DaqDOut(daq, 0, digWord);
     end
 end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
+if loopTrial ~= -1 && ~isempty(daq)
     DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
 end
 

@@ -42,4 +42,9 @@ for i=1:length(c{1})
     end
 end
 
+%parameter conversion where necessary
+if isfield(setupDefault,'useMCDaq')
+    setupDefault.useMCDaq=str2num(setupDefault.useMCDaq);
+end
+
 fclose(fId);
