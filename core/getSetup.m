@@ -4,6 +4,7 @@ function getSetup
 %setupID: XXX
 %masterIP: XXX
 %defaultMonitor: XXX
+%monitorList: name of monitor file (do not include path!!!)
 %logRoot: root folder for log file
 %useDaq: use measurement computing daq device?
 %
