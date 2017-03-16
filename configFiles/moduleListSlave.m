@@ -37,7 +37,7 @@ Mlist{20} = {'GL' 'configPstate_Glass' 'makeTexture_Glass' 'playTexture_Glass' }
 Mlist{21} = {'CK' 'configPstate_CheckerBoard' 'makeTexture_CheckerBoard' 'playTexture_CheckerBoard' };
 Mlist{22} = {'WG' 'configPstate_WarpedGrating' 'makeTexture_WarpedGrating' 'playTexture_WarpedGrating' };
 Mlist{23} = {'WC' 'configPstate_WarpedChecker' 'makeTexture_WarpedChecker' 'playTexture_WarpedChecker' };
-
+Mlist{24} = {'PW' 'configPstate_Piecewise' 'makeTexture_Piecewise' 'playTexture_Piecewise' };
 
 %playfile for the manual mapper
 Mlist{end+1} = {'MG' '' '' 'playTexture_PerGratingManual'};
@@ -45,6 +45,7 @@ Mlist{end+1} = {'MM' '' '' 'playTexture_Mapper'};
 Mlist{end+1} = {'MR' '' '' 'playTexture_RDKManual'};
 Mlist{end+1} = {'MI' '' '' 'playTexture_ImgManual'};
 Mlist{end+1} = {'MP' '' '' 'playTexture_PacmanManual'};
+Mlist{end+1} = {'MC' '' '' 'playTexture_PiecewiseManual'};
 
 
 %playfile for blanks
