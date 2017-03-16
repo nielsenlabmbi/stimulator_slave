@@ -80,8 +80,8 @@ for i = 1:Nstimframes
     end
     
     %plot grating
-    Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-    Screen('DrawTexture', screenPTR, Gtxtr(count), stimSrc, stimDst,[],[],0.5);
+    %Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
+    Screen('DrawTexture', screenPTR, Gtxtr(count), stimSrc, stimDst);
     count=count+1;
     
     %add sync

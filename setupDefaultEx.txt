@@ -1,6 +1,7 @@
 setupID: EP
 masterIP: 172.30.11.140
 defaultMonitor: Viewsonic
+monitorList: monitorListNielsenlab
 logRoot: /home/nielsenlab/log_files/
 logRoot: /media/nielsenlab/EphysNew/log_files/
 useMCDaq: 1

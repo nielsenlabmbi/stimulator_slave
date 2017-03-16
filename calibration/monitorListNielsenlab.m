@@ -1,4 +1,4 @@
-function monitorPar = monitorList(monitorID)
+function monitorPar = monitorListNielsenlab(monitorID)
 
 %the long name is used on the master, the short ID on the slave
 

@@ -1,11 +1,11 @@
 function updateMonitor
 
 
-global Mstate screenPTR
+global Mstate screenPTR setupDefault
 
 
 %set basic monitor parameters for deg to pixel conversion
-monitorPar=monitorList(Mstate.monitor);
+monitorPar=feval(setupDefault.monitorList,Mstate.monitor);
 
 
 Mstate.screenXcm=monitorPar.screenXcm;
