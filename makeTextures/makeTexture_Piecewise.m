@@ -11,7 +11,6 @@ function makeTexture_Piecewise(isManual)
     if isManual
         polygon = getShapeById(P.stimId);
         polygon = movePts(polygon,P.x_pos,P.y_pos,deg2pix(P.size,'none'),P.ori,[0 0]);
-        
     else
         polygon = getShape_p26(P.stimId,P.x_pos,P.y_pos,deg2pix(P.size,'none'),P.ori);
     end
@@ -130,6 +129,7 @@ function [pts,ori] = getShapeById(id)
     end
 
     pts = cell2mat(p')/8;
+    pts(:,2) = -pts(:,2);
 end
 
 function pts = getCircle(center,rad,thStart,thEnd,nPts)
