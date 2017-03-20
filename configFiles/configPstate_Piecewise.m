@@ -26,7 +26,7 @@ Pstate.param{end+1} = {'mask_type'   'string'  'none'  0       ''};
 Pstate.param{end+1} = {'t_period'    'int'     40      0       'frames'};
 Pstate.param{end+1} = {'movement_x'  'int'     0       0       'pixels'};
 Pstate.param{end+1} = {'movement_y'  'int'     0       0       'pixels'};
-Pstate.param{end+1} = {'spin'	     'int'     0       0       ''};
+Pstate.param{end+1} = {'spin'	     'string'  'none'  0       ''};
 
 Pstate.param{end+1} = {'color_r'     'float'   1       0       ''};
 Pstate.param{end+1} = {'color_g'     'float'   1       0       ''};

@@ -10,7 +10,7 @@ global Stxtr %Created in makeSyncTexture
 
 global vSyncState %ventilator sync
 
-global polygon fore_col
+global movement
 
 Pstruct = getParamStruct;
 
@@ -29,8 +29,6 @@ syncDst = [0 0 syncWX-1 syncWY-1]';
 Npreframes = ceil(Pstruct.predelay*screenRes.hz);
 Nstimframes = ceil(Pstruct.stim_time*screenRes.hz);
 Npostframes = ceil(Pstruct.postdelay*screenRes.hz);
-
-
 
 %reset screen
 Screen(screenPTR, 'FillRect', Pstruct.background)
@@ -55,7 +53,7 @@ for i = 2:Npreframes
 end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-Screen('CopyWindow',screenPTROff(1),screenPTR); % works really well
+Screen('CopyWindow',screenPTROff,screenPTR,[0 0 movement.offScreenSize movement.offScreenSize],movement.rect(1,:)); % works really well
 % Screen('FillPoly',screenPTR,fore_col, polygon,1); % does not work nearly as well
 Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
@@ -64,14 +62,13 @@ if loopTrial ~= -1
     DaqDOut(daq, 0, digWord);
 end
 for i=2:Nstimframes
-%     Screen('FillPoly',screenPTR,fore_col, polygon,0);
-    if length(screenPTROff) > 1
-        frameNumber = mod(i,Pstruct.t_period);
-        frameNumber(frameNumber == 0) = Pstruct.t_period;
-        Screen('CopyWindow',screenPTROff(frameNumber),screenPTR);
-    else
-        Screen('CopyWindow',screenPTROff,screenPTR);
-    end
+    frameNumber = mod(i,Pstruct.t_period);
+    frameNumber(frameNumber == 0) = Pstruct.t_period;
+
+    Screen('CopyWindow',screenPTROff,screenPTR,...
+        [0 0 movement.offScreenSize movement.offScreenSize],...
+        movement.rect(frameNumber,:));
+    
     Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
 end

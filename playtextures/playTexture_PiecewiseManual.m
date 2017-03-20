@@ -7,23 +7,27 @@ global  screenPTR screenPTROff
 %manual mappers
 configPstate_Piecewise;
 
+screenPTROff = Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
+Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 %define the list of parameters that can be accessed with the mouse and
 %their settings
-symbList = {'stimId','ori','size','contrast','color','visible'};
+symbList = {'stimId','ori','size','contrast','background','color','visible'};
 valdom{1} = 1:10;
 valdom{2} = 0:45:359;
 valdom{3} = 0.5:0.5:4;
 valdom{4} = [5 15 50 100];
-valdom{5} = 0:7;
-valdom{6} = [0 1];
+valdom{5} = [0 0.25 0.5 0.75 1];
+valdom{6} = 0:7;
+valdom{7} = [0 1];
 
 %set starting value and symbol 
-state.valId = [1 1 3 4 1 2];  %Current index for each value domain
+state.valId = [1 1 3 4 3 2 2];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
 %shorthand indices
-vID=6; % visible
-cID=5; % color
+vID=7; % visible
+cID=6; % color
 
 %update the parameters
 for i = 1:length(valdom)-2
@@ -42,8 +46,8 @@ val = valdom{state.symId}(state.valId(state.symId));
 newtext = [symbol ' ' num2str(val)];
 
 %initialize screen
-Screen(screenPTR, 'FillRect', 0.5)
-Screen(screenPTR,'DrawText','ori 0',40,30,1);
+Screen(screenPTR, 'FillRect', valdom{5}(state.valId(5)))
+Screen(screenPTR,'DrawText','stimId 1',40,30,1);
 Screen('Flip', screenPTR);
 
 

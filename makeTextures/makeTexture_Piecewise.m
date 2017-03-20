@@ -1,5 +1,5 @@
 function makeTexture_Piecewise(isManual)
-    global   screenPTROff screenPTR screenNum
+    global   screenPTROff screenNum movement
     % global polygon fore_col
     % tried using the framebuffer instead of the backbuffer. That makes the
     % shapes look bad. pixels around the edge. backbuffer makes the shape
@@ -12,53 +12,76 @@ function makeTexture_Piecewise(isManual)
 
     fore_col = [P.color_r P.color_g P.color_b P.contrast/100];
     back_col = P.background;
+    
+    offScreenSize = deg2pix(P.size,'ceil')*2;
 
     if isManual
         polygon = getShapeById(P.stimId);
         polygon = movePts(polygon,P.x_pos,P.y_pos,deg2pix(P.size,'none'),P.ori,[0 0]);
-    else
-        polygon = getShape_p26(P.stimId,P.x_pos,P.y_pos,deg2pix(P.size,'none'),P.ori);
-    end
-
-    movement = getMovement(P);
-    
-    if movement.move
         
-        makeMovement(polygon,movement,fore_col,back_col);
-    elseif movement.spin
-        makeSpin(polygon,movement,fore_col);
+        Screen(screenPTROff,'FillRect',back_col);
+        Screen('FillPoly',screenPTROff,fore_col, polygon,0);
     else
-        screenPTROff=Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
+        polygon = getShape_p26(P.stimId,offScreenSize/2,offScreenSize/2,deg2pix(P.size,'none'),P.ori);
+        
+        movement = getMovement(P,offScreenSize);
+        movement.offScreenSize = offScreenSize;
+
+        screenPTROff = Screen('OpenOffscreenWindow',screenNum,back_col,[0 0 offScreenSize offScreenSize],[],[],8);
         Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         Screen(screenPTROff,'FillRect',back_col);
         Screen('FillPoly',screenPTROff,fore_col, polygon,0);
     end
 end
 
-function movement = getMovement(P)
+function movement = getMovement(P,offScreenSize)
     movement.cycleLength = P.t_period;
-    movement.x = P.movement_x;
-    movement.y = P.movement_y;
-    movement.move = movement.x > 0 || movement.y > 0;
-    movement.spin = P.spin;
+    movement.major       = P.movement_x;
+    movement.minor       = P.movement_y;
+    movement.move        = movement.major > 0 || movement.minor > 0;
+    movement.spin        = P.spin;
+    
+    t = linspace(0,2*pi,movement.cycleLength+1); t(end) = [];
+    x = movement.major * cos(t);
+    y = movement.minor * sin(t);
+    
+    movement.center = repmat([P.x_pos P.y_pos],length(x),1) + [x' y'];
+    movement.rect   = [movement.center(:,1)-offScreenSize/2 ...
+                       movement.center(:,2)-offScreenSize/2 ...
+                       movement.center(:,1)+offScreenSize/2 ...
+                       movement.center(:,2)+offScreenSize/2];
+          
+    % movement.rect   = getSpin(movement.spin,movement.rect,movement.center,movement.cycleLength);
 end
 
-function makeMovement(polygon,movement,fore_col,back_col)
-    global screenPTROff screenPTR;
-    t = linspace(0,2*pi,movement.cycleLength+1); t(end) = [];
-    x = movement.x * cos(t);
-    y = movement.y * sin(t);
-    
-    screenPTROff = [];
-    for f=1:movement.cycleLength
-        framePolygon = polygon + repmat([x(f) y(f)],size(polygon,1),1);
-        
-        screenPTROff(f) = Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
-        Screen(screenPTROff(f),'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Screen(screenPTROff(f),'FillRect',back_col);
-        Screen('FillPoly',screenPTROff(f),fore_col,framePolygon,0);
+function rectSpun = getSpin(dir,rectAll,centerAll,cl)
+    rectSpun = nan(size(rectAll));
+    if strcmp(dir,'counter')
+        th = linspace(0,2*pi,cl+1); th(end) = [];
+    elseif strcmp(dir,'clockwise')
+        th = linspace(2*pi,0,cl+1); th(end) = [];
+    else
+        th = linspace(0,0,cl+1); th(end) = [];
     end
-    
+        
+    for ii=1:cl
+        spin(1,1) =  cos(th(cl));
+        spin(1,2) = -sin(th(cl));
+        spin(2,1) =  sin(th(cl));
+        spin(1,2) =  cos(th(cl));
+        
+        rect = rectAll(ii,:);
+        center = repmat(centerAll(ii,:),4,1);
+        
+        mat = [rect(1) rect(2); rect(1) rect(4); rect(3) rect(4); rect(3) rect(2)];
+        mat = center + (mat-center)*spin;
+        
+        rectSpun(ii,1) = mat(1,1);
+        rectSpun(ii,2) = mat(1,2);
+        rectSpun(ii,3) = mat(1,1);
+        rectSpun(ii,4) = mat(1,1);
+        
+    end
 end
 
 %% ==================== GENERATE SHAPE ====================================
