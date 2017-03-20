@@ -10,6 +10,8 @@ global Stxtr %Created in makeSyncTexture
 
 global vSyncState %ventilator sync
 
+global polygon fore_col
+
 Pstruct = getParamStruct;
 
 %get stimulus size
@@ -53,7 +55,8 @@ for i = 2:Npreframes
 end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-Screen('CopyWindow',screenPTROff,screenPTR);
+Screen('CopyWindow',screenPTROff(1),screenPTR); % works really well
+% Screen('FillPoly',screenPTR,fore_col, polygon,1); % does not work nearly as well
 Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 if loopTrial ~= -1
@@ -61,7 +64,14 @@ if loopTrial ~= -1
     DaqDOut(daq, 0, digWord);
 end
 for i=2:Nstimframes
-    Screen('CopyWindow',screenPTROff,screenPTR);
+%     Screen('FillPoly',screenPTR,fore_col, polygon,0);
+    if length(screenPTROff) > 1
+        frameNumber = mod(i,Pstruct.t_period);
+        frameNumber(frameNumber == 0) = Pstruct.t_period;
+        Screen('CopyWindow',screenPTROff(frameNumber),screenPTR);
+    else
+        Screen('CopyWindow',screenPTROff,screenPTR);
+    end
     Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
 end

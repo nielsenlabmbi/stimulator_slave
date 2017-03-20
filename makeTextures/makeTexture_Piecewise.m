@@ -1,12 +1,17 @@
 function makeTexture_Piecewise(isManual)
-    global   screenPTROff
-
+    global   screenPTROff screenPTR screenNum
+    % global polygon fore_col
+    % tried using the framebuffer instead of the backbuffer. That makes the
+    % shapes look bad. pixels around the edge. backbuffer makes the shape
+    % look smooth.
+    
     if ~exist('isManual','var'); isManual = false; end
     
     %get parameters set in GUI
     P = getParamStruct;
 
     fore_col = [P.color_r P.color_g P.color_b P.contrast/100];
+    back_col = P.background;
 
     if isManual
         polygon = getShapeById(P.stimId);
@@ -14,10 +19,49 @@ function makeTexture_Piecewise(isManual)
     else
         polygon = getShape_p26(P.stimId,P.x_pos,P.y_pos,deg2pix(P.size,'none'),P.ori);
     end
+
+    movement = getMovement(P);
     
-    Screen(screenPTROff, 'FillRect', P.background);
-    Screen('FillPoly',screenPTROff,fore_col, polygon,0);
+    if movement.move
+        
+        makeMovement(polygon,movement,fore_col,back_col);
+    elseif movement.spin
+        makeSpin(polygon,movement,fore_col);
+    else
+        screenPTROff=Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
+        Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        Screen(screenPTROff,'FillRect',back_col);
+        Screen('FillPoly',screenPTROff,fore_col, polygon,0);
+    end
 end
+
+function movement = getMovement(P)
+    movement.cycleLength = P.t_period;
+    movement.x = P.movement_x;
+    movement.y = P.movement_y;
+    movement.move = movement.x > 0 || movement.y > 0;
+    movement.spin = P.spin;
+end
+
+function makeMovement(polygon,movement,fore_col,back_col)
+    global screenPTROff screenPTR;
+    t = linspace(0,2*pi,movement.cycleLength+1); t(end) = [];
+    x = movement.x * cos(t);
+    y = movement.y * sin(t);
+    
+    screenPTROff = [];
+    for f=1:movement.cycleLength
+        framePolygon = polygon + repmat([x(f) y(f)],size(polygon,1),1);
+        
+        screenPTROff(f) = Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
+        Screen(screenPTROff(f),'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        Screen(screenPTROff(f),'FillRect',back_col);
+        Screen('FillPoly',screenPTROff(f),fore_col,framePolygon,0);
+    end
+    
+end
+
+%% ==================== GENERATE SHAPE ====================================
 
 function pts = getShape_p26(id,x,y,s,o)
     if id <= 16
@@ -131,6 +175,8 @@ function [pts,ori] = getShapeById(id)
     pts = cell2mat(p')/8;
     pts(:,2) = -pts(:,2);
 end
+
+%% ===================== HELPER FUNCTIONS =================================
 
 function pts = getCircle(center,rad,thStart,thEnd,nPts)
     ang = linspace(thStart,thEnd,nPts); 

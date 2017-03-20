@@ -25,8 +25,8 @@ Masktxtr=[];
 Screen(screenPTR,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-screenPTROff=Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
-Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+% screenPTROff=Screen('OpenOffscreenWindow',screenPTR,[],[],[],[],8);
+% Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 updateMonitor
 
