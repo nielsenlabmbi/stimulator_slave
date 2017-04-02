@@ -1,107 +1,140 @@
 function playTexture_PiecewiseRetinotopy
+    %play piecewise closed contour stimuli for V4 GA
 
-%play piecewise closed contour stimuli for V4 GA
+    global Mstate screenPTR screenNum loopTrial
 
-global Mstate screenPTR screenPTROff screenNum loopTrial
+    global  daq  %Created in makeGratingTexture
 
-global  daq  %Created in makeGratingTexture
+    global Stxtr %Created in makeSyncTexture
 
-global Stxtr %Created in makeSyncTexture
+    global vSyncState %ventilator sync
 
-global vSyncState %ventilator sync
+    Pstruct = getParamStruct;
 
-Pstruct = getParamStruct;
+    %get stimulus size
+    screenRes = Screen('Resolution',screenNum);
+    pixpercmX = screenRes.width/Mstate.screenXcm;
+    pixpercmY = screenRes.height/Mstate.screenYcm;
 
-%get stimulus size
-screenRes = Screen('Resolution',screenNum);
-pixpercmX = screenRes.width/Mstate.screenXcm;
-pixpercmY = screenRes.height/Mstate.screenYcm;
+    syncWX = round(pixpercmX*Mstate.syncSize);
+    syncWY = round(pixpercmY*Mstate.syncSize);
 
-syncWX = round(pixpercmX*Mstate.syncSize);
-syncWY = round(pixpercmY*Mstate.syncSize);
+    syncSrc = [0 0 syncWX-1 syncWY-1]';
+    syncDst = [0 0 syncWX-1 syncWY-1]';
 
-syncSrc = [0 0 syncWX-1 syncWY-1]';
-syncDst = [0 0 syncWX-1 syncWY-1]';
+    nStim = length(eval(Pstruct.stimIds));
+    nSize = Pstruct.nsize;
 
-nStim = length(eval(Pstruct.stimIds));
-nSize = Pstruct.nsize;
+    Npreframes = ceil(Pstruct.predelay*screenRes.hz);
+    Nstimframes = ceil(Pstruct.stim_time*screenRes.hz);
+    Npostframes = ceil(Pstruct.postdelay*screenRes.hz);
 
-Npreframes = ceil(Pstruct.predelay*screenRes.hz);
-Nstimframes = ceil(Pstruct.stim_time*screenRes.hz);
-Npostframes = ceil(Pstruct.postdelay*screenRes.hz);
-
-Nsizeframes = ceil(Nstimframes/(nStim*nSize));
-Nshapeframes = Nsizeframes * nSize;
-Nstimframes = Nshapeframes * nStim;
-
-%reset screen
-Screen(screenPTR, 'FillRect', Pstruct.background)
-
-%Wake up the daq:
-DaqDOut(daq, 0, 0); 
-
-%%%Play predelay %%%%
-Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
-Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
-    digWord = 1;  %Make 1st bit high
-    DaqDOut(daq, 0, digWord);
-    %stop ventilator
-    if vSyncState==1
-        setVentilator(0);
-    end
-end
-for i = 2:Npreframes
-    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
-    Screen(screenPTR, 'Flip');
-end
-
-%%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-shapeNum = 1;
-sizeNum = 1;
-Screen('CopyWindow',screenPTROff(shapeNum,sizeNum),screenPTR); % works really well
-% Screen('FillPoly',screenPTR,fore_col, polygon,1); % does not work nearly as well
-Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
-Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
-    digWord = 3;  %toggle 2nd bit to signal stim on
-    DaqDOut(daq, 0, digWord);
-end
-for i=2:Nstimframes
-    Screen('CopyWindow',screenPTROff(shapeNum,sizeNum),screenPTR);
-    Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
-    Screen(screenPTR, 'Flip');
+    Nsizeframes = ceil(Nstimframes/(nStim*nSize));
+    Nshapeframes = Nsizeframes * nSize;
+    Nstimframes = Nshapeframes * nStim;
     
-    if mod(i,Nsizeframes) == 0
-        sizeNum = sizeNum + 1;
-    end
-    if mod(i,Nshapeframes) == 0
-        shapeNum = shapeNum + 1;
-        sizeNum = 1;
-    end
-end
+    %reset screen
+    Screen(screenPTR, 'FillRect', Pstruct.background)
 
+    %Wake up the daq:
+    DaqDOut(daq, 0, 0); 
 
-%%%Play postdelay %%%%
-for i = 1:Npostframes-1
-    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+    %%%Play predelay %%%%
+    Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if i==1 && loopTrial ~= -1
-        digWord = 1;  %toggle 2nd bit to signal stim off
+    if loopTrial ~= -1
+        digWord = 1;  %Make 1st bit high
         DaqDOut(daq, 0, digWord);
-        %start ventilator
+        %stop ventilator
         if vSyncState==1
-            setVentilator(1);
+            setVentilator(0);
         end
     end
-end
-Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
-Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
-    DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
+    for i = 2:Npreframes
+        Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+        Screen(screenPTR, 'Flip');
+    end
+
+    %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
+    drawOffBuffers(1,Nsizeframes,Nshapeframes);
+    Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    if loopTrial ~= -1
+        digWord = 3;  %toggle 2nd bit to signal stim on
+        DaqDOut(daq, 0, digWord);
+    end
+    for i=2:Nstimframes
+        drawOffBuffers(i,Nsizeframes,Nshapeframes);        
+        Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
+        Screen(screenPTR, 'Flip');
+    end
+
+
+    %%%Play postdelay %%%%
+    for i = 1:Npostframes-1
+        Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+        Screen(screenPTR, 'Flip');
+        if i==1 && loopTrial ~= -1
+            digWord = 1;  %toggle 2nd bit to signal stim off
+            DaqDOut(daq, 0, digWord);
+            %start ventilator
+            if vSyncState==1
+                setVentilator(1);
+            end
+        end
+    end
+    Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    if loopTrial ~= -1
+        DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
+    end
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+    Screen(screenPTR, 'Flip');
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
-Screen(screenPTR, 'Flip');
+function drawOffBuffers(frameNumber,totalSizeFrames,totalShapeFrames)
+    global screenPTROff screenPTR positions screenNum
+    screenRes = Screen('Resolution',screenNum);
+    
+    shapeNum = ceil(frameNumber/totalShapeFrames);
+    offScreenSize = positions.maxS;
+    
+    s = linspace(positions.minS,positions.maxS,totalShapeFrames);
+    frameNumber = mod(frameNumber,totalShapeFrames); 
+    frameNumber(frameNumber == 0) = totalShapeFrames;
+    smallS = s(frameNumber);
+    largeS = s(totalShapeFrames - frameNumber + 1);
+    
+    p = 1;
+    while p <= positions.nPos
+        if mod(p,2)
+            s = smallS;
+        else
+            s = largeS;
+        end
+        
+        left   = positions.x(p) - offScreenSize/2;
+        top    = positions.y(p) - offScreenSize/2;
+        right  = positions.x(p) + offScreenSize/2;
+        bottom = positions.y(p) + offScreenSize/2;
+        
+        rect = [left top right bottom];
+        
+        right - left
+        bottom - top
+        offScreenSize
+        
+        p = p + 1;
+        
+        if sum(rect < 0) ~= 0 || left > screenRes.width || right > screenRes.width ...
+            || top > screenRes.height || bottom > screenRes.height
+            disp('Omitting boundary shape.');
+            continue;
+        end
+        
+        Screen('CopyWindow',screenPTROff(shapeNum),screenPTR,[0 0 offScreenSize offScreenSize],rect);
+    end
 
+end

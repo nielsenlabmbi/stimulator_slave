@@ -1,61 +1,55 @@
 function makeTexture_PiecewiseRetinotopy()
-    global screenPTROff screenNum
+    global screenPTROff screenNum positions
     
-    %get parameters set in GUI
     P = getParamStruct;
 
     fore_col = [P.color_r P.color_g P.color_b 1];
     back_col = P.background;
     
-    stim.ids = eval(P.stimIds);
-    stim.nSize = P.nsize;
-    stim.n = length(stim.ids);
+    stimIds = eval(P.stimIds);
     
-    [nReps,x,y,s] = getPositions(P);
+    positions = getPositions(P);
     
-    for ii=1:stim.n
-        for jj=1:P.nsize        
-            screenPTROff(ii,jj) = Screen('OpenOffscreenWindow',screenNum,[],[],[],[],8);
+    for ii=1:length(stimIds)
+        for jj=1:length(positions.s)
+            screenPTROff(ii,jj) = Screen('OpenOffscreenWindow',screenNum,back_col,[0 0 offScreenSize offScreenSize],[],[],8);
             Screen(screenPTROff(ii,jj),'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             Screen(screenPTROff(ii,jj),'FillRect',back_col);
-            for kk=1:nReps(jj)
-                polygon = getShape_p26(stim.ids(ii),x{jj}(kk),y{jj}(kk),s(jj),0);
-                Screen('FillPoly',screenPTROff(ii,jj),fore_col, polygon,0);
-            end
+            offScreenSize = positions.s(jj);
+            polygon = getShape_p26(stimIds(ii),offScreenSize/2,offScreenSize/2,offScreenSize,0);
+            Screen('FillPoly',screenPTROff(ii,jj),fore_col, polygon,0);
         end
     end
+
 end
 
-function [nReps,x,y,s] = getPositions(P)
+function positions = getPositions(P)
     global screenNum
     screenRes = Screen('Resolution',screenNum);
-    for jj=1:P.nsize
-        blockWidth = screenRes.width/(P.n_vStrips*jj);
-        blockHeight = screenRes.height/(P.n_hStrips*jj);
-        xCenters = (blockWidth/2) :blockWidth :(screenRes.width-blockWidth/2);
-        yCenters = (blockHeight/2):blockHeight:(screenRes.height-blockHeight/2);
+    
+    blockWidth = screenRes.width/(P.n_vStrips);
+    blockHeight = screenRes.height/(P.n_hStrips);
+    xCenters = (blockWidth/2)  : blockWidth  : (screenRes.width-blockWidth/2);
+    yCenters = (blockHeight/2) : blockHeight : (screenRes.height-blockHeight/2);
 
-        if P.b
-            y{jj} = repmat(yCenters,jj,1);
-            y{jj} = y{jj}(:);
-            x{jj} = repmat(xCenters(jj*(P.a-1) + 1 : P.a*jj),length(yCenters),1)';
-            x{jj} = x{jj}(:);
-           
-            nReps(jj) = length(y{jj});
-        else
-            x{jj} = repmat(xCenters,jj,1);
-            x{jj} = x{jj}(:);
-            y{jj} = repmat(yCenters(jj*(P.a-1) + 1 : P.a*jj),length(xCenters),1)';
-            y{jj} = y{jj}(:);
-            
-            nReps(jj) = length(x{jj});
-        end
-        s(jj) = min([blockWidth blockHeight]);
+    if P.b
+        y = yCenters;
+        x = repmat(xCenters(P.a),length(yCenters),1)';
+    else
+        x = xCenters;
+        y = repmat(yCenters(P.a),length(xCenters),1)';
     end
     
+    nPos = length(y);
+    s = min([blockWidth blockHeight]) * linspace(0.25,1,P.nsize);
+    
+    positions.x = x;
+    positions.y = y;
+    positions.s = s;
+    positions.nPos = nPos;
 end
 
-%% ==================== GENERATE SHAPE ====================================
+%%% ==================== GENERATE SHAPE ====================================
 
 function pts = getShape_p26(id,x,y,s,o)
     if id <= 16
@@ -153,16 +147,22 @@ function [pts,ori] = getShapeById(id)
             p{2} = getCircle([-7 0],sqrt(65),2*pi-ang,2*pi+ang,50);
             ori = 0:45:179;
         case 9;
-            p{1} = getEllipse([-4 0],3,4,0,0,pi/2,50);
-            p{2} = flipud(getEllipse([-4 0],5,4,0,0,pi/2,50));
-            p{3} = getEllipse([4 0],3,4,0,pi,3*pi/2,50);
-            p{4} = flipud(getEllipse([4 0],5,4,0,pi,3*pi/2,50));
+            tt = atan(24/7);
+            p{1} = getLine([2 -4],[4 -4],10);
+            p{2} = flipud(getCircle([31/6 0],25/6,pi,pi+tt,25));
+            p{3} = getEllipse([-2 0],3,4,0,0,pi/2,25);
+            p{4} = getLine([-2 4],[-4 4],10);
+            p{5} = flipud(getCircle([-31/6 0],25/6,0,tt,25));
+            p{6} = getEllipse([2 0],3,4,0,pi,3*pi/2,25);
             ori = 0:45:179;
         case 10;
-            p{1} = getEllipse([4 0],3,4,0,pi/2,pi,50);
-            p{2} = flipud(getEllipse([-4 0],5,4,0,3*pi/2,2*pi,50));
-            p{3} = getEllipse([-4 0],3,4,0,3*pi/2,2*pi,50);
-            p{4} = flipud(getEllipse([4 0],5,4,0,pi/2,pi,50));
+            tt = atan(24/7);
+            p{1} = getLine([2 4],[4 4],10);
+            p{2} = flipud(getCircle([31/6 0],25/6,pi,pi-tt,25));
+            p{3} = flipud(getEllipse([-2 0],3,4,0,3*pi/2,2*pi,25));
+            p{4} = getLine([-2 -4],[-4 -4],10);
+            p{5} = getCircle([-31/6 0],25/6,2*pi-tt,2*pi,25);
+            p{6} = flipud(getEllipse([2 0],3,4,0,pi/2,pi,25));
             ori = 0:45:179;
     end
 
@@ -170,7 +170,7 @@ function [pts,ori] = getShapeById(id)
     pts(:,2) = -pts(:,2);
 end
 
-%% ===================== HELPER FUNCTIONS =================================
+%%% ===================== HELPER FUNCTIONS =================================
 
 function pts = getCircle(center,rad,thStart,thEnd,nPts)
     ang = linspace(thStart,thEnd,nPts); 
