@@ -42,23 +42,23 @@ function [positions,shapeSizes] = getPositions(P)
         ribbon = whiteSpace;
         for jj=1:nPairs
             if xPix > yPix
-                positions(ii).x(2*jj-1) = ribbon + shapeSizes(sizePairs(ii,1))/2;
+                positions(ii).x(2*jj-1) = ribbon + xPos - xPix/2 + shapeSizes(sizePairs(ii,1))/2;
                 positions(ii).y(2*jj-1) = yPos;
                 positions(ii).s(2*jj-1) = sizePairs(ii,1);
                 ribbon = ribbon + shapeSizes(sizePairs(ii,1));
                 
-                positions(ii).x(2*jj) = ribbon + shapeSizes(sizePairs(ii,2))/2;
+                positions(ii).x(2*jj) = ribbon + xPos - xPix/2 + shapeSizes(sizePairs(ii,2))/2;
                 positions(ii).y(2*jj) = yPos;
                 positions(ii).s(2*jj) = sizePairs(ii,2);
                 ribbon = ribbon + shapeSizes(sizePairs(ii,2));
             else
                 positions(ii).x(2*jj-1) = xPos;
-                positions(ii).y(2*jj-1) = ribbon + shapeSizes(sizePairs(ii,1))/2;
+                positions(ii).y(2*jj-1) = ribbon + yPos - yPix/2 + shapeSizes(sizePairs(ii,1))/2;
                 positions(ii).s(2*jj-1) = sizePairs(ii,1);
                 ribbon = ribbon + shapeSizes(sizePairs(ii,1));
                 
                 positions(ii).x(2*jj) = xPos;
-                positions(ii).y(2*jj) = ribbon + shapeSizes(sizePairs(ii,2))/2;
+                positions(ii).y(2*jj) = ribbon + yPos - yPix/2 + shapeSizes(sizePairs(ii,2))/2;
                 positions(ii).s(2*jj) = sizePairs(ii,2);
                 ribbon = ribbon + shapeSizes(sizePairs(ii,2));
             end
