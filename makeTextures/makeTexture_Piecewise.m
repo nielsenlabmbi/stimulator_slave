@@ -182,16 +182,22 @@ function [pts,ori] = getShapeById(id)
             p{2} = getCircle([-7 0],sqrt(65),2*pi-ang,2*pi+ang,50);
             ori = 0:45:179;
         case 9;
-            p{1} = getEllipse([-4 0],3,4,0,0,pi/2,50);
-            p{2} = flipud(getEllipse([-4 0],5,4,0,0,pi/2,50));
-            p{3} = getEllipse([4 0],3,4,0,pi,3*pi/2,50);
-            p{4} = flipud(getEllipse([4 0],5,4,0,pi,3*pi/2,50));
+            tt = atan(24/7);
+            p{1} = getLine([2 -4],[4 -4],10);
+            p{2} = flipud(getCircle([31/6 0],25/6,pi,pi+tt,25));
+            p{3} = getEllipse([-2 0],3,4,0,0,pi/2,25);
+            p{4} = getLine([-2 4],[-4 4],10);
+            p{5} = flipud(getCircle([-31/6 0],25/6,0,tt,25));
+            p{6} = getEllipse([2 0],3,4,0,pi,3*pi/2,25);
             ori = 0:45:179;
         case 10;
-            p{1} = getEllipse([4 0],3,4,0,pi/2,pi,50);
-            p{2} = flipud(getEllipse([-4 0],5,4,0,3*pi/2,2*pi,50));
-            p{3} = getEllipse([-4 0],3,4,0,3*pi/2,2*pi,50);
-            p{4} = flipud(getEllipse([4 0],5,4,0,pi/2,pi,50));
+            tt = atan(24/7);
+            p{1} = getLine([2 4],[4 4],10);
+            p{2} = flipud(getCircle([31/6 0],25/6,pi,pi-tt,25));
+            p{3} = flipud(getEllipse([-2 0],3,4,0,3*pi/2,2*pi,25));
+            p{4} = getLine([-2 -4],[-4 -4],10);
+            p{5} = getCircle([-31/6 0],25/6,2*pi-tt,2*pi,25);
+            p{6} = flipud(getEllipse([2 0],3,4,0,pi/2,pi,25));
             ori = 0:45:179;
     end
 
