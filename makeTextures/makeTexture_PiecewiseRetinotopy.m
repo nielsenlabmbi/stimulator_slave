@@ -1,21 +1,21 @@
 function makeTexture_PiecewiseRetinotopy()
-    global screenPTROff screenNum positions
-    
+    global screenPTROff screenNum positions shapeSizes
+
     P = getParamStruct;
 
     fore_col = [P.color_r P.color_g P.color_b 1];
     back_col = P.background;
-    
+
     stimIds = eval(P.stimIds);
-    
-    positions = getPositions(P);
-    
+
+    [positions,shapeSizes] = getPositions(P);
+
     for ii=1:length(stimIds)
-        for jj=1:length(positions.s)
+        for jj=1:P.nsize
+            offScreenSize = shapeSizes(jj);
             screenPTROff(ii,jj) = Screen('OpenOffscreenWindow',screenNum,back_col,[0 0 offScreenSize offScreenSize],[],[],8);
             Screen(screenPTROff(ii,jj),'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             Screen(screenPTROff(ii,jj),'FillRect',back_col);
-            offScreenSize = positions.s(jj);
             polygon = getShape_p26(stimIds(ii),offScreenSize/2,offScreenSize/2,offScreenSize,0);
             Screen('FillPoly',screenPTROff(ii,jj),fore_col, polygon,0);
         end
@@ -23,30 +23,47 @@ function makeTexture_PiecewiseRetinotopy()
 
 end
 
-function positions = getPositions(P)
-    global screenNum
-    screenRes = Screen('Resolution',screenNum);
+function [positions,shapeSizes] = getPositions(P)
+    xPix = deg2pix(P.x_size,'round');
+    yPix = deg2pix(P.y_size,'round');
+    xPos = P.x_pos;
+    yPos = P.y_pos;
+    nSize = P.nsize;
     
-    blockWidth = screenRes.width/(P.n_vStrips);
-    blockHeight = screenRes.height/(P.n_hStrips);
-    xCenters = (blockWidth/2)  : blockWidth  : (screenRes.width-blockWidth/2);
-    yCenters = (blockHeight/2) : blockHeight : (screenRes.height-blockHeight/2);
-
-    if P.b
-        y = yCenters;
-        x = repmat(xCenters(P.a),length(yCenters),1)';
-    else
-        x = xCenters;
-        y = repmat(yCenters(P.a),length(xCenters),1)';
+    sizePairs = [1:nSize; nSize:-1:1]';
+    shapeSizes = floor(min(xPix,yPix) * linspace(0.25,1,nSize)/2)*2;
+    
+    positions = struct([]);
+    
+    for ii=1:nSize
+        pairSize = shapeSizes(sizePairs(ii,1))+shapeSizes(sizePairs(ii,2));
+        nPairs = floor(max(xPix,yPix)/pairSize);
+        whiteSpace = floor((max(xPix,yPix)-nPairs*pairSize)/2);
+        ribbon = whiteSpace;
+        for jj=1:nPairs
+            if xPix > yPix
+                positions(ii).x(2*jj-1) = ribbon + shapeSizes(sizePairs(ii,1))/2;
+                positions(ii).y(2*jj-1) = yPos;
+                positions(ii).s(2*jj-1) = sizePairs(ii,1);
+                ribbon = ribbon + shapeSizes(sizePairs(ii,1));
+                
+                positions(ii).x(2*jj) = ribbon + shapeSizes(sizePairs(ii,2))/2;
+                positions(ii).y(2*jj) = yPos;
+                positions(ii).s(2*jj) = sizePairs(ii,2);
+                ribbon = ribbon + shapeSizes(sizePairs(ii,2));
+            else
+                positions(ii).x(2*jj-1) = xPos;
+                positions(ii).y(2*jj-1) = ribbon + shapeSizes(sizePairs(ii,1))/2;
+                positions(ii).s(2*jj-1) = sizePairs(ii,1);
+                ribbon = ribbon + shapeSizes(sizePairs(ii,1));
+                
+                positions(ii).x(2*jj) = xPos;
+                positions(ii).y(2*jj) = ribbon + shapeSizes(sizePairs(ii,2))/2;
+                positions(ii).s(2*jj) = sizePairs(ii,2);
+                ribbon = ribbon + shapeSizes(sizePairs(ii,2));
+            end
+        end
     end
-    
-    nPos = length(y);
-    s = min([blockWidth blockHeight]) * linspace(0.25,1,P.nsize);
-    
-    positions.x = x;
-    positions.y = y;
-    positions.s = s;
-    positions.nPos = nPos;
 end
 
 %%% ==================== GENERATE SHAPE ====================================
@@ -65,9 +82,9 @@ function pts = getShape_p26(id,x,y,s,o)
         o = o + 90*(temp-1);
         id = 6 + floor(id/2) + 1;
         if temp == 2; id = id - 1; end
-            
+
     end
-        
+
     pts = getShapeById(id);
     pts = movePts(pts,x,y,s,o,[0 0]);
 end
@@ -97,7 +114,7 @@ function [pts,ori] = getShapeById(id)
             % p1 = [-4 0]; t2 = 0;
             % p2 = [2*cos(5*pi/6)+2 -2*sin(5*pi/6)-2]; t1 = tan(pi/2+pi/3);
             p{4} = flipud(p{3}); p{4}(:,2) = -p{4}(:,2);
-            
+
             % p{3} = getLine(2*[cos(pi/3) sin(pi/3)]+[2 -2],2*[cos(pi/3)-sin(pi/3) cos(pi/3)+sin(pi/3)]+[2 -2],20);
             % p{4} = getLine(2*[cos(pi/3)-sin(pi/3) cos(pi/3)+sin(pi/3)]+[2 -2],[0 4],20);
             % p{5} = getLine([0 4],2*[cos(pi/6)-sin(pi/6) cos(pi/3)+sin(pi/3)]+[-2 -2],20);
@@ -173,16 +190,16 @@ end
 %%% ===================== HELPER FUNCTIONS =================================
 
 function pts = getCircle(center,rad,thStart,thEnd,nPts)
-    ang = linspace(thStart,thEnd,nPts); 
+    ang = linspace(thStart,thEnd,nPts);
     x = center(1) + rad * cos(ang);
     y = center(2) + rad * sin(ang);
-    
+
     pts = [x' y'];
 end
 
 function pts = getLine(startPt, endPt, nPts)
     m = (endPt(2) - startPt(2)) / (endPt(1) - startPt(1));
-    
+
     if isinf(m)
         y = linspace(startPt(2),endPt(2),nPts);
         pts = [startPt(1)*ones(nPts,1) y'];
@@ -202,13 +219,13 @@ function pts = getCubicFit(x1,y1,t1,x2,y2,t2,nPts)
            x1^3   x1^2 x1 1;...
            x2^3   x2^2 x2 1;];
     B = [t1;t2;y1;y2];
-    
+
     beta = A\B;
-    
+
     x = linspace(x1,x2,nPts);
-    
+
     y = beta(1)*x.^3 + beta(2)*x.^2 + beta(3)*x + beta(4);
-    
+
     pts = [x' y'];
 end
 
@@ -216,9 +233,9 @@ function pts = getEllipse(center,major,minor,ang,thStart,thEnd,nPts)
     co = cos(ang);
     si = sin(ang);
     the = linspace(thStart,thEnd,nPts);
-  
+
     x = major*cos(the)*co - si*minor*sin(the) + center(1);
     y = major*cos(the)*si + co*minor*sin(the) + center(2);
-  
+
     pts = [x' y'];
 end

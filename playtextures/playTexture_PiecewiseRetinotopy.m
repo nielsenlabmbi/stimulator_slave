@@ -37,7 +37,7 @@ function playTexture_PiecewiseRetinotopy
     Screen(screenPTR, 'FillRect', Pstruct.background)
 
     %Wake up the daq:
-    DaqDOut(daq, 0, 0); 
+    DaqDOut(daq, 0, 0);
 
     %%%Play predelay %%%%
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
@@ -64,7 +64,7 @@ function playTexture_PiecewiseRetinotopy
         DaqDOut(daq, 0, digWord);
     end
     for i=2:Nstimframes
-        drawOffBuffers(i,Nsizeframes,Nshapeframes);        
+        drawOffBuffers(i,Nsizeframes,Nshapeframes);
         Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
         Screen(screenPTR, 'Flip');
     end
@@ -90,51 +90,32 @@ function playTexture_PiecewiseRetinotopy
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
 end
 
 function drawOffBuffers(frameNumber,totalSizeFrames,totalShapeFrames)
-    global screenPTROff screenPTR positions screenNum
-    screenRes = Screen('Resolution',screenNum);
-    
+    global screenPTROff screenPTR positions shapeSizes
+
     shapeNum = ceil(frameNumber/totalShapeFrames);
-    offScreenSize = positions.maxS;
-    
-    s = linspace(positions.minS,positions.maxS,totalShapeFrames);
-    frameNumber = mod(frameNumber,totalShapeFrames); 
+    frameNumber = mod(frameNumber,totalShapeFrames);
     frameNumber(frameNumber == 0) = totalShapeFrames;
-    smallS = s(frameNumber);
-    largeS = s(totalShapeFrames - frameNumber + 1);
+    sizeNum = ceil(frameNumber/totalSizeFrames);
+    
+    shapesToDraw = positions(sizeNum);
     
     p = 1;
-    while p <= positions.nPos
-        if mod(p,2)
-            s = smallS;
-        else
-            s = largeS;
-        end
-        
-        left   = positions.x(p) - offScreenSize/2;
-        top    = positions.y(p) - offScreenSize/2;
-        right  = positions.x(p) + offScreenSize/2;
-        bottom = positions.y(p) + offScreenSize/2;
-        
+    while p <= length(shapesToDraw.x)
+        offScreenSize = shapeSizes(shapesToDraw.s(p));
+        left   = shapesToDraw.x(p) - offScreenSize/2;
+        top    = shapesToDraw.y(p) - offScreenSize/2;
+        right  = shapesToDraw.x(p) + offScreenSize/2;
+        bottom = shapesToDraw.y(p) + offScreenSize/2;
+
         rect = [left top right bottom];
         
-        right - left
-        bottom - top
-        offScreenSize
-        
+        Screen('CopyWindow',screenPTROff(shapeNum,shapesToDraw.s(p)),screenPTR,[0 0 offScreenSize offScreenSize],rect);
         p = p + 1;
-        
-        if sum(rect < 0) ~= 0 || left > screenRes.width || right > screenRes.width ...
-            || top > screenRes.height || bottom > screenRes.height
-            disp('Omitting boundary shape.');
-            continue;
-        end
-        
-        Screen('CopyWindow',screenPTROff(shapeNum),screenPTR,[0 0 offScreenSize offScreenSize],rect);
     end
 
 end
