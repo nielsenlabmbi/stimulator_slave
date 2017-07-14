@@ -15,7 +15,7 @@ Screen(screenPTROff,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 symbList = {'stimId','ori','size','contrast','background','color','visible'};
 valdom{1} = 1:10;
 valdom{2} = 0:45:359;
-valdom{3} = 0.5:0.5:4;
+valdom{3} = 0.5:0.5:10;
 valdom{4} = [5 15 50 100];
 valdom{5} = [0 0.25 0.5 0.75 1];
 valdom{6} = 0:7;
@@ -147,7 +147,9 @@ while ~keyIsDown
     TextrIdx = TextrIdx+1;
     
     %only draw if visible
-    if valdom{vID}(state.valId(vID))==1
+    if valdom{vID}(state.valId(vID))==0
+        Screen(screenPTR, 'FillRect', valdom{5}(state.valId(5)))
+    else
         Screen('CopyWindow',screenPTROff,screenPTR);
     end
     

@@ -1,6 +1,6 @@
 function makeTexture_PiecewiseRetinotopy()
     global screenPTROff screenNum positions shapeSizes
-
+    screenPTROff = [];
     P = getParamStruct;
 
     fore_col = [P.color_r P.color_g P.color_b 1];
@@ -40,6 +40,7 @@ function [positions,shapeSizes] = getPositions(P)
         nPairs = floor(max(xPix,yPix)/pairSize);
         whiteSpace = floor((max(xPix,yPix)-nPairs*pairSize)/2);
         ribbon = whiteSpace;
+ 
         for jj=1:nPairs
             if xPix > yPix
                 positions(ii).x(2*jj-1) = ribbon + xPos - xPix/2 + shapeSizes(sizePairs(ii,1))/2;

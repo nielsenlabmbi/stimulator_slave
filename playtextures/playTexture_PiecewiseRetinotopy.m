@@ -95,8 +95,10 @@ function playTexture_PiecewiseRetinotopy
 end
 
 function drawOffBuffers(frameNumber,totalSizeFrames,totalShapeFrames)
-    global screenPTROff screenPTR positions shapeSizes
+    global screenPTROff screenPTR positions shapeSizes screenNum
 
+    screenRes = Screen('Resolution',screenNum);
+    
     shapeNum = ceil(frameNumber/totalShapeFrames);
     frameNumber = mod(frameNumber,totalShapeFrames);
     frameNumber(frameNumber == 0) = totalShapeFrames;
@@ -107,6 +109,8 @@ function drawOffBuffers(frameNumber,totalSizeFrames,totalShapeFrames)
     p = 1;
     while p <= length(shapesToDraw.x)
         offScreenSize = shapeSizes(shapesToDraw.s(p));
+        
+
         left   = shapesToDraw.x(p) - offScreenSize/2;
         top    = shapesToDraw.y(p) - offScreenSize/2;
         right  = shapesToDraw.x(p) + offScreenSize/2;
