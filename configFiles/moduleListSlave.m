@@ -41,6 +41,7 @@ Mlist{24} = {'WC' 'configPstate_WarpedChecker' 'makeTexture_WarpedChecker' 'play
 Mlist{25} = {'PW' 'configPstate_Piecewise' 'makeTexture_Piecewise' 'playTexture_Piecewise' };
 Mlist{26} = {'PR' 'configPstate_PiecewiseRetinotopy' 'makeTexture_PiecewiseRetinotopy' 'playTexture_PiecewiseRetinotopy' };
 Mlist{27} = {'IG' 'configPstate_ImgGrating' 'makeTexture_ImgGrating' 'playTexture_ImgGrating' };
+Mlist{28} = {'RI' 'configPstate_RCImg' 'makeTexture_RCImg' 'playTexture_RCImg' };
 
 
 %playfile for the manual mapper
