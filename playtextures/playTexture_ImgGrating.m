@@ -23,14 +23,13 @@ syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
 %size change necessary to deal with rotation
-stimsize=2*sqrt((P.x_size/2).^2+(P.y_size/2).^2);
-stimsizeN=deg2pix(stimsize,'round');
+stimsizeN=IDim(1)*IDim(2); %IDim(1): width of 1 cycle in pixels, IDim(2) nr cycles
 stimDst=[P.x_pos-floor(stimsizeN/2)+1 P.y_pos-floor(stimsizeN/2)+1 ...
     P.x_pos+ceil(stimsizeN/2) P.y_pos+ceil(stimsizeN/2)]';
 
 
-%speed (IDim has width of 1 cycle)
-shiftperframe=IDim/P.t_period;
+%speed (IDim(1) has width of 1 cycle)
+shiftperframe=IDim(1)/P.t_period;
 
 Npreframes = ceil(P.predelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
@@ -57,7 +56,7 @@ end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
 for i=1:Nstimframes
-    xoffset = mod((i-1)*shiftperframe,IDim);
+    xoffset = mod((i-1)*shiftperframe,IDim(1));
     stimSrc=[xoffset 0 xoffset + stimsizeN-1 stimsizeN-1];
 
     

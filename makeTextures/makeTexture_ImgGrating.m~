@@ -25,24 +25,15 @@ load([P.stimfile '.mat']);
 %get bar profile and bar width
 didx=find(d==P.distance);
 if isempty(didx)
-    didx=1; %60cm
+    didx==1;
 end
 
 lidx=find(l==P.lightdir);
 if isempty(lidx)
-    lidx=3; %dir 0
-end
+    lidx==
 
 midx=find(m==P.material);
-if isempty(midx)
-    midx=1; %material 1
-end
-
 sidx=find(s==P.barWidth);
-if isempty(sidx)
-    sidx=5; %0.5
-end
-
 barSingle=st{sidx,midx,didx,lidx};
 barSingle=double(barSingle)./255;
 
