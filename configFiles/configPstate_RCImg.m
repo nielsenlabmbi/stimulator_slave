@@ -17,8 +17,10 @@ Pstate.param{6} = {'stimfile'      'string'     '~/manualImg'       1           
 Pstate.param{7} = {'h_per'      'int'   60       0                'frames'};
 Pstate.param{8} = {'nReps'    'int'   2       0                'rep per img'};
 Pstate.param{9} = {'nBlanks'    'int'   7       0                'blanks total'};
+Pstate.param{10} = {'rseed'    'int'   1       0                ''};
 
-Pstate.param{10} = {'background'      'float'   0.3       0                ''};
+
+Pstate.param{11} = {'background'      'float'   0.3       0                ''};
 
 
 
