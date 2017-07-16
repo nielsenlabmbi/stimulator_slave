@@ -1,11 +1,10 @@
-function playTexture_RCImg
+function playTexture_ImgTexture
 
-%RC with images
-
+%play drifting texture made of individual images
 
 global Mstate screenPTR screenNum loopTrial IDim
 
-global Gtxtr daq  Gseq %Created in makeGratingTexture
+global Gtxtr daq Masktxtr  %Created in makeGratingTexture
 
 global Stxtr %Created in makeSyncTexture
 
@@ -22,19 +21,17 @@ syncWY = round(pixpercmY*Mstate.syncSize);
 syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
-xN=deg2pix(P.x_size,'round');
-yN = round((xN*IDim(1))/IDim(2));
-stimSrc = [0 0 xN-1 yN-1];
+%texture has different size to deal with rotation
+stimDst=[P.x_pos-floor(IDim(2)/2)+1 P.y_pos-floor(IDim(1)/2)+1 ...
+    P.x_pos+ceil(IDim(2)/2) P.y_pos+ceil(IDim(1)/2)]';
 
-stimDst=CenterRectOnPoint(stimSrc,P.x_pos,P.y_pos);
 
+%speed (IDim(3) has width of 1 x cycle)
+shiftperframe=IDim(3)/P.t_period;
 
 Npreframes = ceil(P.predelay*screenRes.hz);
+Nstimframes = ceil(P.stim_time*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
-
-Nimg=IDim(3)*P.nReps+P.nBlanks;
-
-
 
 
 Screen(screenPTR, 'FillRect', P.background)
@@ -54,34 +51,29 @@ for i = 2:Npreframes
     Screen(screenPTR, 'Flip');
 end
 
+
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-for i=1:Nimg
-    blankflag=Gseq.blankflag(i);
-    imgid=G
-    for j = 1:P.h_per
-        %draw image
-        if ==0
-            Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst);
-        
-        %add sync
-        Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
-        
-        %flip
-        Screen(screenPTR, 'Flip');
+for i=1:Nstimframes
+    xoffset = mod((i-1)*shiftperframe,IDim(3));
+    stimSrc=[xoffset 0 xoffset + IDim(2)-1 IDim(1)-1];
 
-        %generate event 
-        if j==1 && loopTrial ~= -1
-            digWord = 7;  %toggle 2nd bit high to signal stim on
+    
+    Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst,P.ori);
+    %add mask
+    Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Screen('DrawTexture', screenPTR, Masktxtr);
+    Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    
+    
+    if ~isempty(daq)
+        if i==1 && loopTrial ~= -1
+            digWord=3;
             DaqDOut(daq, 0, digWord);
         end
-        if j==floor(P.h_per/2) && loopTrial ~= -1
-            digWord = 3;  %reset 2nd bit to low
-            DaqDOut(daq, 0, digWord);
-        end
-        
     end
+    
 end
-
 
 
 %%%Play postdelay %%%%
