@@ -19,14 +19,14 @@ if length(port) > 0;
 end
 
 % make udp object named 'stim'
-comState.serialPortHandle = udp(setupDefault.masterIP,'RemotePort',9000,'LocalPort',8000);
+comState.serialPortHandle = udp(setupDefault.masterIP,'RemotePort',9000,'LocalPort',8002);
 
 %For unknown reasons, the output buffer needs to be set to the amount that the input
 %buffer needs to be.  For example, we never exptect to send a packet higher
 %than 512 bytes, but the receiving seems to want the output buffer to be
 %high as well.  Funny things happen if I don't do this.  (For UDP)
-set(comState.serialPortHandle, 'InputBufferSize', 1024)
-set(comState.serialPortHandle, 'OutputBufferSize', 1024)  %This is necessary for UDP!!!
+%set(comState.serialPortHandle, 'InputBufferSize', 1024)
+%set(comState.serialPortHandle, 'OutputBufferSize', 1024)  %This is necessary for UDP!!!
 
 set(comState.serialPortHandle, 'Datagramterminatemode', 'off')  %things are screwed w/o this
 
