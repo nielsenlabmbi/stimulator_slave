@@ -22,6 +22,8 @@ syncWY = round(pixpercmY*Mstate.syncSize);
 syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
+stimSrc=[0 0 IDim(2)-1 IDim(1)-1];
+
 xN=deg2pix(P.x_size,'round');
 if P.keepaspectratio
     yN = round((xN*IDim(1))/IDim(2));
@@ -30,12 +32,12 @@ else
 end
 
 if P.usenativesize
-    stimSrc = [0 0 IDim(2)-1 IDim(1)-1];
+    stimDstT = [0 0 IDim(2)-1 IDim(1)-1];
 else
-    stimSrc = [0 0 xN-1 yN-1];
+    stimDstT = [0 0 xN-1 yN-1];
 end
 
-stimDst=CenterRectOnPoint(stimSrc,P.x_pos,P.y_pos);
+stimDst=CenterRectOnPoint(stimDstT,P.x_pos,P.y_pos);
 
 
 Npreframes = ceil(P.predelay*screenRes.hz);
@@ -70,7 +72,7 @@ if loopTrial ~= -1
     DaqDOut(daq, 0, digWord);
 end
 for i=2:Nstimframes
-    Screen('DrawTexture', screenPTR, Gtxtr, [], stimDst);
+    Screen('DrawTexture', screenPTR, Gtxtr, stimSrc,stimDst);
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
 end

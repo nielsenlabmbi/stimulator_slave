@@ -41,7 +41,7 @@ end
 
 lidx=find(l==P.length);
 if isempty(lidx)
-    lidx=3; %dir 0
+    lidx=1; %smallest length
 end
 
 midx=find(m==P.material);
@@ -81,30 +81,53 @@ textMat=ones(nCyclesY*blockWidthY,nCyclesX*blockWidthX)*P.background;
 IDim=size(textMat);
 IDim(3)=blockWidthX;
 
-%generate random offsets for each block
-sr = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2double(Mstate.unit)+str2double(Mstate.expt)+P.rseed);
-randoff=rand(sr,[2,nCyclesX*nCyclesY]);
-Gseq.randoff=randoff;
+%generate offset vector for y (needs to take into account that objects
+%should not overlap)
+offsetY=(blockWidthY-cSize(1))/P.NposY;
+for i=1:nCyclesX
+    offY(i)=mod(i-1,P.NposY);
+end
+
+
+%generate random offsets for each block - x fully random, y permutation of
+%offsets
+sr = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2double(Mstate.unit)+str2double(Mstate.expt)+loopTrial);
+
+randoffX=rand(sr,[1,nCyclesX*nCyclesY]);
+
+for i=1:nCyclesY
+    rp=randperm(sr,length(offY));
+    randoffY(i,:)=offY(rp);
+end
+
+Gseq.randoffX=randoffX;
+Gseq.randoffY=randoffY;
+
+
 
 %generate all but the last cycle (will need to be copied from start)
 for i=1:nCyclesX
     for j=1:nCyclesY
         %top left position
         startX = (i-1)*blockWidthX+1; %regular grid
-        startX = startX+round(P.noiseX*randoff(1,(i-1)*nCyclesY+j)*P.deltaX*cSize(2)); %add noise, max shift to the right is blockWidth-imgWidth
+        startX = startX+round(P.noiseX*randoffX((i-1)*nCyclesY+j)*P.deltaX*cSize(2)); %add noise, max shift to the right is blockWidth-imgWidth
         
         %top right position
         startY = (j-1)*blockWidthY+1;
-        startY = startY+round(P.noiseY*randoff(2,(i-1)*nCyclesY+j)*P.deltaY*cSize(1)); %add noise, max shift to the right is blockWidth-imgWidth
-        
+        if P.addNoiseY
+            startY = startY+round(randoffY(j,i)*offsetY); %add shifts
+        else
+            startY = startY+round(offY(i)*offsetY); %add shifts
+        end
         %add into matrix at respective position
         textMat(startY:startY+cSize(1)-1,startX:startX+cSize(2)-1)=cSingle;
         
     end
 end
 
-%copy the first cycle to the end
-textMat=[textMat textMat(:,1:blockWidthX)];
+%copy the the pattern for movement
+textMat=[textMat textMat];
+
     
 %generate texture
 Gtxtr = Screen(screenPTR, 'MakeTexture', textMat,[],[],2);
@@ -112,7 +135,7 @@ Gtxtr = Screen(screenPTR, 'MakeTexture', textMat,[],[],2);
 
 %save sequence data
 if Mstate.running
-    saveLog(Gseq,P.rseed,loopTrial)  %append log file with the latest sequence
+    saveLog(Gseq,loopTrial,loopTrial)  %append log file with the latest sequence
 end
 
 

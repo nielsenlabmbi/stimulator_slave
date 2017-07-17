@@ -28,6 +28,9 @@ stimDst=[P.x_pos-floor(IDim(2)/2)+1 P.y_pos-floor(IDim(1)/2)+1 ...
 
 %speed (IDim(3) has width of 1 x cycle)
 shiftperframe=IDim(3)/P.t_period;
+if P.t_period==1 %otherwise we can't get static
+    shiftperframe=IDim(2);
+end
 
 Npreframes = ceil(P.predelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
@@ -54,7 +57,7 @@ end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
 for i=1:Nstimframes
-    xoffset = mod((i-1)*shiftperframe,IDim(3));
+    xoffset = mod((i-1)*shiftperframe,IDim(2));
     stimSrc=[xoffset 0 xoffset + IDim(2)-1 IDim(1)-1];
 
     
