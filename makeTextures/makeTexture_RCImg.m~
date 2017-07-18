@@ -47,6 +47,7 @@ blankflag(idx)=1;
 Gseq.blankflag=blankflag;
 Gseq.imgseq=imgseq;
 
+clc
 %generate images
 for i=1:nrImg
     im = double(squeeze(selectedImages(:,:,i)))/255;

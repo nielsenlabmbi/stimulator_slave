@@ -37,6 +37,7 @@ Nstimframes = ceil(P.stim_time*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 
 
+
 Screen(screenPTR, 'FillRect', P.background)
 
 DaqDOut(daq, 0, 0); 
