@@ -21,7 +21,7 @@ switch monitorID
         monitorPar.screenYcm = 30;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/ViewSonic151109/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/ViewSonic170811/luminance.mat';
         
     case {'Viewpixx','VPX'} %Viewpixx 120Hz monitor
         

@@ -33,10 +33,6 @@ yN=deg2pix(P.y_size,'round');
 mN=deg2pix(P.mask_radius,'round');
 mask=makeMask(screenRes,P.x_pos,P.y_pos,xN,yN,mN,P.mask_type,P.background);
 
-%we need to invert the mask if this is a surround stimulus
-if P.surround_bit==1 && P.plaid_bit==0
-    mask=1-mask;
-end
 
 Masktxtr = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
 
