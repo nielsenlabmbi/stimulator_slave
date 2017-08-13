@@ -95,7 +95,8 @@ end
 %need to change contrast here if this a center/surround situation (can't
 %use the alpha channel like usually)
 if P.surround_bit==1 && P.plaid_bit==0
-    grating=P.contrast/100*0.5*grating+0.5;
+    gAmp=min(P.background,1-P.background);
+    grating=P.contrast/100*gAmp*grating+P.background;
 end
 
 Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
