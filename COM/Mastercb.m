@@ -13,13 +13,13 @@ try
     else
         return
     end
-    inString
-    ind = strfind(inString,'8000');
+    %inString
+    %ind = strfind(inString,'8000');
     
-    for ii=1:length(ind)
-        ind = strfind(inString,'8000');
-        inString(ind(1):ind(1)+3) = '';
-    end
+    %for ii=1:length(ind)
+    %    ind = strfind(inString,'8000');
+    %    inString(ind(1):ind(1)+3) = '';
+    %end
     
     inString = inString(1:end-1)  %Get rid of the terminator
     

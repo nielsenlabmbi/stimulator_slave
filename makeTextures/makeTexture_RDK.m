@@ -37,7 +37,7 @@ stimSizePx(2)=deg2pix(P.y_size,'round');
 maskradiusPx=deg2pix(P.mask_radius,'round');
 stimArea=stimSize(1)*stimSize(2);
 
-nrDots=round(P.dotDensity*stimArea/fps); %density is specified in dots/(deg^2 s)
+nrDots=round(P.dotDensity*stimArea); %density is specified in dots/(deg^2)
 
 deltaFrame = deg2pix(P.speedDots,'none')/fps;  % displacement per frame, based on dot speed (pixels/frame)
 

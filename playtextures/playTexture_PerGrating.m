@@ -61,6 +61,7 @@ Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
 
+%disp(P.background)
 
 %set background
 Screen(screenPTR, 'FillRect', P.background)
