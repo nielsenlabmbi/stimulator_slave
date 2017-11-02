@@ -1,0 +1,124 @@
+function playTexture_Opto
+%blank for optogenetics
+
+global Mstate screenPTR screenNum daq loopTrial
+
+global Gtxtr    %Created in makeTexture
+
+global Stxtr %Created in makeSyncTexture
+
+
+%get basic parameters
+P = getParamStruct;
+
+screenRes = Screen('Resolution',screenNum);
+fps=screenRes.hz;      % frames per second
+pixpercmX = screenRes.width/Mstate.screenXcm;
+pixpercmY = screenRes.height/Mstate.screenYcm;
+
+%get sync size and position
+syncWX = round(pixpercmX*Mstate.syncSize); %syncsize is in cm to be independent of screen distance
+syncWY = round(pixpercmY*Mstate.syncSize);
+syncSrc = [0 0 syncWX-1 syncWY-1]';
+syncDst = [0 0 syncWX-1 syncWY-1]';
+
+%stimulus source and destination
+xN=50;
+yN=50;
+stimSrc=[0 0 xN yN];
+stimDst=[0 screenRes.height-yN xN screenRes.height-1];
+
+%get timing information
+Npreframes = ceil(P.predelay*screenRes.hz);
+Npostframes = ceil(P.postdelay*screenRes.hz);
+Nstimframes = ceil(P.stim_time*screenRes.hz);
+Npulseframes= ceil(P.pulse_dur/1000*screenRes.hz);
+Nrepframes = ceil(1/P.pulse_fr*screenRes.hz);
+
+%set background
+Screen(screenPTR, 'FillRect', P.background)
+
+%set sync to black 
+Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+Screen(screenPTR, 'Flip');
+
+%Wake up the daq to improve timing later
+DaqDOut(daq, 0, 0); 
+
+
+%%%Play predelay %%%%
+Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+Screen(screenPTR, 'Flip');
+if loopTrial ~= -1
+    digWord = 1;  %Make 1st bit high
+    DaqDOut(daq, 0, digWord);
+end
+for i = 2:Npreframes
+    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+end
+
+
+%%%%%Play stimuli%%%%%%%%%%
+statePulse=0;
+countPulse=1;
+for i = 1:Nstimframes
+    
+    countPulse=countPulse+1;
+    
+    %turn light on with preset frequency
+    if mod(i-1,Nrepframes)==0 && statePulse==0
+        statePulse=1;
+        optoStim(1);
+        countPulse=1;
+    end
+    
+    %turn light off after preset duration
+    if mod(countPulse,Npulseframes)==0 && statePulse==1
+        statePulse=0;
+        optoStim(0);
+    end
+    
+    %draw indicator stimulus if selected
+    if P.indic_stim==1 && statePulse==1
+        Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst);
+    end
+    
+    %add sync
+    Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+    
+    %flip
+    Screen(screenPTR, 'Flip');
+        
+    %generate event
+    if loopTrial ~=-1 && i==1
+        digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
+        DaqDOut(daq, 0, digWord);
+    end
+end
+    
+
+%%%Play postdelay %%%%
+for i = 1:Npostframes-1
+    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    if i==1 && loopTrial ~= -1
+        digWord = 1;  %toggle 2nd bit to signal stim on
+        DaqDOut(daq, 0, digWord);
+    end
+end
+Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+Screen(screenPTR, 'Flip');
+
+
+if loopTrial ~= -1
+    DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
+end
+
+
+%set sync to black for next stimulus
+Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+Screen(screenPTR, 'Flip');
+
+
+
