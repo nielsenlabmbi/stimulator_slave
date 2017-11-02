@@ -152,7 +152,7 @@ try
             end
         
         case 'O' %start pulse or pulse train
-            optoStimStart(optoInfo,modID);
+            optoStimM(optoInfo,str2num(modID));
             
     end
     

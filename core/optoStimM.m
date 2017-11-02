@@ -1,4 +1,4 @@
-function optoStimStart(oInfo,pulseType)
+function optoStimM(oInfo,pulseType)
 
 %generate a single light pulse or a pulse train in response to a button
 %press in the GUI
@@ -10,9 +10,11 @@ function optoStimStart(oInfo,pulseType)
 
 global daq daqPort1state
 
+
 if pulseType==1
     %turn port high
     daqPort1state=bitset(daqPort1state,oInfo.Ch,1);
+    disp(daqPort1state)
     DaqDOut(daq, 1, daqPort1state);
     
     wakeup=WaitSecs(oInfo.pulseDur/1000);
