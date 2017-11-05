@@ -43,6 +43,7 @@ Mlist{26} = {'PR' 'configPstate_PiecewiseRetinotopy' 'makeTexture_PiecewiseRetin
 Mlist{27} = {'RI' 'configPstate_RCImg' 'makeTexture_RCImg' 'playTexture_RCImg' };
 Mlist{28} = {'IG' 'configPstate_ImgGrating' 'makeTexture_ImgGrating' 'playTexture_ImgGrating' };
 Mlist{29} = {'IT' 'configPstate_ImgTexture' 'makeTexture_ImgTexture' 'playTexture_ImgTexture' };
+Mlist{30} = {'OS' 'configPstate_Opto' 'makeTexture_Opto' 'playTexture_Opto' };
 
 
 %playfile for the manual mapper

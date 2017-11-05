@@ -39,7 +39,11 @@ stimDst=[P.x_pos-floor(stimsizeN/2)+1 P.y_pos-floor(stimsizeN/2)+1 ...
 %grating 1 parameters
 pixpercycle=deg2pix(1/P.s_freq,'none');
 shiftperframe=pixpercycle/P.t_period;
-ctr=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
+%grating goes from -1 to 1. contrast sets scaling so that after adding the grating 
+%to the background, the range remains between 0 and 1 and the grating is
+%equiluminant to the background. maximum amplitude the grating can have is
+%either the background (if smaller than 0.5), or 1-background.
+ctr=P.contrast/100*min(P.background,1-P.background); 
 
 if P.plaid_bit==1 || P.surround_bit==1
     stimsize2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
@@ -47,7 +51,7 @@ if P.plaid_bit==1 || P.surround_bit==1
     stimDst2=[P.x_pos-floor(stimsizeN2/2)+1 P.y_pos-floor(stimsizeN2/2)+1 ...
         P.x_pos+ceil(stimsizeN2/2) P.y_pos+ceil(stimsizeN2/2)]';
     
-    ctr2=P.contrast2/100*0.5;
+    ctr2=P.contrast2/100*min(P.background,1-P.background);
     pixpercycle2=deg2pix(1/P.s_freq2,'none');
     shiftperframe2=pixpercycle2/P.t_period2;
 end
@@ -57,6 +61,7 @@ Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
 
+%disp(P.background)
 
 %set background
 Screen(screenPTR, 'FillRect', P.background)
@@ -88,12 +93,11 @@ end
 
 
 %%%%%Play stimuli%%%%%%%%%%
-Screen(screenPTR, 'FillRect', 0.5) %mask takes care of the rest
+Screen(screenPTR, 'FillRect', P.background) %sets the level that the gratings will be added to
 
 for i = 1:Nstimframes
     
-    %get parameters for grating 1
-    
+    %get parameters for grating 1   
     xoffset = mod((i-1)*shiftperframe+P.phase/360*pixpercycle,pixpercycle);
     stimSrc=[xoffset 0 xoffset + stimsizeN-1 stimsizeN-1];
     
@@ -134,7 +138,7 @@ for i = 1:Nstimframes
         %now allow plotting to all channels again; will only plot where
         %alpha is 1
         Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
-        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctr);
+        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori);
     end
     
     %add sync
@@ -165,7 +169,7 @@ end
     
 
 %%%Play postdelay %%%%
-Screen(screenPTR, 'FillRect', P.background) %hack
+Screen(screenPTR, 'FillRect', P.background) 
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');

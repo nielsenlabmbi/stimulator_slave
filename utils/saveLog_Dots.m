@@ -8,7 +8,7 @@ function saveLog_Dots(x,loopTrial)
 global Mstate setupDefault
 
 
-rootDirs=strtrim(strsplit(setupDefault.logRoot));
+rootDirs=strtrim(strsplit(setupDefault.logRoot,';'));
 
 for i=1:length(rootDirs)
     if exist(rootDirs{i},'dir')

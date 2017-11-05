@@ -22,7 +22,7 @@ Pstate.param{11} = {'sizeDots'      'float'     0.2       1                'deg'
 Pstate.param{12} = {'dotType'      'int'     0       1                ''};
 
 Pstate.param{13} = {'ori'      'int'     0       1                'deg'};
-Pstate.param{14} = {'dotDensity'      'float'      100       1                'dots/(deg^2 s)'};
+Pstate.param{14} = {'dotDensity'      'float'      100       1                'dots/(deg^2)'};
 Pstate.param{15} = {'speedDots'      'float'     5       1                'deg/s'};
 Pstate.param{16} = {'dotLifetime'      'int'     0       1                'frames'};
 Pstate.param{17} = {'dotCoherence'      'int'     100       1                '%'};

@@ -1,7 +1,7 @@
 function Mastercb(obj,event)
 %Callback function 'Stimulator' PC
 
-global comState screenPTR loopTrial vSyncState blankFlag
+global comState screenPTR loopTrial vSyncState blankFlag optoInfo
 
 
 try
@@ -13,31 +13,40 @@ try
     else
         return
     end
-    inString
-    ind = strfind(inString,'8000');
+    %inString
+    %ind = strfind(inString,'8000');
     
-    for ii=1:length(ind)
-        ind = strfind(inString,'8000');
-        inString(ind(1):ind(1)+3) = '';
-    end
+    %for ii=1:length(ind)
+    %    ind = strfind(inString,'8000');
+    %    inString(ind(1):ind(1)+3) = '';
+    %end
     
     inString = inString(1:end-1)  %Get rid of the terminator
     
-    
+    %parse string
     delims = find(inString == ';');
-    msgID = inString(1:delims(1)-1);  %Tells what button was pressed at master
-    if strcmp(msgID,'M') || strcmp(msgID,'C') || strcmp(msgID,'S') || strcmp(msgID,'L') 
-        paramstring = inString(delims(1):end); %list of parameters and their values
+    
+    %msgID contains the type of signal transmitted and is content before
+    %first delim
+    msgID = inString(1:delims(1)-1); 
+    
+    %parse parameters accordingly
+    if ismember(msgID,{'M','C','S','L','OP'})
+            %strcmp(msgID,'M') || strcmp(msgID,'C') || strcmp(msgID,'S') || strcmp(msgID,'L' ) 
+        paramstring = inString(delims(1):end); %parameters start immediately after message string
     elseif strcmp(msgID,'B')        
-        modID = inString(delims(1)+1:delims(2)-1); %The stimulus module (e.g. 'grater')
+        modID = inString(delims(1)+1:delims(2)-1); %stimulus module follows message string, then trial ID, then param
         loopTrial = str2num(inString(delims(2)+1:delims(3)-1));
-        paramstring = inString(delims(3):end); %list of parameters and their values
+        paramstring = inString(delims(3):end); 
     else
-        modID = inString(delims(1)+1:delims(2)-1); %The stimulus module (e.g. 'grater')
-        paramstring = inString(delims(2):end); %list of parameters and their values
+        modID = inString(delims(1)+1:delims(2)-1); %second message string followed by parameters
+        paramstring = inString(delims(2):end); 
     end
+    
+    %parse parameters
     delims = find(paramstring == ';');
     
+    %react to message
     switch msgID
         
         case 'M'  %Update sent info from "main" window
@@ -132,6 +141,18 @@ try
         case 'L' %blanks
             makeSyncTexture
             blankFlag=1;
+            
+        case 'OP' %optoInfo parameters
+            for i = 1:length(delims)-1
+                dumstr = paramstring(delims(i)+1:delims(i+1)-1);
+                id = find(dumstr == '=');
+                psymbol = dumstr(1:id-1);
+                pval = dumstr(id+1:end);
+                optoInfo.(psymbol)=str2num(pval);
+            end
+        
+        case 'O' %start pulse or pulse train
+            optoStimM(optoInfo,str2num(modID));
             
     end
     
