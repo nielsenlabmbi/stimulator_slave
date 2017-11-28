@@ -21,8 +21,9 @@ try
     %    inString(ind(1):ind(1)+3) = '';
     %end
     
-    inString = inString(1:end-1)  %Get rid of the terminator
-    
+    inString = inString(1:end-1);  %Get rid of the terminator
+    disp(['Message received from master: ' inString]);
+        
     %parse string
     delims = find(inString == ';');
     
@@ -94,16 +95,16 @@ try
             %Use the callback terminator here...
             %disp('test')
             if loopTrial ~= -1
-                fwrite(comState.serialPortHandle,'nextT~') %running actual experiment
+                fwrite(comState.serialPortHandleSender,'nextT~') %running actual experiment
             else
-                fwrite(comState.serialPortHandle,'nextS~') %playing sample
+                fwrite(comState.serialPortHandleSender,'nextS~') %playing sample
             end
             
         case 'MM'  %Go for manual mapper - necessary because the blankflag otherwise remains unset
             
             blankFlag=0;
             playstimulus(modID)
-            fwrite(comState.serialPortHandle,'nextS~') %playing sample
+            fwrite(comState.serialPortHandleSender,'nextS~') %playing sample
             
             
         case 'MON'  %Monitor info
@@ -157,8 +158,8 @@ try
     end
     
     if ~strcmp(msgID,'G')
-        fwrite(comState.serialPortHandle,'a')  %dummy so that Master knows it finished
-        disp('send a');
+        fwrite(comState.serialPortHandleSender,'a')  %dummy so that Master knows it finished
+        disp('Message sent to master: Acknowledge');
     end
     
     
@@ -172,6 +173,6 @@ catch
     msg.stack.file
     msg.stack.line
     
-    fwrite(comState.serialPortHandle,'a')  %dummy so that Master knows it finished
+    fwrite(comState.serialPortHandleSender,'a')  %dummy so that Master knows it finished
     
 end
