@@ -11,7 +11,7 @@ mList=moduleListSlave;
 idx=0;
 for i=1:length(mList)
     if strcmp(modID,mList{i}{1})
-    	idx = i
+    	idx = i;
         break;
     end
 end
@@ -24,5 +24,5 @@ else
     eval(mList{end}{4});
 end
     
-ShowCursor
+ShowCursor;
     

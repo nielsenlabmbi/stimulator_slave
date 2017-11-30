@@ -47,3 +47,5 @@ end
 
 comState.serialPortHandle.bytesavailablefcn = @Mastercb;  
 
+comState.serialPortHandleSender = comState.serialPortHandle; % for backwards compatibility with the new TCP implementation 
+
