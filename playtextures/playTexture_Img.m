@@ -44,10 +44,9 @@ else
 end
 
 Npreframes = ceil(P.predelay*screenRes.hz);
-Nstimframes = ceil(P.stim_time*screenRes.hz)
+Nstimframes = ceil(P.stim_time*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
-length(Gtxtr)
-Nstimframes_perImage = floor(Nstimframes/length(Gtxtr))
+Nstimframes_perImage = floor(Nstimframes/length(Gtxtr));
 
 
 Screen(screenPTR, 'FillRect', P.background)
@@ -79,7 +78,7 @@ if loopTrial ~= -1
 end
 for i=2:Nstimframes
     if i/Nstimframes_perImage >= 1 && mod(i,Nstimframes_perImage) == 1 && stimNr < length(Gtxtr)
-        stimNr = stimNr + 1
+        stimNr = stimNr + 1;
     end
 
     Screen('DrawTexture', screenPTR, Gtxtr(stimNr), stimSrc,stimDst);
