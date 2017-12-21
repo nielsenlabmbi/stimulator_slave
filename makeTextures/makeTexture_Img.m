@@ -5,7 +5,9 @@ function makeTexture_Img
 global screenPTR Gtxtr loopTrial Mstate IDim
 
 if ~isempty(Gtxtr)
-    Screen('Close',Gtxtr);  %First clean up: Get rid of all textures/offscreen windows
+    for ii=1:length(Gtxtr)
+        Screen('Close',Gtxtr(ii));
+    end
 end
 
 Gtxtr = [];
@@ -93,6 +95,13 @@ end
 IDim=size(imgout);
 
 %generate texture
-Gtxtr = Screen(screenPTR, 'MakeTexture', imgout);
+
+if length(IDim) <= 3
+    Gtxtr = Screen(screenPTR, 'MakeTexture', imgout);
+else
+    for ii=1:IDim(4)
+        Gtxtr(ii) = Screen(screenPTR, 'MakeTexture', squeeze(imgout(:,:,1,ii)));
+    end
+end
 
 

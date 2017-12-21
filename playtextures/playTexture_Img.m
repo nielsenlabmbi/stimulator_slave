@@ -22,8 +22,6 @@ syncWY = round(pixpercmY*Mstate.syncSize);
 syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
-stimSrc=[0 0 IDim(2)-1 IDim(1)-1];
-
 xN=deg2pix(P.x_size,'round');
 if P.keepaspectratio
     yN = round((xN*IDim(1))/IDim(2));
@@ -39,11 +37,17 @@ end
 
 stimDst=CenterRectOnPoint(stimDstT,P.x_pos,P.y_pos);
 
+if P.croptoscale
+    stimSrc = stimDst;
+else
+    stimSrc=[0 0 IDim(2)-1 IDim(1)-1];
+end
 
 Npreframes = ceil(P.predelay*screenRes.hz);
-Nstimframes = ceil(P.stim_time*screenRes.hz);
+Nstimframes = ceil(P.stim_time*screenRes.hz)
 Npostframes = ceil(P.postdelay*screenRes.hz);
-
+length(Gtxtr)
+Nstimframes_perImage = floor(Nstimframes/length(Gtxtr))
 
 
 Screen(screenPTR, 'FillRect', P.background)
@@ -64,7 +68,9 @@ for i = 2:Npreframes
 end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst);
+stimNr = 1;
+
+Screen('DrawTexture', screenPTR, Gtxtr(stimNr), stimSrc, stimDst);
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 if loopTrial ~= -1
@@ -72,7 +78,11 @@ if loopTrial ~= -1
     DaqDOut(daq, 0, digWord);
 end
 for i=2:Nstimframes
-    Screen('DrawTexture', screenPTR, Gtxtr, stimSrc,stimDst);
+    if i/Nstimframes_perImage >= 1 && mod(i,Nstimframes_perImage) == 1 && stimNr < length(Gtxtr)
+        stimNr = stimNr + 1
+    end
+
+    Screen('DrawTexture', screenPTR, Gtxtr(stimNr), stimSrc,stimDst);
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
 end
