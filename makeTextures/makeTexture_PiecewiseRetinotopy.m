@@ -1,5 +1,14 @@
 function makeTexture_PiecewiseRetinotopy()
     global screenPTROff screenNum positions shapeSizes
+    
+%     if ~isempty(screenPTROff)
+%         for ii=1:size(screenPTROff,1)
+%             for jj=1:size(screenPTROff,2)
+%                 Screen('Close',screenPTROff(ii,jj));
+%             end
+%         end
+%     end
+    
     screenPTROff = [];
     P = getParamStruct;
 
