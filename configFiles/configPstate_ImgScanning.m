@@ -16,12 +16,12 @@ function configPstate_ImgScanning
     Pstate.param{end+1} = {'tube_diam'      'float'         2           1       'deg'};
     Pstate.param{end+1} = {'tube_sep'       'float'         4           1       'deg'};
     Pstate.param{end+1} = {'arc_rad'        'float'         4           1       'deg'};
-
+    Pstate.param{end+1} = {'strip_width'    'int'           12          1       'deg'};
+    
     Pstate.param{end+1} = {'threeD'         'int'           1           1       'binary'};
 
     Pstate.param{end+1} = {'tilt_angle'     'float'         0           1       'deg'};
     Pstate.param{end+1} = {'ori_inplane'    'float'         0           1       'deg'};
-    Pstate.param{end+1} = {'repeats'        'int'           12          1       ''};
     Pstate.param{end+1} = {'nShifts'        'int'           11          0       ''};
 
     Pstate.param{end+1} = {'zuckerise'      'int'           0           0       'binary'};
