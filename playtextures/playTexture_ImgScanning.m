@@ -20,18 +20,11 @@ function playTexture_ImgScanning
 
     % full imags as is
     stimSrc=[0 0 IDim(2)-1 IDim(1)-1];
-
-    % rotate stim dest by P.ori_inplane
-    % rectVect = rotateImageRect([-xx/2 yy/2 0; xx/2 -yy/2 0],-deg2rad(0));
-    stimDstT = [0 0 IDim(2)-1 IDim(1)-1]; % round([-rectVect(1,2) + yy/2 rectVect(1,1) + xx/2 -rectVect(2,2) + yy/2 rectVect(2,1) + xx/2]);
+    stimDstT = [0 0 IDim(2)-1 IDim(1)-1];
 
     % displacement as per image number
     xDisp = round(pixpercmX * pos(1,P.shiftID)/10);
     yDisp = round(pixpercmY * pos(2,P.shiftID)/10);
-
-    % translate rect to rf center and add displacement
-    rectCenter = [P.x_pos + xDisp, P.y_pos - yDisp];
-    stimDst = CenterRectOnPoint(stimDstT,rectCenter(1),rectCenter(2));
 
     % number of frames in each epoch
     Npreframes = ceil(P.predelay*screenRes.hz);
@@ -39,14 +32,19 @@ function playTexture_ImgScanning
     Npostframes = ceil(P.postdelay*screenRes.hz);
     
     % find actual final position after correct displacement
-    xShifts = rectCenter(1) + round(linspace(0,finalPos(1)/10,Nstimframes) .* pixpercmX);
-    yShifts = rectCenter(2) - round(linspace(0,finalPos(2)/10,Nstimframes) .* pixpercmY);
+    rectCenter = [P.x_pos + xDisp, P.y_pos - yDisp];
+    xShifts = rectCenter(1) + round(linspace(-finalPos(1)/20,finalPos(1)/20,Nstimframes) .* pixpercmX);
+    yShifts = rectCenter(2) - round(linspace(-finalPos(2)/20,finalPos(2)/20,Nstimframes) .* pixpercmY);
 
+    % translate rect to rf center and add displacement
+    stimDst = CenterRectOnPoint(stimDstT,xShifts(1),yShifts(2));
+
+    % background
     Screen(screenPTR, 'FillRect', P.background)
 
     DaqDOut(daq, 0, 0); 
 
-    %%%Play predelay %%%%
+    %%%%% Play predelay %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
     if loopTrial ~= -1
@@ -58,7 +56,7 @@ function playTexture_ImgScanning
         Screen(screenPTR, 'Flip');
     end
 
-    %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
+    %%%%% Play whats in the buffer (the stimulus) %%%%%%%%%%
     
     Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst,-P.ori_inplane);
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
@@ -75,7 +73,7 @@ function playTexture_ImgScanning
     end
 
 
-    %%%Play postdelay %%%%
+    %%%%% Play postdelay %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     for i = 1:Npostframes-1
         Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
         Screen(screenPTR, 'Flip');
@@ -90,7 +88,8 @@ function playTexture_ImgScanning
         DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
     Screen(screenPTR, 'Flip');
 end
