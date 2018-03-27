@@ -58,6 +58,7 @@ function params = makeParams(P,Mstate)
     params.screenDist = Mstate.screenDist*10;
     params.ori_deg = P.ori_inplane;
     params.nDisp = P.nShifts;
+    params.nDriftCycles = P.nDriftCycles;
     params.id = makeId(params);
     if P.threeD; params.shade = 'SHADE'; else params.shade = 'TWOD'; end
 end

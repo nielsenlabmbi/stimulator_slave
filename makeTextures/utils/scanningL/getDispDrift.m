@@ -16,9 +16,7 @@ function [pos,finalPos] = getDispDrift(params)
     
     pos = [x;y];
     
-    params.tube_sep = 2 + 2*params.tube_sep_deg/params.tube_diam_deg;
-    
-    finalPosDeg = params.tube_sep*params.tube_diam_deg;
+    finalPosDeg = params.nDriftCycles * (params.tube_sep_deg + params.tube_diam_deg);
     finalPos = round(rotate_z([params.screenDist*tan(deg2rad(finalPosDeg)) 0 0],...
         -deg2rad(params.ori_deg)),5); % -z rotation is correct dir
 end

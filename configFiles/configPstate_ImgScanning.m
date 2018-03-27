@@ -23,6 +23,7 @@ function configPstate_ImgScanning
     Pstate.param{end+1} = {'tilt_angle'     'float'         0           1       'deg'};
     Pstate.param{end+1} = {'ori_inplane'    'float'         0           1       'deg'};
     Pstate.param{end+1} = {'nShifts'        'int'           11          0       ''};
+    Pstate.param{end+1} = {'nDriftCycles'   'int'           2           0       ''};
 
     Pstate.param{end+1} = {'zuckerise'      'int'           0           0       'binary'};
 
