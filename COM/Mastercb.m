@@ -32,7 +32,7 @@ try
     msgID = inString(1:delims(1)-1); 
     
     %parse parameters accordingly
-    if ismember(msgID,{'M','C','S','L','OP'})
+    if ismember(msgID,{'M','C','S','OP','L'})
             %strcmp(msgID,'M') || strcmp(msgID,'C') || strcmp(msgID,'S') || strcmp(msgID,'L' ) 
         paramstring = inString(delims(1):end); %parameters start immediately after message string
     elseif strcmp(msgID,'B')        
@@ -140,6 +140,7 @@ try
             vSyncState=str2num(modID);
             
         case 'L' %blanks
+            loopTrial=str2num(paramstring(delims(1)+1:delims(2)-1));
             makeSyncTexture
             blankFlag=1;
             

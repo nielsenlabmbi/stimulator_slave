@@ -3,7 +3,7 @@ function playTexture_Blank
 %play basic images (tifs)
 
 
-global Mstate screenPTR screenNum loopTrial 
+global Mstate screenPTR screenNum  
 
 global daq  
 
@@ -41,7 +41,7 @@ end
 %%%Play predelay %%%%
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1 && ~isempty(daq)
+if ~isempty(daq)
     digWord = 1;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
 end
@@ -53,7 +53,7 @@ end
 %%%%%Play "stimulus"
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1 && ~isempty(daq)
+if ~isempty(daq)
     digWord = 3;  %toggle 2nd bit to signal stim on
     DaqDOut(daq, 0, digWord);
 end
@@ -67,14 +67,14 @@ end
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if i==1 && loopTrial ~= -1 && ~isempty(daq)
+    if i==1 && ~isempty(daq)
         digWord = 1;  %toggle 2nd bit to signal stim off
         DaqDOut(daq, 0, digWord);
     end
 end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
-if loopTrial ~= -1 && ~isempty(daq)
+if ~isempty(daq)
     DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
 end
 
