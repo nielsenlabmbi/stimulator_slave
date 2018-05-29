@@ -14,7 +14,7 @@ function makeTexture_ImgScanning
 
     % create image if needed
     imgPath = [P.imgpath '/' P.imgbase '/' params.id];
-    oFile = [imgPath '_' params.shade '.png'];
+    oFile = [imgPath '_' params.shade '_' params.texture '.png'];
     zFile = [imgPath '_drape_' params.shade '.png'];
     if ~params.zuckerise && ~exist(oFile,'file')
         if ~exist([imgPath '_vert.txt'],'file')
@@ -60,7 +60,8 @@ function params = makeParams(P,Mstate)
     params.nDisp = P.nShifts;
     params.nDriftCycles = P.nDriftCycles;
     params.id = makeId(params);
-    if P.threeD; params.shade = 'SHADE'; else params.shade = 'TWOD'; end
+    if P.threeD;  params.shade   = 'SHADE'; else params.shade   = 'TWOD'; end
+    if P.texture; params.texture = 'GRID';  else params.texture = 'NONE'; end
 end
 
 function id = makeId(params)

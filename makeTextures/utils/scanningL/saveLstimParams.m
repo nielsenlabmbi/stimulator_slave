@@ -85,7 +85,7 @@ function saveLstimParams(params,imgPath)
     save([imgPath '_params.mat'],'params');
     
     % use blender to save the normals. opengl requires this for smooth rendering
-    system(['/usr/local/bin/blender/blender --python /home/nielsenlab/stimulator_slave/makeTextures/utils/scanningL/saveNormals.py --background -- ' imgPath]);
+    system(['/usr/local/bin/blender/blender --python /home/nielsenlab/stimulator_slave/makeTextures/utils/scanningL/saveNormals.py --background -- ' imgPath ' ' num2str(params.tilt)]);
     
     % use java to render the grating
     % system(['java -Djava.library.path=native/macos -jar generateStimuli.jar ' params.shade ' ' imgPath]);

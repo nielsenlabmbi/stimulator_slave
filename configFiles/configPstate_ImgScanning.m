@@ -19,6 +19,7 @@ function configPstate_ImgScanning
     Pstate.param{end+1} = {'strip_width'    'int'           12          1       'deg'};
     
     Pstate.param{end+1} = {'threeD'         'int'           1           1       'binary'};
+    Pstate.param{end+1} = {'texture'        'int'           0           1       'binary'};
 
     Pstate.param{end+1} = {'tilt_angle'     'float'         0           1       'deg'};
     Pstate.param{end+1} = {'ori_inplane'    'float'         0           1       'deg'};
