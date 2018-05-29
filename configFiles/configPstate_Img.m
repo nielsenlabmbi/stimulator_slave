@@ -30,4 +30,4 @@ Pstate.param{17} = {'nrblocks'      'int'     8       1                ''};
 Pstate.param{18} = {'background'      'float'   0.5       0                ''};
 Pstate.param{19} = {'contrast' 'float'   100       0             '%'};
 
-
+Pstate.param{20} = {'keepinmemory' 'int'   0       0             'binary'};

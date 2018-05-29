@@ -4,16 +4,22 @@ function makeTexture_Img
 
 global screenPTR Gtxtr loopTrial Mstate IDim
 
-if ~isempty(Gtxtr)
-    for ii=1:length(Gtxtr)
-        Screen('Close',Gtxtr(ii));
-    end
-end
-
-Gtxtr = [];
-
 %get parameters
 P = getParamStruct;
+
+if ~P.keepinmemory
+    if ~isempty(Gtxtr)
+        for ii=1:length(Gtxtr)
+            Screen('Close',Gtxtr(ii));
+        end
+    end
+
+    Gtxtr = [];
+elseif ~isempty(Gtxtr)
+    return;
+end
+
+
 
 %read image
 img=imread([P.imgpath '/' P.imgbase '/' P.imgbase '_' num2str(P.imgnr) '.' P.filetype]);
