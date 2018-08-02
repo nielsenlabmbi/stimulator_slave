@@ -45,7 +45,7 @@ Mlist{28} = {'IG' 'configPstate_ImgGrating' 'makeTexture_ImgGrating' 'playTextur
 Mlist{29} = {'IT' 'configPstate_ImgTexture' 'makeTexture_ImgTexture' 'playTexture_ImgTexture' };
 Mlist{30} = {'OS' 'configPstate_Opto' 'makeTexture_Opto' 'playTexture_Opto' };
 Mlist{31} = {'IS' 'configPstate_ImgScanning' 'makeTexture_ImgScanning' 'playTexture_ImgScanning'};
-Mlist{32} = {'TT' 'configPstate_TestTrial' 'makeTexture_TestTrial' 'playTexture_TestTrial'};
+Mlist{32} = {'TT' 'configPstate_TesTrial'}
 
 %playfile for the manual mapper
 Mlist{end+1} = {'MG' '' '' 'playTexture_PerGratingManual'};
