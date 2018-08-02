@@ -41,14 +41,13 @@ nrDots=round(P.dotDensity*stimArea); %density is specified in dots/(deg^2)
 
 deltaFrame = deg2pix(P.speedDots,'none')/fps;  % displacement per frame, based on dot speed (pixels/frame)
 
-
 %size parameters for the second grating if necessary
 if P.motionopp_bit==1
     stimSizePx2=stimSizePx;
     maskradiusPx2=maskradiusPx;
     stimArea2=stimArea;
     
-    nrDots2=round(P.dotDensity2*stimArea2/fps);
+    nrDots2=round(P.dotDensity2*stimArea2);
     
     deltaFrame2 = deg2pix(P.speedDots2,'none')/fps;                 
 end
@@ -61,7 +60,7 @@ if P.surround_bit==1 && P.motionopp_bit==0
     
     stimArea2=stimSize2(1)*stimSize2(2);
     
-    nrDots2=round(P.dotDensity2*stimArea2/fps);
+    nrDots2=round(P.dotDensity2*stimArea2);
     
     deltaFrame2 = deg2pix(P.speedDots2,'none')/fps;                  
 end
