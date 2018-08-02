@@ -13,5 +13,5 @@ Pstate.param{6} = {'x_size'      'float'      3       1                'deg'};
 Pstate.param{7} = {'y_size'      'float'      3       1                'deg'};
 Pstate.param{8} = {'Intensity'      'float'      1       0                ''};
 
-Pstate.param{16} = {'Leye_bit'    'int'   1       0                ''};
-Pstate.param{17} = {'Reye_bit'    'int'   1       0                ''};
+Pstate.param{9} = {'Leye_bit'    'int'   1       0                ''};
+Pstate.param{10} = {'Reye_bit'    'int'   1       0                ''};

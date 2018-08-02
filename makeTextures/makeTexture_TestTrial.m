@@ -24,4 +24,4 @@ ColorScreen = ones(100) .* P.Intensity;
 
 
 
-Gtxtr = Screen(screenPTR, 'MakeTestTrial',ColorScreen,[],[],2);
+Gtxtr = Screen(screenPTR, 'MakeTexture',ColorScreen,[],[],2);
