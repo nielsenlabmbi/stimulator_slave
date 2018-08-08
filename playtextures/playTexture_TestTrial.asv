@@ -51,9 +51,9 @@ end
 %%%%%Play stimuli%%%%%%%%%%
 for i = 1:Nstimframes
       
-    stimDst=CenterRectOnPoint(stimSrc,P.x_pos,P.y_pos);
+    stimDst=CenterRectOnPoint(stimSrc,P.x_pos+offsetX-deltaX,P.y_pos+offsetY-deltaY);
     %draw 
-    Screen('DrawTexture', screenPTR, Gtxtr, stimSrc, stimDst);
+    Screen('DrawTexture', screenPTR, Gtxtr, [P.x_pos P.y_pos], stimDst);
     
     %add mask
     if ~strcmp(P.mask_type,'none')
