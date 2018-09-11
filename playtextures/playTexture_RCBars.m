@@ -64,12 +64,12 @@ for i = 1:length(Gtxtr)
     end
     
     %generate event 
-    if j==1 && loopTrial ~= -1
+    if mod(i,2)==1 && loopTrial ~= -1
         digWord = 7;  %toggle 2nd bit high to signal stim on
         DaqDOut(daq, 0, digWord);
     end
-    if j==floor(P.h_per/2) && loopTrial ~= -1
-        digWord = 3;  %reset 2nd bit to low
+    if mod(i,2)==0 && loopTrial ~= -1
+        digWord = 1;  %reset 2nd bit to low
         DaqDOut(daq, 0, digWord);
     end
 end

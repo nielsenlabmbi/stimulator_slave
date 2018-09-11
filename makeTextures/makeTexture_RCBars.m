@@ -3,7 +3,7 @@ function makeTexture_RCBars
 %reverse correlation with bars to map receptive fields; black/white bars
 %only at this time
 
-global Mstate screenPTR screenNum 
+global Mstate screenPTR screenNum loopTrial
 
 global Gseq Gtxtr barTxtr
 
