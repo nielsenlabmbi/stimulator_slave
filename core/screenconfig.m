@@ -1,9 +1,17 @@
 function screenconfig
 
-global screenPTR screenPTROff screenNum Mstate Gtxtr Masktxtr
+global screenPTR screenPTROff screenNum Mstate Gtxtr Masktxtr setupDefault
 
 %screens=Screen('Screens');
 %screenNum=max(screens);
+
+%set GPU correctly if needed in case of 2 GPUs
+if setupDefault.useSecondGfx==1
+    PsychTweak('UseGPUIndex',1);
+    screenNum=1;
+else
+    screenNum=0;
+end
 
 PsychImaging('PrepareConfiguration');
 PsychImaging('AddTask','General','FloatingPoint32BitIfPossible');
@@ -13,7 +21,7 @@ PsychImaging('AddTask', 'General', 'UseFastOffscreenWindows');
 AssertOpenGL;
 InitializeMatlabOpenGL;
 
-screenNum=0;
+
 
 screenRes = Screen('Resolution',screenNum);
 

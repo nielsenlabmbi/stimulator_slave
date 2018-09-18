@@ -48,4 +48,10 @@ if isfield(setupDefault,'useMCDaq')
     setupDefault.useMCDaq=str2num(setupDefault.useMCDaq);
 end
 
+if isfield(setupDefault,'useSecondGfx')
+    setupDefault.useSecondGfx=str2num(setupDefault.useSecondGfx);
+else
+    setupDefault.useSecondGfx=0;
+end
+
 fclose(fId);
