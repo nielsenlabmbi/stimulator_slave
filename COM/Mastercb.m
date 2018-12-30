@@ -96,8 +96,10 @@ try
             %disp('test')
             if loopTrial ~= -1
                 fwrite(comState.serialPortHandleSender,'nextT~') %running actual experiment
+                disp('Message sent to master: nextT');
             else
                 fwrite(comState.serialPortHandleSender,'nextS~') %playing sample
+                disp('Message sent to master: nextS');
             end
             
         case 'MM'  %Go for manual mapper - necessary because the blankflag otherwise remains unset
