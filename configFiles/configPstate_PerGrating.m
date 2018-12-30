@@ -40,10 +40,17 @@ Pstate.param{27} = {'s_profile2'   'string'   'sin'       0                ''};
 Pstate.param{28} = {'s_duty2'      'float'   0.5       0                ''};
 Pstate.param{29} = {'t_period2'    'int'       20       0                'frames'};
 
-Pstate.param{30} = {'Leye_bit'    'int'   1       0                ''};
-Pstate.param{31} = {'Reye_bit'    'int'   1       0                ''};
-Pstate.param{32} = {'use_ch3'    'int'   0       0                'binary'};
-Pstate.param{33} = {'background'    'float'   0.5       0                ''};
+Pstate.param{30} = {'tmod_bit'    'int'       0       0                ''};
+Pstate.param{31} = {'tmod_max'    'int'       100       0                '% contrast'};
+Pstate.param{32} = {'tmod_min'    'int'       0       0                '% contrast'};
+Pstate.param{33} = {'tmod_tperiod'    'int'       20       0                'frames'};
+Pstate.param{34} = {'tmod_tprofile'    'string'      'sin'       0                ''};
+
+
+Pstate.param{35} = {'Leye_bit'    'int'   1       0                ''};
+Pstate.param{36} = {'Reye_bit'    'int'   1       0                ''};
+Pstate.param{37} = {'use_ch3'    'int'   0       0                'binary'};
+Pstate.param{38} = {'background'    'float'   0.5       0                ''};
 
 
 

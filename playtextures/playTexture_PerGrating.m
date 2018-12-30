@@ -35,6 +35,11 @@ stimDst=[P.x_pos-floor(stimsizeN/2)+1 P.y_pos-floor(stimsizeN/2)+1 ...
     P.x_pos+ceil(stimsizeN/2) P.y_pos+ceil(stimsizeN/2)]';
 
 
+%get timing information
+Npreframes = ceil(P.predelay*screenRes.hz);
+Npostframes = ceil(P.postdelay*screenRes.hz);
+Nstimframes = ceil(P.stim_time*screenRes.hz);
+
 
 %grating 1 parameters
 pixpercycle=deg2pix(1/P.s_freq,'none');
@@ -43,8 +48,23 @@ shiftperframe=pixpercycle/P.t_period;
 %to the background, the range remains between 0 and 1 and the grating is
 %equiluminant to the background. maximum amplitude the grating can have is
 %either the background (if smaller than 0.5), or 1-background.
-ctr=P.contrast/100*min(P.background,1-P.background); 
 
+ctrBase=P.contrast/100*min(P.background,1-P.background);
+if P.tmod_bit==0
+    %static contrast
+    ctrFrame=repmat(ctrBase,1,Nstimframes);
+else
+    %contrast modulation
+    ctr=cos([0:Nstimframes-1]*2*pi/P.tmod_tperiod);
+    if strcmp(P.tmod_tprofile,'square')
+        ctr=sign(ctr);
+    end
+    %scale between min and max
+    ctramp=1/2*(P.tmod_tmax-P.tmod_tmin)/100*ctrBase;
+    ctroff=1/2*(P.tmod_tmax+P.tmod_tmin)/100*ctrBase;
+    ctrFrame=ctroff+ctramp*ctr;
+end
+    
 if P.plaid_bit==1 || P.surround_bit==1
     stimsize2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
     stimsizeN2=deg2pix(stimsize2,'round');
@@ -56,10 +76,6 @@ if P.plaid_bit==1 || P.surround_bit==1
     shiftperframe2=pixpercycle2/P.t_period2;
 end
 
-%get timing information
-Npreframes = ceil(P.predelay*screenRes.hz);
-Npostframes = ceil(P.postdelay*screenRes.hz);
-Nstimframes = ceil(P.stim_time*screenRes.hz);
 
 %disp(P.background)
 
@@ -123,7 +139,7 @@ for i = 1:Nstimframes
         
         %for individual grating or plaid, plot grating1
         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctr);
+        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctrFrame(i));
     
         %add mask
         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
