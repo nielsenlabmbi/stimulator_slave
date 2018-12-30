@@ -60,8 +60,8 @@ else
         ctr=sign(ctr);
     end
     %scale between min and max
-    ctramp=1/2*(P.tmod_tmax-P.tmod_tmin)/100*ctrBase;
-    ctroff=1/2*(P.tmod_tmax+P.tmod_tmin)/100*ctrBase;
+    ctramp=1/2*(P.tmod_max-P.tmod_min)/100*ctrBase;
+    ctroff=1/2*(P.tmod_max+P.tmod_min)/100*ctrBase;
     ctrFrame=ctroff+ctramp*ctr;
 end
     
