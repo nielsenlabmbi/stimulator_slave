@@ -61,21 +61,23 @@ if strcmp(P.s_profile,'square')
 end
 
 
-%incorporate contrast
-gratingTemp=gratingTemp.*P.contrast/100;
-
-%get color settings
-[gainvec,basevec]=getColorSettings(P.colormod,P);
 
 
 %grating is between -1 and 1; transform it to 0 to 1 for each channel using
 %the color settings
 grating=zeros([size(gratingTemp) 3]);
+
+camp(1)=1/2*(P.c1_red-P.c2_red);
+coff(1)=1/2*(P.c1_red+P.c2_red);
+
+camp(2)=1/2*(P.c1_green-P.c2_green);
+coff(2)=1/2*(P.c1_green+P.c2_green);
+
+camp(3)=1/2*(P.c1_blue-P.c2_blue);
+coff(3)=1/2*(P.c1_blue+P.c2_blue);
+
 for i=1:3
-    tmp=(gratingTemp.*gainvec(i)+1)/2 -0.5+basevec(i);
-    disp(min(tmp(:)))
-    disp(max(tmp(:)))
-    grating(:,:,i)=tmp;
+   grating(:,:,i)=gratingTemp*camp(i)+coff(i);
 end
 
 
