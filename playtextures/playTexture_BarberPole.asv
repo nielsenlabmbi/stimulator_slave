@@ -46,14 +46,8 @@ if P.useOccluder1
     xoN=deg2pix(P.o1x_size,'round');
     yoN=deg2pix(P.o1y_size,'round');
     o1Src=[0 0 xoN yoN];
-    o1Dst=CenterRectOnPoint([0 0 xoN yoN],P.o1x_pos,P.o1y_pos); 
 end
-if P.useOccluder2
-    xoN=deg2pix(P.o2x_size,'round');
-    yoN=deg2pix(P.o2y_size,'round');
-    o2Src=[0 0 xoN yoN];
-    o2Dst=CenterRectOnPoint([0 0 xoN yoN],P.o2x_pos,P.o2y_pos); 
-end
+
 
 
 %get timing information
@@ -100,11 +94,8 @@ for i = 1:Nstatframes
     
     %add occluder if selected
     if P.useOccluder1
-        Screen('DrawTextures', screenPTR, Gtxtr(2),o1Src,o1Dst,P.o1_angle);
-    end  
-    if P.useOccluder2
-        Screen('DrawTextures', screenPTR, Gtxtr(3),o2Src,o2Dst,P.o2_angle);
-    end  
+        Screen('DrawTextures', screenPTR, [Gtxtr{i} Stxtr(2-rem(i,2))],...
+            [stimSrc syncSrc],[Gseq.stimDst{i,j} syncDst],[ori 0]);    
     
     %add sync
     if i==1

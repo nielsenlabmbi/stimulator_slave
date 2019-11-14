@@ -75,6 +75,26 @@ end
 
 Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 
+%generate occluders if selected
+if P.useOccluder1
+    %convert stimulus size to pixel
+    xoN=deg2pix(P.o1x_size,'round');
+    yoN=deg2pix(P.o1y_size,'round');
+
+    %generate texture
+    Im = ones(yoN,xoN,3);
+    Gtxtr(2) = Screen(screenPTR, 'MakeTexture',Im,[],[],2);
+end
+
+if P.useOccluder2
+    %convert stimulus size to pixel
+    xoN=deg2pix(P.o2x_size,'round');
+    yoN=deg2pix(P.o2y_size,'round');
+
+    %generate texture
+    Im = ones(yoN,xoN,3);
+    Gtxtr(3) = Screen(screenPTR, 'MakeTexture',Im,[],[],2);
+end
 
 
 

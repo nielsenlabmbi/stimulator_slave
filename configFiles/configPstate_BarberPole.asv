@@ -28,18 +28,13 @@ Pstate.param{16} = {'useFrame'    'int'        0       0             'binary'};
 Pstate.param{17} = {'frame_width'    'float'        1       0             'deg'};
 
 Pstate.param{18} = {'useOccluder1'    'int'        0       0             'binary'};
-Pstate.param{19} = {'o1x_pos'    'int'        700       0             'pixels'};
-Pstate.param{20} = {'o1y_pos'       'int'      400       0                'pixels'};
-Pstate.param{21} = {'o1x_size'      'float'      3       1                'deg'};
-Pstate.param{22} = {'o1y_size'      'float'      3       1                'deg'};
-Pstate.param{23} = {'o1_angle'      'float'      0       1                'deg'};
+Pstate.param{19} = {'o1x_size'    'int'        1       0             'deg'};
+Pstate.param{6} = {'y_pos'       'int'      400       0                'pixels'};
+Pstate.param{7} = {'x_size'      'float'      3       1                'deg'};
+Pstate.param{8} = {'y_size'      'float'      3       1                'deg'};
 
-Pstate.param{24} = {'useOccluder2'    'int'        0       0             'binary'};
-Pstate.param{25} = {'o2x_pos'    'int'        900       0             'pixels'};
-Pstate.param{26} = {'o2y_pos'       'int'      400       0                'pixels'};
-Pstate.param{27} = {'o2x_size'      'float'      3       1                'deg'};
-Pstate.param{28} = {'o2y_size'      'float'      3       1                'deg'};
-Pstate.param{29} = {'o2_angle'      'float'      0       1                'deg'};
+
+
 
 
 
