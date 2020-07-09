@@ -104,8 +104,8 @@ try
             
         case 'F'  %get refresh rate
                      
-            fwrite(comState.serialPortHandleSender,[num2str(Mstate.refresh_rate) '~']) %return refresh rate
-            disp('Message sent to master: nextS');
+            fwrite(comState.serialPortHandleSender,['r' num2str(Mstate.refresh_rate) '~']) %return refresh rate
+            disp('Message sent to master: rate');
                       
         case 'MM'  %Go for manual mapper - necessary because the blankflag otherwise remains unset
             
@@ -116,7 +116,7 @@ try
             
         case 'MON'  %Monitor info
             
-            global Mstate
+            %global Mstate
             
             Mstate.monitor = modID;
             updateMonitor
