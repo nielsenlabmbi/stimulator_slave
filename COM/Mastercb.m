@@ -1,7 +1,7 @@
 function Mastercb(obj,event)
 %Callback function 'Stimulator' PC
 
-global comState screenPTR loopTrial vSyncState blankFlag optoInfo
+global comState screenPTR loopTrial vSyncState blankFlag optoInfo Mstate
 
 
 try
@@ -32,7 +32,7 @@ try
     msgID = inString(1:delims(1)-1); 
     
     %parse parameters accordingly
-    if ismember(msgID,{'M','C','S','OP','L'})
+    if ismember(msgID,{'M','C','S','OP','L','F'})
             %strcmp(msgID,'M') || strcmp(msgID,'C') || strcmp(msgID,'S') || strcmp(msgID,'L' ) 
         paramstring = inString(delims(1):end); %parameters start immediately after message string
     elseif strcmp(msgID,'B')        
@@ -102,6 +102,11 @@ try
                 disp('Message sent to master: nextS');
             end
             
+        case 'F'  %get refresh rate
+                     
+            fwrite(comState.serialPortHandleSender,[num2str(Mstate.refresh_rate) '~']) %return refresh rate
+            disp('Message sent to master: nextS');
+                      
         case 'MM'  %Go for manual mapper - necessary because the blankflag otherwise remains unset
             
             blankFlag=0;
