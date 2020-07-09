@@ -27,7 +27,7 @@ Mlist{10} = {'AD' 'configPstate_Adapt' 'makeTexture_Adapt' 'playTexture_Adapt' }
 Mlist{11} = {'RA' 'configPstate_RCAdaptGrating' 'makeTexture_RCAdaptGrating' 'playTexture_RCAdaptGrating' };
 Mlist{12} = {'PC' 'configPstate_PerGratingColor' 'makeTexture_PerGratingColor' 'playTexture_PerGratingColor' };
 Mlist{13} = {'BP' 'configPstate_BarberPole' 'makeTexture_BarberPole' 'playTexture_BarberPole' };
-Mlist{14} = {'TP' 'configPstate_TransparentPlaid' 'makeTexture_TransparentPlaid' 'playTexture_TransparentPlaid' };
+Mlist{14} = {'TP' 'configPstate_TransPlaid' 'makeTexture_TransPlaid' 'playTexture_TransPlaid' };
 Mlist{15} = {'BR' 'configPstate_Bar' 'makeTexture_Bar' 'playTexture_Bar' };
 Mlist{16} = {'BK' 'configPstate_Kalatsky' 'makeTexture_Kalatsky' 'playTexture_Kalatsky' };
 Mlist{17} = {'RB' 'configPstate_RCBars' 'makeTexture_RCBars' 'playTexture_RCBars' };
@@ -47,6 +47,7 @@ Mlist{30} = {'OS' 'configPstate_Opto' 'makeTexture_Opto' 'playTexture_Opto' };
 Mlist{31} = {'IS' 'configPstate_ImgScanning' 'makeTexture_ImgScanning' 'playTexture_ImgScanning'};
 Mlist{32} = {'TT' 'configPstate_TestTrial' 'makeTexture_TestTrial' 'playTexture_TestTrial'};
 Mlist{33} = {'MS' 'configPstate_MSeq' 'makeTexture_MSeq' 'playTexture_MSeq'};
+Mlist{34} = {'RS' 'configPstate_RCTransPlaid' 'makeTexture_RCTransPlaid' 'playTexture_RCTransPlaid' };
 
 
 %playfile for the manual mapper
