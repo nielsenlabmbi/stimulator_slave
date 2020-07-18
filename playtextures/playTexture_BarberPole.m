@@ -139,7 +139,15 @@ for i = 1:Nmovframes
     %add mask
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     Screen('DrawTexture', screenPTR, Masktxtr(1));
-        
+     
+    %add occluder if selected
+    if P.useOccluder1
+        Screen('DrawTextures', screenPTR, Gtxtr(2),o1Src,o1Dst,P.o1_angle);
+    end  
+    if P.useOccluder2
+        Screen('DrawTextures', screenPTR, Gtxtr(3),o2Src,o2Dst,P.o2_angle);
+    end
+    
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
     

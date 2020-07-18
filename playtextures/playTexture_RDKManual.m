@@ -19,9 +19,9 @@ configPstate_RDK;
 %their settings
 symbList = {'ori','dotDensity','sizeDots','speedDots','dotCoherence','mask_radius','background'};
 valdom{1} = 0:15:359;
-valdom{2} = logspace(log10(1),log10(100),20);
+valdom{2} = logspace(log10(0.01),log10(1),20);
 valdom{3} = linspace(.2,5,10);  
-valdom{4} = logspace(log10(5),log10(50),20);
+valdom{4} = logspace(log10(5),log10(60),20);
 valdom{5} = 0:10:100;
 valdom{6} = logspace(log10(.5),log10(60),20);
 valdom{7} = [0 0.3 0.5];

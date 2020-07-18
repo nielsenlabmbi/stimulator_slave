@@ -16,7 +16,7 @@ inFile = sys.argv[5] # ('spec/' + shape + '_' + str(s))
 normDest = inFile + '_norm.txt'
 faceDest = inFile + '_face.txt'
 uvDest = inFile + '_uv.txt'
-print('using ' + inFile)
+
 try:
     with open(inFile+'_face.txt', newline='') as inputfile:
         faceSpec = list(csv.reader(inputfile))

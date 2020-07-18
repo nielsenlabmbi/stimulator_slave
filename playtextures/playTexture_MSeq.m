@@ -38,7 +38,6 @@ N_Im = round(P.stim_time*screenRes.hz/P.h_per);
 MseqFrames=size(Gseq.Mseq,3);
 
 
-
 Screen(screenPTR, 'FillRect', P.background)
 
 DaqDOut(daq, 0, 0); 
@@ -57,28 +56,34 @@ for i = 2:Npreframes
 end
 
 %%%%%Play the stimulus
+digWord=3;
+sidx=1;
 for i=1:N_Im
     
     %need to first make the stimulus
     tidx=mod(i-1,MseqFrames)+1;
-    Gtxtr = Screen('MakeTexture',screenPTR, squeeze(Gseq.Mseq(:,:,tidx)),[],[],2);
+    img=squeeze(Gseq.Mseq(:,:,tidx));
+    Gtxtr = Screen('MakeTexture',screenPTR, img,[],[],2);
     
     for j = 1:P.h_per
         Screen('DrawTexture', screenPTR, Gtxtr,[], stimDst, [], 0); %need to make sure interpolation is off
    
-        %add sync
-        Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
+        %add sync - update every 5 stimuli
+        if mod(i-1,10)==0
+            sidx=~sidx;
+        end
+        Screen('DrawTexture', screenPTR, Stxtr(sidx+1),syncSrc,syncDst);
         
         %flip
         Screen(screenPTR, 'Flip');
 
-        %generate event 
+        %generate event - toggle between up and down on third channel
         if j==1 && loopTrial ~= -1
-            digWord = 7;  %toggle 2nd bit high to signal stim on
-            DaqDOut(daq, 0, digWord);
-        end
-        if j==floor(P.h_per/2) && loopTrial ~= -1
-            digWord = 3;  %reset 2nd bit to low
+            if digWord==3
+                digWord=7;
+            elseif digWord==7
+                digWord=3;
+            end
             DaqDOut(daq, 0, digWord);
         end
         

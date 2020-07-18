@@ -312,6 +312,7 @@ end
 
 %Save it if 'running' experiment
 if Mstate.running
-    saveLog_Dots(DotFrame,loopTrial);
+    
+    %saveLog_Dots(DotFrame,loopTrial);
 end
 

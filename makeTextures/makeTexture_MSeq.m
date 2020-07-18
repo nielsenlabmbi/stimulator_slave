@@ -20,21 +20,21 @@ Gseq = [];
 P = getParamStruct;
 
 %read M sequence - generates MSequence
-load([P.seqfile '.mat']);
+load(P.seqfile);
 
 %reshape M sequence into 16x16xframes
 Sequence=Sequence';
 Gseq.Mseq=reshape(Sequence,[16 16 size(Sequence,2)]);
 
 %incorporate starting offset (0: no shift)
-Gseq.Mseq=circshift(Gseq,P.startOffset,3);
+Gseq.Mseq=circshift(Gseq.Mseq,P.startOffset,3);
 
 %we are not generating textures here because there are way too many - this
 %will happen in drawtexture
 
 %save sequence data
-if Mstate.running
-    saveLog(Gseq,P.rseed,loopTrial)  %append log file with the latest sequence
-end
+%if Mstate.running
+%    saveLog(Gseq,P.rseed,loopTrial)  %append log file with the latest sequence
+%end
 
 

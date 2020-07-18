@@ -14,20 +14,23 @@ configPstate_Img;
 %define the list of parameters that can be accessed with the mouse and
 %their settings
 symbList = {'imgbase','imgnr','x_size'};
-valdom{1} = 1:6;
-valdom{2} = 1:200;
-valdom{3} = logspace(log10(20),log10(500),30);
+valdom{1} = 1:14;
+valdom{2} = 1:90;
+valdom{3} = 1:2:20;
 
-
-imgbase={'2dRandom','lsRandom','lsNatural','maRandom','obj','faceRhesus'};
+imgbase={'shade_0' 'shade_1' 'shade_2' 'shade_3' 'shade_4' 'shade_5' 'shade_6' ...
+         'twod_0' 'twod_1' 'twod_2' 'twod_3' 'twod_4' 'twod_5' 'twod_6'};
 
 %set starting value and symbol 
 state.valId = [1 1 3];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
 %update the parameters - we only need imgbase and imgnr to make the image
+updatePstate('imgpath','~/images/flashingL/1');
 updatePstate('imgbase',imgbase{valdom{1}(state.valId(1))});
 updatePstate('imgnr',num2str(valdom{2}(state.valId(2))));
+updatePstate('filetype','png');
+updatePstate('background','0.3');
 
 %initialize texture
 makeTexture_Img %this populates Gtxtr and IDim
@@ -39,7 +42,7 @@ newtext = [symbol ' ' num2str(val)];
 
 
 %initialize screen
-Screen(screenPTR, 'FillRect', 0)
+Screen(screenPTR, 'FillRect', 0.3)
 Screen(screenPTR,'DrawText',newtext,40,30,1);
 Screen('Flip', screenPTR);
 
@@ -82,7 +85,7 @@ while ~keyIsDown
             if strcmp(symbol,'imgbase')
                 valT = imgbase{val};
                 updatePstate(symbol,valT);
-                updatePstate('imgpath',['manualImg/' valT]);
+                % updatePstate('imgpath',['manualImg/' valT]);
             else
                 updatePstate(symbol,num2str(val)); 
             end
@@ -129,7 +132,7 @@ while ~keyIsDown
             if strcmp(symbol,'imgbase')
                 valT = imgbase{val};
                 updatePstate(symbol,valT);
-                updatePstate('imgpath',['manualImg/' valT]);
+                % updatePstate('imgpath',['manualImg/' valT]);
             else
                 updatePstate(symbol,num2str(val)); 
             end

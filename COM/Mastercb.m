@@ -163,6 +163,9 @@ try
         case 'O' %start pulse or pulse train
             optoStimM(optoInfo,str2num(modID));
             
+        case 'TTL' % send a ttl pulse on the daq
+            DaqDOut(daq, 0, 1); pause(0.5); DaqDOut(daq, 0, 0);
+            
     end
     
     if ~strcmp(msgID,'G')

@@ -124,11 +124,11 @@ for i = 1:Nstimframes
         
     %generate event
     if loopTrial ~=-1
-        if (deltaX==0 && deltaY==0)
-            digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
+        if (xpos<100 || ypos<100)
+            digWord = 3;  %toggle 2nd and 3rd bit high to signal stim on
             DaqDOut(daq, 0, digWord);
         else
-            digWord=3;
+            digWord=1;
             DaqDOut(daq, 0, digWord);
         end
     end
