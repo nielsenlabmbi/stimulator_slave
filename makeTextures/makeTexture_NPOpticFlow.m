@@ -1,21 +1,14 @@
-function makeTexture_OpticFlow
+function makeTexture_NPOpticFlow
 
-%stimuli: basic set described in Duffy & Wurtz 91 - translation, circular
-%and radial motion; also added random condition
-%same idea: speed sets speed for translational, radial and random stimuli and random; for the circular
-%motion, it sets the average speed
+%stimuli: described in Duffy & Wurtz 95 
+%radial and circular stimuli only, with the possibility to move the center
+%around
+%same stimulus generation (speed etc) as in the OpticFlow module
 %all stimuli are programmed as circles -> large enough circles make
 %fullfield stimuli
-%reason: wrap around for the radial and circular condition are difficult to get right otherwise
-%to allow the looper to work, this has a list of condition numbers rather
-%than trying to more directly code direction etc
-%condition list:
-%0 - random
-%1-8 - planar in steps of 45
-%9 - rotation cw
-%10 - rotation ccw
-%11 - radial expansion
-%12 - radial contraction
+%stimType: rotation versus radial; rather than numbers use string
+%'rot','rad'
+%stimDir: 1/-1 = cw/ccw, expansion/contraction
 %no coherences
 
 global  Mstate DotFrame screenNum loopTrial;
@@ -37,7 +30,7 @@ stimArea=P.stimRadius^2*4;  %we initialize all stimuli on a square, so use that 
 nrDots=round(P.dotDensity*stimArea/fps); %this is the number of dots in each frame
 
 %dot displacement
-if P.stimType==9 || P.stimType==10 
+if strcmp(P.stimType,'rot')
     %different speed for rotating stimulus
     %average speed for a circular motion: v=dtheta/dt *r
     deltaFrame=P.speedDots/(P.stimRadius/sqrt(2))*(1/fps);
@@ -56,18 +49,15 @@ s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2do
 randpos=rand(s,2,nrDots); %this gives numbers between 0 and 1
 
 xypos=[];
-if P.stimType<9 %for the translation stimulus, we keep all of these dots
-    xypos(1,:)=(randpos(1,:)-0.5)*stimRadiusPx*2; %now we have between -stimsize and +stimsize
-    xypos(2,:)=(randpos(2,:)-0.5)*stimRadiusPx*2;
-else %for the other stimuli, remove the dots that are outside the center and correct nr of dots accordingly
-    tmpx=(randpos(1,:)-0.5)*stimRadiusPx*2;
-    tmpy=(randpos(2,:)-0.5)*stimRadiusPx*2;
-    idx=find(sqrt(tmpx.^2+tmpy.^2)<stimRadiusPx);
-  
-    nrDots=length(idx);
-    xypos(1,:)=tmpx(idx);
-    xypos(2,:)=tmpy(idx);
-end
+%remove the dots that are outside the center and correct nr of dots accordingly
+tmpx=(randpos(1,:)-0.5)*stimRadiusPx*2;
+tmpy=(randpos(2,:)-0.5)*stimRadiusPx*2;
+idx=find(sqrt(tmpx.^2+tmpy.^2)<stimRadiusPx);
+
+nrDots=length(idx);
+xypos(1,:)=tmpx(idx);
+xypos(2,:)=tmpy(idx);
+
 
 
 %initialize lifetime vector - between 1 and dotLifetimte
@@ -90,48 +80,16 @@ for i=1:nrFrames
     %check lifetime (unless inf)
     if P.dotLifetime>0
         idx=find(lifetime==0);
-        %reposition the dots that are too old - different procedures based
-        %on stimulus type (see reasoning below)   
-        if P.stimType<9 
-            temppos=rand(s,2,length(idx));
-            xypos(1,idx)=(temppos(1,:)-0.5)*stimRadiusPx*2; 
-            xypos(2,idx)=(temppos(2,:)-0.5)*stimRadiusPx*2;
-        else
-            [~,rad]=cart2pol(xypos(1,idx),xypos(2,idx));
-            thrand=rand(s,1,length(idx))*2*pi;
-            [xypos(1,idx),xypos(2,idx)]=pol2cart(thrand,rad);
-        end
+        %reposition the dots that are too old          
+        [~,rad]=cart2pol(xypos(1,idx),xypos(2,idx));
+        thrand=rand(s,1,length(idx))*2*pi;
+        [xypos(1,idx),xypos(2,idx)]=pol2cart(thrand,rad);
+        
         lifetime=lifetime-1;
         lifetime(idx)=P.dotLifetime;
     end
-    
-    if P.stimType==0 %random motion
-                
-        %random orientation vector
-        ori=rand(s,nrDots)*2*pi;
-        
-        %move dots
-        xypos(1,:)=xypos(1,:)+P.stimDir*deltaFrame.*cos(ori)';
-        xypos(2,:)=xypos(2,:)-P.stimDir*deltaFrame.*sin(ori)';
-        
-        %randomly reposition the dots that are outside the window now
-        idx2=find(abs(xypos(1,:))>stimRadiusPx | abs(xypos(2,:))>stimRadiusPx);
-        rvec=rand(s,2,length(idx2));
-        xypos(1,idx2)=(rvec(1,:)-0.5)*stimRadiusPx*2;
-        xypos(2,idx2)=(rvec(2,:)-0.5)*stimRadiusPx*2;
-        
-    elseif P.stimType>=1 && P.stimType<=8 %translation, 45 deg steps
-        dotdir=45*(P.stimType-1);
-        xypos(1,:)=xypos(1,:)-deltaFrame*cos(dotdir*pi/180);
-        xypos(2,:)=xypos(2,:)-deltaFrame*sin(dotdir*pi/180);
-             
-        %check which ones are outside and place back on the other side
-        idx2=find(abs(xypos(1,:))>stimRadiusPx);
-        rvec=rand(s,size(idx2));
-        xypos(1,idx2)=-1*P.stimDir*stimRadiusPx;
-        xypos(2,idx2)=(rvec-0.5)*2*stimRadiusPx;
-            
-    elseif P.stimType>=9 && P.stimType<=10 % rotation, cw and ccw
+           
+    if strcmp(P.stimType,'rot') % rotation, cw and ccw
             
         %in this case speed is angular speed
         %no wrap around procedure necessary here
@@ -140,6 +98,8 @@ for i=1:nrFrames
         %radius 1/sqrt(2)*stimRadius
                     
         %now compute movement stuff - first get radius and angle
+        
+        %cart2pol(xypos-center)
         [th,rad]=cart2pol(xypos(1,:),xypos(2,:));
             
         %result of cart2pol has theta in radians, with 0 to pi = 0 to
@@ -147,18 +107,15 @@ for i=1:nrFrames
         idx2=find(th<0);
         th(idx2)=2*pi+th(idx2);
             
-        %9 - cw, 10 - ccw
-        if P.stimType==9
-            th=th+deltaFrame;
-        else
-            th=th-deltaFrame;
-        end           
+        %cw/ccw
+        th=th+P.stimDir*deltaFrame;
+          
         %go back to cartesian
         [xtemp,ytemp]=pol2cart(th,rad);
         xypos(1,:)=xtemp;
         xypos(2,:)=ytemp;
             
-    else %radial pattern - 11 expansion, 12 contraction      
+    else %radial pattern  
         
         %radial pattern needs to be solved differently than the other
         %patterns because of wrap around; problem: in the expanding
@@ -224,7 +181,7 @@ for i=1:nrFrames
     [~,rad]=cart2pol(xypos(1,:),xypos(2,:));
     idx=find(rad<stimRadiusPx);
     
-    if P.stimType==12 %we still need to reverse the order for the contracting stimuli
+    if strcmp(P.stimType,'rad') && P.stimDir==-1 %we still need to reverse the order for the contracting stimuli
         tmpFrame{i}=xypos(:,idx);
     else
         DotFrame{i}=xypos(:,idx);
@@ -232,7 +189,7 @@ for i=1:nrFrames
    
 end
 
-if P.stimType==12
+if strcmp(P.stimType,'rad') && P.stimDir==-1
     for i=1:nrFrames
         DotFrame{i}=tmpFrame{nrFrames-i+1};
     end
