@@ -34,7 +34,7 @@ stimRadiusPx=deg2pix(P.stimRadius,'round');
 
 %figure out how many dots 
 stimArea=P.stimRadius^2*4;  %we initialize all stimuli on a square, so use that to compute area
-nrDots=round(P.dotDensity*stimArea/fps); %this is the number of dots in each frame
+nrDots=round(P.dotDensity*stimArea); %this is the number of dots in each frame
 
 %dot displacement
 if P.stimType==9 || P.stimType==10 

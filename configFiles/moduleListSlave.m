@@ -48,6 +48,7 @@ Mlist{31} = {'IS' 'configPstate_ImgScanning' 'makeTexture_ImgScanning' 'playText
 Mlist{32} = {'TT' 'configPstate_TestTrial' 'makeTexture_TestTrial' 'playTexture_TestTrial'};
 Mlist{33} = {'MS' 'configPstate_MSeq' 'makeTexture_MSeq' 'playTexture_MSeq'};
 Mlist{34} = {'RS' 'configPstate_RCTransPlaid' 'makeTexture_RCTransPlaid' 'playTexture_RCTransPlaid' };
+Mlist{35} = {'FG' 'configPstate_FuncGen' 'makeTexture_FuncGen' 'playTexture_FuncGen'};
 
 
 %playfile for the manual mapper
