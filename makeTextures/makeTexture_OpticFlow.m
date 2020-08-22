@@ -108,11 +108,11 @@ for i=1:nrFrames
     if P.stimType==0 %random motion
                 
         %random orientation vector
-        ori=rand(s,nrDots)*2*pi;
+        ori=rand(s,[1 nrDots])*2*pi;
         
         %move dots
-        xypos(1,:)=xypos(1,:)+P.stimDir*deltaFrame.*cos(ori)';
-        xypos(2,:)=xypos(2,:)-P.stimDir*deltaFrame.*sin(ori)';
+        xypos(1,:)=xypos(1,:)+deltaFrame.*cos(ori);
+        xypos(2,:)=xypos(2,:)-deltaFrame.*sin(ori);
         
         %randomly reposition the dots that are outside the window now
         idx2=find(abs(xypos(1,:))>stimRadiusPx | abs(xypos(2,:))>stimRadiusPx);
@@ -126,10 +126,29 @@ for i=1:nrFrames
         xypos(2,:)=xypos(2,:)-deltaFrame*sin(dotdir*pi/180);
              
         %check which ones are outside and place back on the other side
-        idx2=find(abs(xypos(1,:))>stimRadiusPx);
+        %find out how many dots are out of the stimulus window
+        idx2=find(sqrt(xypos(1,:).^2+xypos(2,:).^2)>stimRadiusPx);
+        %reset to the other side of the stimulus
         rvec=rand(s,size(idx2));
-        xypos(1,idx2)=-1*P.stimDir*stimRadiusPx;
-        xypos(2,idx2)=(rvec-0.5)*2*stimRadiusPx;
+        for j=1:length(idx2)
+            %get projection of movement vector onto axes
+            xproj=-cos(dotdir*pi/180);
+            yproj=-sin(dotdir*pi/180);
+            if rvec(j)<= abs(xproj)/(abs(xproj)+abs(yproj))
+                %y axis chosen, so place stimulus at the other x axis and a
+                %random y location
+                xypos(1,idx2(j))=-1*sign(xproj)*stimRadiusPx;
+                xypos(2,idx2(j))=(rand(s,1)-0.5)*stimRadiusPx*2;
+                 disp(xypos(2,idx2(j)))
+                disp(stimRadiusPx)
+            else
+                %x axis chosen
+                xypos(1,idx2(j))=(rand(s,1)-0.5)*stimRadiusPx*2;
+                disp(xypos(1,idx2(j)))
+                disp(stimRadiusPx)
+                xypos(2,idx2(j))=-1*sign(yproj)*stimRadiusPx;
+            end
+        end
             
     elseif P.stimType>=9 && P.stimType<=10 % rotation, cw and ccw
             

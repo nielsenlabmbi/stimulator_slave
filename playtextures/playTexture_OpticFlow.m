@@ -8,9 +8,6 @@ global Stxtr %Created in makeSyncTexture
 
 global DotFrame %created in makeRandomDots
 
-%Wake up the daq:
-DaqDOut(daq, 0, 0); %I do this at the beginning because it improves timing on the call to daq below
-
 
 P = getParamStruct;
 
@@ -25,12 +22,11 @@ syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
 
-
-
 sizeDotsPx=deg2pix(P.sizeDots,'round');
 
-
-
+r=P.redgun;
+g=P.greengun;
+b=P.bluegun;
 
 
 Npreframes = ceil(P.predelay*screenRes.hz);
@@ -41,49 +37,44 @@ Npostframes = ceil(P.postdelay*screenRes.hz);
 
 Screen(screenPTR, 'FillRect', P.background)
 
-r=P.redgun;
-g=P.greengun;
-b=P.bluegun;
 
 
-%%%Play predelay %%%%
-if ~isempty(DotFrame{1})
-    Screen('DrawDots', screenPTR, DotFrame{1}, sizeDotsPx, [r g b],...
-        [P.x_pos P.y_pos],P.dotType);
+%Wake up the daq to improve timing later
+if ~isempty(daq)
+    DaqDOut(daq, 0, 0);
 end
-Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
-Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
-    digWord = 1;  %Make 1st,2nd,3rd bits high
-    DaqDOut(daq, 0, digWord);
-end
-for i = 2:Npreframes
+
+%%%Play predelay - static %%%%
+for i=1:Npreframes
     if ~isempty(DotFrame{1})
         Screen('DrawDots', screenPTR, DotFrame{1}, sizeDotsPx, [r g b],...
             [P.x_pos P.y_pos],P.dotType);
     end
-    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
-    Screen(screenPTR, 'Flip');
+    if i==1
+        Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+        Screen(screenPTR, 'Flip');
+        if loopTrial ~= -1 && ~isempty(daq)
+            digWord = 1;  %Make 1st,2nd,3rd bits high
+            DaqDOut(daq, 0, digWord);
+        end
+    else
+        Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+        Screen(screenPTR, 'Flip');
+    end
 end
 
 %%%%%Play whats in the buffer (the stimulus)%%%%%%%%%%
-if ~isempty(DotFrame{1})
-    Screen('DrawDots', screenPTR, DotFrame{1}, sizeDotsPx, [r g b],...
-        [P.x_pos P.y_pos],P.dotType);
-end
-Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
-Screen(screenPTR, 'Flip');
-if loopTrial ~= -1
-    digWord = 3;  %toggle 2nd bit to signal stim on
-    DaqDOut(daq, 0, digWord);
-end
-for i = 2:Nstimframes
+for i=1:Nstimframes
     if ~isempty(DotFrame{i})
         Screen('DrawDots', screenPTR, DotFrame{i}, sizeDotsPx, [r g b],...
             [P.x_pos P.y_pos],P.dotType);
     end
-    Screen('DrawTextures', screenPTR,Stxtr(1),syncSrc,syncDst);
+    Screen('DrawTextures', screenPTR, Stxtr(1),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
+    if i==1 && loopTrial ~= -1 && ~isempty(daq)
+        digWord = 3;  %toggle 2nd bit to signal stim on
+        DaqDOut(daq, 0, digWord);
+    end
 end
 
 
@@ -95,7 +86,7 @@ for i = 1:Npostframes-1
     end
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if i==i && loopTrial ~= -1
+    if i==1 && loopTrial ~= -1 && ~isempty(daq)
         digWord = 1;  %toggle 2nd bit to signal stim off
         DaqDOut(daq, 0, digWord);
     end
@@ -107,7 +98,7 @@ end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 
-if loopTrial ~= -1
+if loopTrial ~= -1 && ~isempty(daq)
     DaqDOut(daq, 0, 0);  %Make sure 1st bit finishes low
 end
 
