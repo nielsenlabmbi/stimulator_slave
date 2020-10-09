@@ -44,15 +44,10 @@ Nstimframes = ceil(P.stim_time*screenRes.hz);
 %grating  parameters
 pixpercycle=deg2pix(1/P.s_freq,'none');
 shiftperframe=pixpercycle/P.t_period;
-%grating goes from -1 to 1. contrast sets scaling so that after adding the grating 
-%to the background, the range remains between 0 and 1 and the grating is
-%equiluminant to the background. maximum amplitude the grating can have is
-%either the background (if smaller than 0.5), or 1-background.
-ctr=P.contrast/100*0.5;
 
 
 %set background
-Screen(screenPTR, 'FillRect', 0.5)
+Screen(screenPTR, 'FillRect', P.background)
 
 %set sync to black 
 Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
@@ -81,7 +76,7 @@ end
 
 
 %%%%%Play stimuli%%%%%%%%%%
-Screen(screenPTR, 'FillRect', 0.5) %sets the level that the gratings will be added to
+Screen(screenPTR, 'FillRect', P.background) %sets the level that the gratings will be added to
 
 for i = 1:Nstimframes
     
@@ -92,11 +87,11 @@ for i = 1:Nstimframes
   
     %plot grating 1
     Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-    Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctr);
+    Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori);
     
     %if plaid, plot grating 2 and intersections    
     if P.plaid_bit==1 
-        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori2,[],ctr);
+        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori2);
     
         %change luminance at intersections
         %Disable alpha-blending, restrict following drawing to alpha channel:
@@ -137,7 +132,7 @@ end
     
 
 %%%Play postdelay %%%%
-Screen(screenPTR, 'FillRect', 0.5) 
+Screen(screenPTR, 'FillRect', P.background) 
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');

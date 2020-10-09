@@ -58,10 +58,6 @@ grating = cos(sdom);
 thresh = cos(P.s_duty*pi);
 gratingBase=sign(grating-thresh); %-1 for black, 1 for white
 
-%we want to directly specity the luminance of the dark and white part, so
-%put numbers here (subtract background)
-grating(gratingBase<0)=P.lumDark-P.background;
-grating(gratingBase>0)=P.lumBright-P.background;
 
 Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 
