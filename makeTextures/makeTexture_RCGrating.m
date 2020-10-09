@@ -87,7 +87,7 @@ end
 %save these in global structure for use by playTexture
 Gseq.oridom=oridom;
 Gseq.sfdom=sfdom;
-Gseq.tpfdom=tpdom;
+Gseq.tpdom=tpdom;
 Gseq.phasedom=phasedom;
 Gseq.oriseq=oriseq;
 Gseq.sfseq=sfseq;
