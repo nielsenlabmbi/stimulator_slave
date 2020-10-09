@@ -151,8 +151,6 @@ end
 
 
 %%%Play postdelay %%%%
-Screen(screenPTR, 'FillRect', P.background) 
-
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');

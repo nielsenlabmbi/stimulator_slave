@@ -63,8 +63,6 @@ end
 phasedom = linspace(0,360,P.n_phase+1);
 phasedom = phasedom(1:end-1); 
 
-%make contrast domain
-contrastdom = [.5 1];
 
 %make luminance intersection domain
 lumdom=[0 0.2 0.4 0.6 0.8 1];
@@ -84,13 +82,6 @@ lumseq = randi(s,[1 length(lumdom)],1,N_Im);
 idx=find(pairdom(pairseq,1)==pairdom(pairseq,2));
 phaseseq2(idx)=phaseseq1(idx);
 
-%set contrast - for all plaids, use preset contrast; half of the gratings
-%should have half the contrast
-contrastseq=ones(size(pairseq))*2;
-Nhalf=round(length(idx)/2);
-rIdx=Shuffle(idx);
-contrastseq(rIdx(1:Nhalf))=1;
-
 
 %add blanks
 blankflag = zeros(1,N_Im);
@@ -103,8 +94,8 @@ if P.blankProb > 0
     pairseq(bidx) = size(pairdom,1)+1;
     phaseseq1(bidx) = 1;
     phaseseq2(bidx) = 1;
-    contrastseq(bidx) = 1;
     blankflag(bidx) = 1;
+    lumseq(bidx) = 1;
 end
 
 
@@ -112,7 +103,6 @@ end
 %save these in global structure for use by playTexture
 Gseq.pairdom=pairdom;
 Gseq.phasedom=phasedom;
-Gseq.contrastdom=contrastdom;
 Gseq.lumdom=lumdom;
 Gseq.pairseq=pairseq;
 Gseq.phaseseq1=phaseseq1;
@@ -143,8 +133,12 @@ x_ecc=linspace(-stimsize/2,stimsize/2,stimsizeN);
 sdom = x_ecc*P.s_freq*2*pi; %radians
 grating = cos(sdom);
 thresh = cos(P.s_duty*pi);
-grating=sign(grating-thresh);
+gratingBase=sign(grating-thresh); %-1 for black, 1 for white
 
+%we want to directly specity the luminance of the dark and white part, so
+%put numbers here (subtract background)
+grating(gratingBase<0)=P.lumDark-P.background;
+grating(gratingBase>0)=P.lumBright-P.background;
         
 Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 

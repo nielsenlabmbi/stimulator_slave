@@ -50,8 +50,7 @@ end
 sfdom = unique(sfdom);
 
 
-%make temporal frequency domain
-tpdom=linspace(P.min_tp,P.max_tp,P.n_tp);
+%make temporal freque
     
 %make phase domain
 phasedom = linspace(0,360,P.n_phase+1);
@@ -65,7 +64,6 @@ s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2do
 
 oriseq = randi(s,[1 length(oridom)],1,N_Im); 
 sfseq = randi(s,[1 length(sfdom)],1,N_Im); 
-tpseq = randi(s,[1 length(tpdom)],1,N_Im); 
 phaseseq = randi(s,[1 length(phasedom)],1,N_Im); 
 
 %add blanks
@@ -78,7 +76,6 @@ if P.blankProb > 0
     %blank condition is identified with the following indices
     oriseq(bidx) = 1;
     sfseq(bidx) = length(sfdom) + 1;
-    tpseq(bidx) = length(tpdom) + 1;
     phaseseq(bidx) = 1;
     blankflag(bidx) = 1;
 end
@@ -87,11 +84,9 @@ end
 %save these in global structure for use by playTexture
 Gseq.oridom=oridom;
 Gseq.sfdom=sfdom;
-Gseq.tpfdom=tpdom;
 Gseq.phasedom=phasedom;
 Gseq.oriseq=oriseq;
 Gseq.sfseq=sfseq;
-Gseq.tpseq=tpseq;
 Gseq.phaseseq=phaseseq;
 Gseq.blankflag=blankflag;
 

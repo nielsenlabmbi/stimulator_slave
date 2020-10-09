@@ -65,25 +65,29 @@ end
 
 for i = 1:N_Im
     
-    %get orientation and spatial frequency
+    %get orientation, spatial frequency and temporal frequency
     ori=Gseq.oridom(Gseq.oriseq(i));
     p=Gseq.phasedom(Gseq.phaseseq(i));
 
     %adjust contrast for blank
     if Gseq.blankflag(i)==1
         sfid=1;
+        tpid=1;
         ctr=0;
         sfreq=min(Gseq.sfdom);
+        tperiod=min(Gseq.tpdom);
     else
         sfid=Gseq.sfseq(i);
+        tpid=Gseq.tpseq(i);
         ctr=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
         sfreq=Gseq.sfdom(sfid);
+        tperiod=Gseq.tpdom(tpid);
     end
     
     %get shift per frame
     pixpercycle=deg2pix(1/sfreq,'none');
     if P.drift==1
-        shiftperframe=pixpercycle/P.t_period;
+        shiftperframe=pixpercycle/tperiod;
     end
     
     for j = 1:P.h_per 
