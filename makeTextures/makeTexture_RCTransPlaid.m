@@ -107,7 +107,6 @@ Gseq.lumdom=lumdom;
 Gseq.pairseq=pairseq;
 Gseq.phaseseq1=phaseseq1;
 Gseq.phaseseq2=phaseseq2;
-Gseq.contrastseq=contrastseq;
 Gseq.lumseq=lumseq;
 Gseq.blankflag=blankflag;
 

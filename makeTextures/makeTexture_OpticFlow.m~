@@ -178,9 +178,9 @@ for f=1:nrFrames
         xypos(1,:)=xtemp;
         xypos(2,:)=ytemp;
 
-        %wrap around - check for number of dots in bins and refill accordingly
+        %replace dots - check for number of dots in bins and refill accordingly
         idx=find(abs(xypos(1,:))>stimSizePx(1)/2 | abs(xypos(2,:))>stimSizePx(2)/2);
-        xypos(:,idx)=[];
+        xypos(:,idx)=[]'
         for i=2:length(xbins)
             for j=2:length(ybins)
                 %figure out how many dots are in bin
