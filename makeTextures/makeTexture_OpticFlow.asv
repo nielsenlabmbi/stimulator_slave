@@ -177,8 +177,6 @@ for i=1:nrFrames
     xypos(:,idx)=[];
     
     %replace dots - check for number of dots in bins and refill accordingly
-    xpos=[];
-    ypos=[];
     for i=2:length(xbins)
         for j=2:length(ybins)
             %figure out how many dots are in bin
@@ -187,25 +185,20 @@ for i=1:nrFrames
             if Nmiss>0
                 randpos=rand(s,2,Nmiss); %this gives numbers between 0 and 1
                 
-                xpos=[xpos (randpos(1,:)*(xbins(i)-xbins(i-1)))+xbins(i-1)];
-                ypos=[ypos (randpos(2,:)*(ybins(j)-ybins(j-1)))+ybins(j-1)];
-            end
-        end
+        xpos=[xpos (randpos(1,:)*(xbins(i)-xbins(i-1)))+xbins(i-1)];
+        ypos=[ypos (randpos(2,:)*(ybins(j)-ybins(j-1)))+ybins(j-1)];
     end
-    xypos=[xypos [xpos;ypos]];
+end
    
     
-    %remove dots when necessary to generate a round stimulus
-    if strcmp(P.mask_type,'disc')
-        [~,rad]=cart2pol(xypos(1,:),xypos(2,:));
-        idx=find(rad>maskradiusPx);
-        xypos(:,idx)=[];
-    end
+    %make sure to only keep dots inside the stimulus radius
+    [~,rad]=cart2pol(xypos(1,:),xypos(2,:));
+    idx=find(rad<stimRadiusPx);
     
     if P.stimType==12 %we still need to reverse the order for the contracting stimuli
-        tmpFrame{i}=xypos;
+        tmpFrame{i}=xypos(:,idx);
     else
-        DotFrame{i}=xypos;
+        DotFrame{i}=xypos(:,idx);
     end
    
 end
