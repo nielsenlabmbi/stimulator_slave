@@ -151,11 +151,13 @@ try
             blankFlag=1;
         
         case 'FG' %connect/disconnect function generator
-            status=str2num(paramstring(delims(1)+1:delims(2)-1));
-            if status==1
-                funcGenConnect;
-            else
-                funcGenDisconnect;
+            loopTrial=str2num(paramstring(delims(1)+1:delims(2)-1));
+            for i = 1:length(delims)-1
+                dumstr = paramstring(delims(i)+1:delims(i+1)-1);
+                id = find(dumstr == '=');
+                psymbol = dumstr(1:id-1);
+                pval = dumstr(id+1:end);
+                optoInfo.(psymbol)=str2num(pval);
             end
             
         case 'OP' %optoInfo parameters
