@@ -119,7 +119,7 @@ for i = 1:Npreframes
         end
     end
     
-    if i==Nstartfg && P.trialPhaseStart==0
+    if i==Nstartfg && P.trialPhaseStart==0 && P.useFuncGen
          writeline(funcGen.port, funcGen.startStr);
     end
    
@@ -187,11 +187,11 @@ for i = 1:Nstimframes
         DaqDOut(daq, 0, digWord);
     end
     
-    if i==Nstartfg && P.trialPhaseStart==1
+    if i==Nstartfg && P.trialPhaseStart==1 && P.useFuncGen
          writeline(funcGen.port, funcGen.startStr);
     end
    
-    if i==Nstopfg && P.trialPhaseStop==0
+    if i==Nstopfg && P.trialPhaseStop==0 && P.useFuncGen
          writeline(funcGen.port, funcGen.stopStr);
     end 
     
@@ -212,7 +212,7 @@ for i = 1:Npostframes-1
         end
     end
     
-    if i==Nstopfg && P.trialPhaseStop==1
+    if i==Nstopfg && P.trialPhaseStop==1 && P.useFuncGen
          writeline(funcGen.port, funcGen.stopStr);
     end 
 end
