@@ -7,6 +7,7 @@ function saveLog(seq,seed,trialno)
 global Mstate setupDefault
 
 
+%disp(Mstate)
 rootDirs=strtrim(strsplit(setupDefault.logRoot,';'));
 
 for i=1:length(rootDirs)

@@ -51,7 +51,12 @@ sfdom = unique(sfdom);
 
 
 %make temporal frequency domain
-tpdom=linspace(P.min_tp,P.max_tp,P.n_tp);
+if strcmp(P.tp_domain,'log')
+    tpdom = logspace(log10(P.min_tp),log10(P.max_tp),P.n_tp);
+elseif strcmp(P.tp_domain,'lin')
+    tpdom=linspace(P.min_tp,P.max_tp,P.n_tp);
+end
+tpdom = unique(tpdom);
     
 %make phase domain
 phasedom = linspace(0,360,P.n_phase+1);
