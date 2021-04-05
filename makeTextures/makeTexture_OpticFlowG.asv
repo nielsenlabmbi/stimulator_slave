@@ -1,0 +1,272 @@
+function makeTexture_OpticFlowG
+
+%stimuli: this is the set described in Graziano et al 1994
+% logic: 
+% - each dot has a limited lifetime (doesn't work otherwise)
+% - during the lifetime, each dot moves in a constant direction at a
+% constant speed (this way accelaration and path curvature cannot be used
+% to distinguish between patterns)
+% - speed is set to K*r (where r is the distance from the center) for all
+% but the translational patterns; the translational patterns move at the
+% average speed of the other patterns
+% - dots are randomly replotted when the fall outside the perimeter (which
+% will happen even for the rotation since the path is not curved)
+% - spiral pattern consists of combination of expansion plus rotation
+% (equal weight)
+
+% Sdir notation for spiral space: 0 expansion, pi contraction
+
+
+
+global  Mstate DotFrame screenNum loopTrial;
+
+
+%get parameters
+P = getParamStruct;
+
+%get screen settings
+screenRes = Screen('Resolution',screenNum);
+fps=screenRes.hz;      % frames per second
+
+
+%size parameters - this stimulus will be forced to be round (large enough
+%will fill screen)
+%we're computing the nr of dots based on a square, since it is easier to
+%initialize/shuffle them on a square to get a homogeneous density
+stimRadius=deg2pix(P.stimRadius,'round');
+nrDots=round(P.dotDensity*P.stimRadius.^2);%density is specified in dots/(deg^2) 
+
+
+%initialize random number generate to time of date
+s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2double(Mstate.unit)+str2double(Mstate.expt)+loopTrial);
+
+%initialize dot positions, delta position and orientation
+xypos=zeros(2,nrDots); 
+
+%displacements: set so that the scaling factor makes the average speed
+%appear at half the stimulus radius
+avgDeltaFrame = deg2pix(P.avgSpeedDots,'none')/fps; %this is the displacement based on the average speed in pixels per frame
+speedScale = 2*avgDeltaFrame/stimRadius; 
+
+if P.spiralBit==1 %spiral; everything gets set during first frame
+    deltaFrame=zeros(nrDots,1);
+    dotDir=zeros(nrDots,1);
+else
+    deltaFrame=avgDeltaFrame;
+    dotDir=P.Tdir/180*pi; %needs to be in radians
+end
+
+%initialize lifetime vector: set everything to 0 here so every dot gets an
+%initial direction and speed; set to random start value for frame 1 later 
+lifetime=zeros(nrDots,1);
+
+
+%figure out how many frames - we use the first and the last frame to be
+%shown in the pre and postdelay, so only stimulus duration matters here
+nrFrames=ceil(P.stim_time*fps);
+
+%now generate dot coordinates for all frames
+DotFrame={};
+
+for f=1:nrFrames 
+    %find dots with lifetime 0 (only then does the direction/speed change)
+    idx=find(lifetime==0);
+    
+    %first move these dots to a new position
+    rvec=rand(s,[2 length(idx)]); %gives numbers between 0 and 1
+    xypos(1,idx)=(rvec(1,:)-0.5)*2*stimRadius;
+    xypos(2,idx)=(rvec(2,:)-0.5)*2*stimRadius;
+    
+    %now update direction and speed
+    if P.spiralBit==1 %spiral
+        %get polar coordinates of dots to figure out speed and direction
+        [th,rad]=cart2pol(xypos(1,idx),xypos(2,idx));
+        dotDir(idx)=th+P.Sdir/180*pi; %this is in radians
+        deltaFrame(idx)=speedScale*rad;
+    end
+    
+    %now move everyone
+    xypos(1,:)=xypos(1,:)-deltaFrame.*cos(dotDir);
+    xypos(2,:)=xypos(2,:)-deltaFrame.*sin(dotDir);
+    
+    %update lifetime
+    if f==1
+        randlife=randi(s,P.dotLifetime,nrDots,1);
+        lifetime=randlife;
+    else
+        lifetime=lifetime-1;
+        lifetime(idx)=P.dotLifetime;
+    end
+    
+    %randomly reshuffle the ones that end up outside the stimulus (these
+    %will need to have their speeds etc recomputed, so set their lifetime to 0 at this point)
+    %because density is computed on square, use that to figure out of
+    %bounds
+    idxOut=find(abs(xypos(1,:))>stimSizRadius | abs(xypos(2,:))>stimSizePx(2)/2);
+    
+        
+        %for the contracting stimulus only (Sdir==pi), eliminate dots that
+        %cross the origin
+        
+    
+    
+end
+    
+end %for frames
+
+
+
+
+
+
+
+
+tmpFrame={};
+
+      
+    if P.stimType==0 %random motion
+                
+        %random orientation vector
+        ori=rand(s,[1 nrDots])*2*pi;
+        
+        %move dots
+        xypos(1,:)=xypos(1,:)+deltaFrame.*cos(ori);
+        xypos(2,:)=xypos(2,:)-deltaFrame.*sin(ori);
+        
+        %randomly reposition the dots outside of the stimulus area
+        idx=find(abs(xypos(1,:))>stimSizePx(1)/2 | abs(xypos(2,:))>stimSizePx(2)/2);
+        rvec=rand(s,[2 length(idx)]);
+        xypos(1,idx)=(rvec(1,:)-0.5)*stimSizePx(1);
+        xypos(2,idx)=(rvec(2,:)-0.5)*stimSizePx(2);
+        
+    elseif P.stimType>=1 && P.stimType<=8 %translation, 45 deg steps
+        dotdir=45*(P.stimType-1);
+        xypos(1,:)=xypos(1,:)-deltaFrame*cos(dotdir*pi/180);
+        xypos(2,:)=xypos(2,:)-deltaFrame*sin(dotdir*pi/180);
+             
+       
+        %find out how many dots are out of the stimulus window
+        idx=find(abs(xypos(1,:))>stimSizePx(1)/2 | abs(xypos(2,:))>stimSizePx(2)/2);
+   
+        %reset to the other side of the stimulus
+        rvec=rand(s,size(idx));
+        for j=1:length(idx)
+            %get projection of movement vector onto axes
+            xproj=-cos(dotdir*pi/180);
+            yproj=-sin(dotdir*pi/180);
+            if rvec(j)<= abs(xproj)/(abs(xproj)+abs(yproj))
+                %y axis chosen, so place stimulus at the other x axis and a
+                %random y location
+                xypos(1,idx(j))=-1*sign(xproj)*stimSizePx(1)/2;
+                xypos(2,idx(j))=(rand(s,1)-0.5)*stimSizePx(2);
+            else
+                %x axis chosen
+                xypos(1,idx(j))=(rand(s,1)-0.5)*stimSizePx(1);
+                xypos(2,idx(j))=-1*sign(yproj)*stimSizePx(2)/2;
+            end
+        end
+        
+    elseif P.stimType>=9 && P.stimType<=10 % rotation, cw and ccw
+            
+        %in this case speed is angular speed
+        %no wrap around procedure necessary here
+            
+        %half the number of dots are contained within a circle of
+        %radius 1/sqrt(2)*stimRadius
+                    
+        %now compute movement stuff - first get radius and angle
+        [th,rad]=cart2pol(xypos(1,:),xypos(2,:));
+            
+        %result of cart2pol has theta in radians, with 0 to pi = 0 to
+        %180, and -pi to 0 = 180 to 360; transform to 0 to 2pi
+        idx2=find(th<0);
+        th(idx2)=2*pi+th(idx2);
+            
+        %9 - cw, 10 - ccw
+        if P.stimType==9
+            th=th+deltaFrame;
+        else
+            th=th-deltaFrame;
+        end           
+        %go back to cartesian
+        [xtemp,ytemp]=pol2cart(th,rad);
+        xypos(1,:)=xtemp;
+        xypos(2,:)=ytemp;
+            
+    else %radial pattern - 11 expansion, 12 contraction      
+        
+        %we model the contracting dot pattern as an expanding one and then
+        %reverse the order - otherwise we'd have to figure out a minimal
+        %radius at which to remove the dots; easier to deal with dots that
+        %have moved too far away
+            
+        [th,rad]=cart2pol(xypos(1,:),xypos(2,:));
+                                   
+        rad=rad+rad*deltaFrame;
+            
+        %go back to cartesian
+        [xtemp,ytemp]=pol2cart(th,rad);
+        xypos(1,:)=xtemp;
+        xypos(2,:)=ytemp;
+
+        %wrap around - check for number of dots in bins and refill accordingly
+        idx=find(abs(xypos(1,:))>stimSizePx(1)/2 | abs(xypos(2,:))>stimSizePx(2)/2);
+        xypos(:,idx)=[];
+        for i=2:length(xbins)
+            for j=2:length(ybins)
+                %figure out how many dots are in bin
+                idx=find(xypos(1,:)>xbins(i-1) & xypos(1,:)<xbins(i) & ...
+                    xypos(2,:)>ybins(j-1) & xypos(2,:)<ybins(j));
+                Ndiff=dotsBin-length(idx);
+                
+                %add or subtract dots
+                if Ndiff>0 %add dots
+                    randpos=rand(s,2,Ndiff); %this gives numbers between 0 and 1
+                    
+                    xtmp=(randpos(1,:)*(xbins(i)-xbins(i-1)))+xbins(i-1);
+                    ytmp=(randpos(2,:)*(ybins(j)-ybins(j-1)))+ybins(j-1);
+                    
+                    xypos=[xypos [xtmp;ytmp]];
+                elseif Ndiff<0 %remove dots
+                    p=randperm(s,length(idx),abs(Ndiff));
+                    xypos(:,idx(p))=[];
+                end
+            end
+        end
+        
+    end
+    
+    %check lifetime (unless inf)
+    if P.dotLifetime>0
+        idx=find(lifetime==0);
+        
+        %give these dots random positions
+        rvec=rand(s,[2 length(idx)]);
+        xypos(1,idx)=(rvec(1,:)-0.5)*stimSizePx(1);
+        xypos(2,idx)=(rvec(2,:)-0.5)*stimSizePx(2);
+        
+        lifetime=lifetime-1;
+        lifetime(idx)=P.dotLifetime;
+    end
+    
+
+    %remove dots when necessary to generate a round stimulus
+    if strcmp(P.mask_type,'disc')
+        [~,rad]=cart2pol(xypos(1,:),xypos(2,:));
+        idx=find(rad>maskradiusPx);
+        xypos(:,idx)=[];
+    end
+        
+    if P.stimType==12 %we still need to reverse the order for the contracting stimuli
+        tmpFrame{f}=xypos;
+    else
+        DotFrame{f}=xypos;
+    end
+   
+end
+
+if P.stimType==12
+    for i=1:nrFrames
+        DotFrame{i}=tmpFrame{nrFrames-i+1};
+    end
+end
