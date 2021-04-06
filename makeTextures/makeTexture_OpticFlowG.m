@@ -53,7 +53,7 @@ if P.spiralBit==1 %spiral; everything gets set during first frame
     dotDir=zeros(nrDots,1);
 else
     deltaFrame=avgDeltaFrame;
-    dotDir=P.Tdir/180*pi; %needs to be in radians
+    dotDir=P.ori/180*pi; %needs to be in radians
 end
 
 %initialize lifetime vector: set everything to 0 here so every dot gets an
@@ -81,14 +81,14 @@ for f=1:nrFrames
     if P.spiralBit==1 %spiral
         %get polar coordinates of dots to figure out speed and direction
         [th,rad]=cart2pol(xypos(1,idx),xypos(2,idx));
-        dotDir(idx)=th+P.Sdir/180*pi; %this is in radians
+        dotDir(idx)=th+P.ori/180*pi; %this is in radians
         deltaFrame(idx)=speedScale*rad;
         
         %for the contracting stimulus, we need to flag dots that would
         %cross to the opposite side of the center and move in the wrong
         %direction there
         flagOut=[];
-        if P.Sdir==180 
+        if P.ori==180 
             flagOut=find(deltaFrame>rad);
         end
         
