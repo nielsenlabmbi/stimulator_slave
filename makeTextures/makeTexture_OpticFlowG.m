@@ -49,17 +49,19 @@ avgDeltaFrame = deg2pix(P.avgSpeedDots,'none')/fps; %this is the displacement ba
 speedScale = 2*avgDeltaFrame/stimRadius; 
 
 if P.spiralBit==1 %spiral; everything gets set during first frame
-    deltaFrame=zeros(nrDots,1);
-    dotDir=zeros(nrDots,1);
+    deltaFrame=zeros(1,nrDots);
+    dotDir=zeros(1,nrDots);
 else
     deltaFrame=avgDeltaFrame;
-    dotDir=P.ori/180*pi; %needs to be in radians
+    dotDir=ones(1,nrDots)*P.ori/180*pi; %needs to be in radians
 end
 
 %initialize lifetime vector: set everything to 0 here so every dot gets an
 %initial direction and speed; set to random start value for frame 1 later 
-lifetime=zeros(nrDots,1);
+lifetime=zeros(1, nrDots);
 
+%figure out how many noise dots there are
+nrNoise=round(nrDots*(1-P.dotCoherence/100)); 
 
 %figure out how many frames - we use the first and the last frame to be
 %shown in the pre and postdelay, so only stimulus duration matters here
@@ -76,7 +78,7 @@ for f=1:nrFrames
     rvec=rand(s,[2 length(idx)]); %gives numbers between 0 and 1
     xypos(1,idx)=(rvec(1,:)-0.5)*2*stimRadius;
     xypos(2,idx)=(rvec(2,:)-0.5)*2*stimRadius;
-    
+        
     %now update direction and speed
     if P.spiralBit==1 %spiral
         %get polar coordinates of dots to figure out speed and direction
@@ -87,11 +89,32 @@ for f=1:nrFrames
         %for the contracting stimulus, we need to flag dots that would
         %cross to the opposite side of the center and move in the wrong
         %direction there
-        flagOut=[];
-        if P.ori==180 
-            flagOut=find(deltaFrame>rad);
-        end
-        
+        %turns out this is not noticeable
+        %if P.ori==0 
+        %    flagOut=find(deltaFrame>rad);
+        %end
+    else
+        %for translation, initally reset all of these dots back to signal
+        %direction
+        dotDir(idx)=P.ori/180*pi; 
+    end
+    
+    %noise: either randomly reposition or randomly assign direction to
+    %preserve speed gradient; we do this here for the random direction;
+    %doesn't matter for the random reposition that there is another arbitrary
+    %jump in position after
+    if P.noiseType==0 %reposition, don't do anything about direction/speed
+        idxNoise=randperm(s,nrDots,nrNoise);
+        rvec=rand(s,[2 length(idxNoise)]); 
+        xypos(1,idxNoise)=(rvec(1,:)-0.5)*2*stimRadius;
+        xypos(2,idxNoise)=(rvec(2,:)-0.5)*2*stimRadius;
+        lifetime(idxNoise)=1; %these will need a direction to be assigned in the next round
+    else %change direction only
+        %we randomly pick a fraction of the lifetime 0 dots for this method
+        %(dots will keep their assignment for their lifetime)        
+        signalid=rand(s,1,length(idx))<P.dotCoherence/100; %id=1: signal
+        randdir=round(360*rand(s,1,length(idx)-sum(signalid)));
+        dotDir(idx(signalid==0))=randdir;
     end
     
     %now move everyone
@@ -103,8 +126,8 @@ for f=1:nrFrames
         randlife=randi(s,P.dotLifetime,nrDots,1);
         lifetime=randlife;
     else
+        lifetime(lifetime==0)=P.dotLifetime; 
         lifetime=lifetime-1;
-        lifetime(idx)=P.dotLifetime;
     end
     
     %randomly reshuffle the ones that end up outside the stimulus (these
@@ -116,19 +139,20 @@ for f=1:nrFrames
     xypos(1,idxOut)=(rvec(1,:)-0.5)*2*stimRadius;
     xypos(2,idxOut)=(rvec(2,:)-0.5)*2*stimRadius;
     lifetime(idxOut)=0;
+    
         
     %for the contracting stimulus only (Sdir==pi), eliminate dots that
     %cross the origin
-    if isempty(flagOut)
-        rvec=rand(s,[2 length(flagOut)]); 
-        xypos(1,flagOut)=(rvec(1,:)-0.5)*2*stimRadius;
-        xypos(2,flagOut)=(rvec(2,:)-0.5)*2*stimRadius;
-        lifetime(flagOut)=0;
-    end  
+    %if isempty(flagOut)
+    %    rvec=rand(s,[2 length(flagOut)]); 
+    %    xypos(1,flagOut)=(rvec(1,:)-0.5)*2*stimRadius;
+    %    xypos(2,flagOut)=(rvec(2,:)-0.5)*2*stimRadius;
+    %    lifetime(flagOut)=0;
+    %end  
    
     %now save, keeping only dots that are inside the radius
     [~,rad]=cart2pol(xypos(1,:),xypos(2,:));
-    DotFrame{f}=xypos(rad>stimRadius,:);
+    DotFrame{f}=xypos(:,rad<stimRadius);
     
 end %for frames
 
