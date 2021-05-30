@@ -40,7 +40,7 @@ cRGB = nan(256,3);
 
 y = interp1(RGB(:,1),RGB(:,2),0:255,'pchip');
 %iMax = find(max(y)==y,1,'first');
-iMax = 240;
+iMax = 215;
 iMin = find(min(y)==y,1,'last');
 mR = (y - y(iMin))/y(iMax);
 dR = 0:(1/255):1;
@@ -50,7 +50,7 @@ end
 
 y = interp1(RGB(:,1),RGB(:,3),0:255,'pchip');
 %iMax = find(max(y)==y,1,'first');
-iMax = 212;
+iMax = 215;
 iMin = find(min(y)==y,1,'last');
 mG = (y - y(iMin))/y(iMax);
 dG = (0:(1/255):1)';
@@ -60,7 +60,7 @@ end
 
 y = interp1(RGB(:,1),RGB(:,4),0:255,'pchip');
 %iMax = find(max(y)==y,1,'first');
-iMax = 212;
+iMax = 215;
 iMin = find(min(y)==y,1,'last');
 mB = (y - y(iMin))/y(iMax);
 dB = (0:(1/255):1)';
