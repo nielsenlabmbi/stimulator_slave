@@ -40,7 +40,7 @@ cRGB = nan(256,3);
 
 y = interp1(RGB(:,1),RGB(:,2),0:255,'pchip');
 %iMax = find(max(y)==y,1,'first');
-iMax = 228;
+iMax = 215;
 iMin = find(min(y)==y,1,'last');
 mR = (y - y(iMin))/y(iMax);
 dR = 0:(1/255):1;

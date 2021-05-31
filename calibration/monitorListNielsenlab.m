@@ -51,5 +51,5 @@ switch monitorID
         monitorPar.screenYcm = 53.4;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/LG43_210530/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/LG43_210531/luminance.mat';
 end
