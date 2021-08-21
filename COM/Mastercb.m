@@ -32,7 +32,7 @@ try
     msgID = inString(1:delims(1)-1); 
     
     %parse parameters accordingly
-    if ismember(msgID,{'M','C','S','OP','L','F','FG'})
+    if ismember(msgID,{'M','C','S','OP','L','F','FG','ZS'})
         paramstring = inString(delims(1):end); %parameters start immediately after message string
     elseif strcmp(msgID,'B')        
         modID = inString(delims(1)+1:delims(2)-1); %stimulus module follows message string, then trial ID, then param
@@ -156,6 +156,14 @@ try
                 funcGenConnect;
             else
                 funcGenDisconnect;
+            end
+            
+        case 'ZS' %connect/disconnect zaber stages
+            status=str2num(paramstring(delims(1)+1:delims(2)-1));
+            if status==1
+                zaberConnect;
+            else
+                zaberDisconnect;
             end
             
         case 'OP' %optoInfo parameters
