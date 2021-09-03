@@ -52,6 +52,7 @@ Mlist{35} = {'FG' 'configPstate_FuncGen' 'makeTexture_FuncGen' 'playTexture_Func
 Mlist{36} = {'PF' 'configPstate_PerGratingFG' 'makeTexture_PerGratingFG' 'playTexture_PerGratingFG' };
 Mlist{37} = {'OG' 'configPstate_OpticFlowG' 'makeTexture_OpticFlowG' 'playTexture_OpticFlowG' };
 Mlist{38} = {'ZT' 'configPstate_ZaberTrial' 'makeTexture_ZaberTrial' 'playTexture_ZaberTrial' };
+Mlist{39} = {'ZR' 'configPstate_ZaberRot' 'makeTexture_ZaberRot' 'playTexture_ZaberRot' };
 
 
 
