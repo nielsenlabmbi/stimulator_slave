@@ -23,9 +23,9 @@ P = getParamStruct;
 screenRes = Screen('Resolution',screenNum);
 Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
-Nstimframes = ceil(P.stimDur*screenRes.hz);
+Nrotframes = ceil(P.rotDur*screenRes.hz);
 
-moveAngle=P.stimDur*P.rotSpeed; %relative angle by which to move the stage
+moveAngle=P.rotDir*P.rotDur*P.rotSpeed; %relative angle by which to move the stage
 
 %Wake up the daq to improve timing later
 if ~isempty(daq)
@@ -44,8 +44,8 @@ for i = 2:Npreframes
 end
 
 
-%%%%%ramp 1%%%%%%%%%%
-for i = 1:Nstimframes
+%%%%%rot%%%%%%%%%%
+for i = 1:Nrotframes
     Screen(screenPTR, 'Flip');
     
     if i==1
