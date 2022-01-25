@@ -1,5 +1,7 @@
 function makeTexture_ZaberRot
 
+%nothing to be done here
+
 import zaber.motion.Library;
 import zaber.motion.ascii.Connection;
 import zaber.motion.Units;
@@ -17,12 +19,16 @@ Library.enableDeviceDbStore();
 
 global zaber
 
+%disp(zaber.axis(1).getPosition());
+%zaber.axis(1).moveAbsolute(5,Units.LENGTH_MILLIMETRES);
+%disp(zaber.axis(1).getPosition());
+
 %get parameters
-P = getParamStruct;
+%P = getParamStruct;
 
 %move x and y axes
-zaber.axis(1).moveRelative(P.pos1,Units.LENGTH_MILLIMETRES);
-zaber.axis(2).moveRelative(P.pos2,Units.LENGTH_MILLIMETRES);
+%zaber.axis(1).moveRelative(double(P.pos1),Units.LENGTH_MILLIMETRES);
+%zaber.axis(2).moveRelative(P.pos2,Units.LENGTH_MILLIMETRES);
 
 
 %set axis to its default speed

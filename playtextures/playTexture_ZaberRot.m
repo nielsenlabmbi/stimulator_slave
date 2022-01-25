@@ -1,5 +1,6 @@
 function playTexture_ZaberRot
-%move 1 zaber stage in a ramp and hold pattern
+%note: if this function crashes, it's because the zaber stages can't
+%execute the relative movement because it's past their range
 
 import zaber.motion.Library;
 import zaber.motion.ascii.Connection;
@@ -31,6 +32,10 @@ moveAngle=P.rotDir*P.rotDur*P.rotSpeed; %relative angle by which to move the sta
 if ~isempty(daq)
     DaqDOut(daq, 0, 0);
 end
+
+%move the x and y stages to their locations
+zaber.axis(1).moveRelative(P.pos1,Units.LENGTH_MILLIMETRES);
+zaber.axis(2).moveRelative(P.pos2,Units.LENGTH_MILLIMETRES);
 
 %%%Play predelay %%%%
 Screen(screenPTR, 'FillRect', 0)
@@ -79,6 +84,10 @@ for i = 1:Npostframes-1
 end
 Screen(screenPTR, 'Flip');
 
+
+%move the x and y stages back to their initial locations
+zaber.axis(1).moveRelative(-P.pos1,Units.LENGTH_MILLIMETRES);
+zaber.axis(2).moveRelative(-P.pos2,Units.LENGTH_MILLIMETRES);
 
 if loopTrial ~= -1 && ~isempty(daq)
     DaqDOut(daq, 0, 0);  %Make sure 3rd bit finishes low
