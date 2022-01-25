@@ -20,6 +20,9 @@ global zaber
 %get parameters
 P = getParamStruct;
 
+%move x and y axes
+zaber.axis(1).moveRelative(P.pos1,Units.LENGTH_MILLIMETRES);
+zaber.axis(2).moveRelative(P.pos2,Units.LENGTH_MILLIMETRES);
 
 
 %set axis to its default speed
