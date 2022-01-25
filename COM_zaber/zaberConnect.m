@@ -28,7 +28,7 @@ try
     end
     
     %move home
-    zaber.device(1).getAllAxes().home();
+    %zaber.device(1).getAllAxes().home();
     
 catch exception
     zaber.connection.close();

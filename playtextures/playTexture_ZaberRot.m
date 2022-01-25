@@ -50,7 +50,8 @@ for i = 1:Nrotframes
     
     if i==1
         %start moving; will not wait for execution here       
-        zaber.axis(3).moveRelative(moveAngle,Units.ANGLE_DEGREES,0);
+        %zaber.axis(3).moveRelative(moveAngle,Units.ANGLE_DEGREES,0);
+        zaber.axis(3).moveVelocity(P.rotDir*P.rotSpeed,Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND);
 
         %generate event
         if ~isempty(daq) && loopTrial ~= -1
@@ -67,9 +68,12 @@ end
 for i = 1:Npostframes-1
     Screen(screenPTR, 'Flip');
     
-    if i==1 && loopTrial ~= -1 && ~isempty(daq)
-        digWord = 1;  %toggle 2nd bit to signal stim on
-        DaqDOut(daq, 0, digWord);
+    if i==1 
+        zaber.axis(3).stop();
+        if loopTrial ~= -1 && ~isempty(daq)
+            digWord = 1;  %toggle 2nd bit to signal stim on
+            DaqDOut(daq, 0, digWord);
+        end
     end
 
 end

@@ -26,5 +26,5 @@ zaber.axis(2).moveRelative(P.pos2,Units.LENGTH_MILLIMETRES);
 
 
 %set axis to its default speed
-zaber.axis(3).getSettings().set('maxspeed', P.rotSpeed, Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND);
+%zaber.axis(3).getSettings().set('maxspeed', P.rotSpeed, Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND);
 
