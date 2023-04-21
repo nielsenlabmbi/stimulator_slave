@@ -54,6 +54,7 @@ Mlist{37} = {'OG' 'configPstate_OpticFlowG' 'makeTexture_OpticFlowG' 'playTextur
 Mlist{38} = {'ZT' 'configPstate_ZaberTrial' 'makeTexture_ZaberTrial' 'playTexture_ZaberTrial' };
 Mlist{39} = {'ZR' 'configPstate_ZaberRot' 'makeTexture_ZaberRot' 'playTexture_ZaberRot' };
 Mlist{40} = {'LV' 'configPstate_LED' 'makeTexture_LED' 'playTexture_LED' };
+Mlist{41} = {'NB' 'configPstate_NoiseBar' 'makeTexture_NoiseBar' 'playTexture_NoiseBar' };
 
 
 

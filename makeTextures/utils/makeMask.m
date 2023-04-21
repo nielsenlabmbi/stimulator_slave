@@ -11,7 +11,7 @@ function mask=makeMask(screenRes,x_pos,y_pos,xsizeN,ysizeN,maskradiusN,mask_type
 %x_pos, y_pos: position in pixel
 %xsizeN, ysizeN: size in pixel
 %maskradiusN: radius in pixel
-%mask_type: gauss, disc or non
+%mask_type: gauss, disc or none
 %varargin: mask_color (0.5 default)
 
 if isempty(varargin)

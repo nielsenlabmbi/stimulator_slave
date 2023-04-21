@@ -36,7 +36,7 @@ Gtxtr(1) = Screen(screenPTR, 'MakeTexture',Im,[],[],2);
 %generate noise texture - treat like grating (add on in one direction, rest
 %solved with rotation/translation in playTexture
 %stimuli will need to be larger to deal with rotation
-stimsize=2*sqrt((P.x_size/2).^2+(P.y_size/2).^2); %deg
+stimsize=2*sqrt(2*(P.text_size/2).^2); %deg
 
 %add extra so that we can slide the window to generate motion 
 stimsize=stimsize+P.speed*P.stim_time; %deg
@@ -47,15 +47,22 @@ stimsizeN=deg2pix(stimsize,'ceil'); %pixel
 %now divide into squares with same width as bar
 nText = ceil(stimsizeN/xNbar);
 
-%operate at block level - set certain blocks to texture
-nBlock=length(nText^2);
-idxText=randperm(nBlock,round(nBlock*P.frac_text));
+%generate output texture
+textOut=ones(nText)*P.background; %we're operating at the block level here
 
-textOut=ones(nBlock)*P.background;
+idxText=randperm(nText^2,round(P.frac_text*nText^2));
+
 textOut(idxText)=P.text_lum;
 
+%expand out into pixel level
 textOut=repelem(textOut,xNbar,xNbar);
 Gtxtr(2) = Screen('MakeTexture',screenPTR,textOut, [],[],2);
+
+%need a mask to deal with the rotation
+maskN=deg2pix(P.text_size,'round');
+mask=makeMask(screenRes,P.x_pos,P.y_pos,maskN,maskN,0,'none',P.background);
+Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
+
 
 
 
