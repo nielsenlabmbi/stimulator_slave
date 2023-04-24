@@ -6,6 +6,8 @@ global Mstate screenPTR screenNum daq loopTrial
 
 global Gtxtr    %Created in makeTexture
 
+global Masktxtr
+
 global Stxtr %Created in makeSyncTexture
 
 
@@ -74,16 +76,19 @@ end
 %draw texture, centered on screen
 textSrc=[0 0 xNtext xNtext];
 Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
-Screen('DrawTexture', screenPTR, Masktxtr(2)); 
+Screen('DrawTexture', screenPTR, Masktxtr(1)); 
 
 %draw bar at offset relative to center (movement will be symmetric around
 %center
 if P.stim_type>0
     offset=P.speed*P.stim_time/2; %in deg
-    offsetX=deg2pix(offset,'round')*cos(P.ori*pi/180);
-    offsetY=deg2pix(offset,'round')*sin(P.ori*pi/180);
+    disp(offset)
+    
+    offsetX=deltaFrame*Nstimframes/2*cos(P.ori*pi/180);
+    offsetY=deltaFrame*Nstimframes/2*sin(P.ori*pi/180);
+    disp(offsetX)
 
-    barDst=CenterRectOnPoint(barSrc,P.x_pos-offsetX,P.y_pos-offsetY);
+    barDst=CenterRectOnPoint(barSrc,P.x_pos+offsetX,P.y_pos+offsetY);
     Screen('DrawTextures', screenPTR,Gtxtr(1),barSrc,barDst,P.ori);
 end
 
@@ -97,7 +102,7 @@ if loopTrial ~= -1
 end
 for i = 2:Npreframes2
     Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
-    Screen('DrawTexture', screenPTR, Masktxtr(2)); 
+    Screen('DrawTexture', screenPTR, Masktxtr(1)); 
     if P.stim_type>0
         Screen('DrawTextures', screenPTR,Gtxtr(1),barSrc,barDst,P.ori);
     end
@@ -107,6 +112,8 @@ end
 
 
 %%%%%Play stimuli%%%%%%%%%%
+deltaX=0;
+deltaY=0;
 for i = 1:Nstimframes
     %move texture
     if P.stim_type==1 %only bar moves
@@ -118,14 +125,14 @@ for i = 1:Nstimframes
 
     %draw texture
     Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
-    Screen('DrawTexture', screenPTR, Masktxtr(2));
+    Screen('DrawTexture', screenPTR, Masktxtr(1));
 
 
     %move bar
     if P.stim_type>0
         deltaX=deltaX+deltaFrame*cos(P.ori*pi/180);
         deltaY=deltaY+deltaFrame*sin(P.ori*pi/180);
-        barDst=CenterRectOnPoint(barSrc,P.x_pos-offsetX+deltaX,P.y_pos-offsetY+deltaY);
+        barDst=CenterRectOnPoint(barSrc,P.x_pos+offsetX-deltaX,P.y_pos+offsetY-deltaY);
         Screen('DrawTextures', screenPTR,Gtxtr(1),barSrc,barDst,P.ori);
     end
     
