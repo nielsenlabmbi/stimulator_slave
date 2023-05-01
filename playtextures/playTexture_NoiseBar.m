@@ -43,7 +43,7 @@ deltaFrame = deg2pix(P.speed,'none')/fps;
 
 
 %get timing information
-Npreframes1 = ceil(P.predelay1*screenRes.hz);
+Npreframes1 = ceil(P.predelay*screenRes.hz);
 Npreframes2 = ceil(P.predelay2*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
