@@ -73,20 +73,22 @@ for i = 2:Npreframes1
 end
 
 %%%Play predelay (stationary stimulus) %%%%
-%draw texture, centered on screen
-textSrc=[0 0 xNtext xNtext];
-Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
-Screen('DrawTexture', screenPTR, Masktxtr(1)); 
+%draw texture, centered on screen (if selected)
+if P.stim_type~=1
+    textSrc=[0 0 xNtext xNtext];
+    Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
+    Screen('DrawTexture', screenPTR, Masktxtr(1));
+end
 
 %draw bar at offset relative to center (movement will be symmetric around
 %center
 if P.stim_type>0
     offset=P.speed*P.stim_time/2; %in deg
-    disp(offset)
+    %disp(offset)
     
     offsetX=deltaFrame*Nstimframes/2*cos(P.ori*pi/180);
     offsetY=deltaFrame*Nstimframes/2*sin(P.ori*pi/180);
-    disp(offsetX)
+    %disp(offsetX)
 
     barDst=CenterRectOnPoint(barSrc,P.x_pos+offsetX,P.y_pos+offsetY);
     Screen('DrawTextures', screenPTR,Gtxtr(1),barSrc,barDst,P.ori);
@@ -97,12 +99,14 @@ Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 
 Screen(screenPTR, 'Flip');
 if loopTrial ~= -1
-    digWord = 1;  %Make 1st bit high
+    digWord = 3;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
 end
 for i = 2:Npreframes2
-    Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
-    Screen('DrawTexture', screenPTR, Masktxtr(1)); 
+    if P.stim_type~=1
+        Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
+        Screen('DrawTexture', screenPTR, Masktxtr(1));
+    end
     if P.stim_type>0
         Screen('DrawTextures', screenPTR,Gtxtr(1),barSrc,barDst,P.ori);
     end
@@ -116,17 +120,18 @@ deltaX=0;
 deltaY=0;
 for i = 1:Nstimframes
     %move texture
-    if P.stim_type==1 %only bar moves
+    if P.stim_type==2 %texture stationary
         textSrc=[0 0 xNtext xNtext];
-    else
+    else %we fold the no texture condition into this
         textOffset = (i-1)*deltaFrame;
         textSrc=[textOffset 0 textOffset+xNtext-1 xNtext-1];
     end
 
     %draw texture
-    Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
-    Screen('DrawTexture', screenPTR, Masktxtr(1));
-
+    if P.stim_type~=1
+        Screen('DrawTextures', screenPTR,Gtxtr(2),textSrc,textDst,P.ori);
+        Screen('DrawTexture', screenPTR, Masktxtr(1));
+    end
 
     %move bar
     if P.stim_type>0
@@ -144,7 +149,7 @@ for i = 1:Nstimframes
         
     %generate event
     if loopTrial ~=-1
-        digWord=3;
+        digWord=7;
         DaqDOut(daq, 0, digWord);
     end
 end
