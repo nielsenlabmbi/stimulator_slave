@@ -15,7 +15,7 @@ screenRes = Screen('Resolution',screenNum);
 
 %define the list of parameters that can be accessed with the mouse and
 %their settings
-symbList = {'ori','s_freq','t_period','mask_radius','s_profile','contrast','visible'};
+symbList = {'ori','s_freq','t_period','mask_radius','contrast','s_profile','visible'};
 valdom{1} = 0:15:359;
 valdom{2} = logspace(log10(.002),log10(2),20);
 valdom{3} = logspace(log10(.5),log10(10),20);  %Hz
@@ -26,7 +26,7 @@ valdom{6} = {'sin' 'square'};
 valdom{7} = [0 1];
 
 %set starting value and symbol 
-state.valId = [7 10 5 8 4 2 2];  %Current index for each value domain
+state.valId = [7 10 5 15 4 2 2];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
 %shorthand indices
@@ -40,7 +40,7 @@ for i = 1:length(valdom)-2
     updatePstate(symbol,num2str(val));
 end
 %need to handle the string parameter differently
-updatePstate(symbList{6},valdom{6}(state.valId(6)));
+updatePstate(symbList{6},valdom{6}{state.valId(6)});
 
 %make sure grating is big enought
 xsize = 2*valdom{4}(state.valId(4));  %width = 2*radius
@@ -106,7 +106,11 @@ while ~keyIsDown
             state.valId(state.symId) = length(valdom{state.symId});
         end       
         
-        val = valdom{state.symId}(state.valId(state.symId));
+        if state.symId~=sID
+            val = valdom{state.symId}(state.valId(state.symId));
+        else
+            val = valdom{state.symId}{state.valId(state.symId)};
+        end
         
         if state.symId~=vID
             if state.symId~=sID
@@ -150,7 +154,11 @@ while ~keyIsDown
             state.symId = 1; %unwrap
         end
         symbol = symbList{state.symId};
-        val = valdom{state.symId}(state.valId(state.symId));
+        if state.symId~=sID
+            val = valdom{state.symId}(state.valId(state.symId));
+        else
+            val = valdom{state.symId}{state.valId(state.symId)};
+        end
         
         
         newtext = [symbol ' ' num2str(val)];
@@ -168,7 +176,12 @@ while ~keyIsDown
             state.valId(state.symId) = 1;
         end
       
-        val = valdom{state.symId}(state.valId(state.symId));        
+        if state.symId~=sID
+            val = valdom{state.symId}(state.valId(state.symId));
+        else
+            val = valdom{state.symId}{state.valId(state.symId)};
+        end
+            
         
         if state.symId~=vID
             if state.symId~=sID
