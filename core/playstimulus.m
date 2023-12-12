@@ -1,13 +1,18 @@
 function playstimulus(modID)
 
-global blankFlag
+global blankFlag stereoFlag
 
 HideCursor
 
 %modID: 2 letter string
 
 %figure out which module we want
-mList=moduleListSlave;
+if stereoFlag==0
+    mList=moduleListSlave;
+else
+    mList=moduleListStereo;
+end
+
 idx=0;
 for i=1:length(mList)
     if strcmp(modID,mList{i}{1})

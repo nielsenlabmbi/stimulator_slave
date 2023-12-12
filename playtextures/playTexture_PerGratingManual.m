@@ -15,28 +15,34 @@ screenRes = Screen('Resolution',screenNum);
 
 %define the list of parameters that can be accessed with the mouse and
 %their settings
-symbList = {'ori','s_freq','t_period','mask_radius','contrast','visible'};
+symbList = {'ori','s_freq','t_period','mask_radius','s_profile','contrast','visible'};
 valdom{1} = 0:15:359;
-valdom{2} = logspace(log10(.01),log10(10),20);
+valdom{2} = logspace(log10(.002),log10(2),20);
 valdom{3} = logspace(log10(.5),log10(10),20);  %Hz
 valdom{3} = round(fliplr(screenRes.hz./valdom{3}));  %frames
 valdom{4} = logspace(log10(.5),log10(60),20);
 valdom{5} = [5 15 50 100];
-valdom{6} = [0 1];
+valdom{6} = {'sin' 'square'};
+valdom{7} = [0 1];
 
 %set starting value and symbol 
-state.valId = [7 10 5 8 4 2];  %Current index for each value domain
+state.valId = [7 10 5 8 4 2 2];  %Current index for each value domain
 state.symId = 1;  %Current symbol index
 
 %shorthand indices
-vID=6; %visible
+sID=6; %profile
+vID=7; %visible
 
 %update the parameters
-for i = 1:length(valdom)-1
+for i = 1:length(valdom)-2
     symbol = symbList{i};
     val = valdom{i}(state.valId(i));
     updatePstate(symbol,num2str(val));
 end
+%need to handle the string parameter differently
+updatePstate(symbList{6},valdom{6}(state.valId(6)));
+
+%make sure grating is big enought
 xsize = 2*valdom{4}(state.valId(4));  %width = 2*radius
 ysize = xsize;
 updatePstate('x_size',num2str(xsize));
@@ -103,7 +109,11 @@ while ~keyIsDown
         val = valdom{state.symId}(state.valId(state.symId));
         
         if state.symId~=vID
-            updatePstate(symbol,num2str(val));
+            if state.symId~=sID
+                updatePstate(symbol,num2str(val));
+            else
+                updatePstate(symbol,val);
+            end
         end
         
         newtext = [symbol ' ' num2str(val)];
@@ -161,7 +171,11 @@ while ~keyIsDown
         val = valdom{state.symId}(state.valId(state.symId));        
         
         if state.symId~=vID
-            updatePstate(symbol,num2str(val));
+            if state.symId~=sID
+                updatePstate(symbol,num2str(val));
+            else
+                updatePstate(symbol,val);
+            end
         end
             
         newtext = [symbol ' ' num2str(val)];
