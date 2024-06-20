@@ -111,8 +111,8 @@ for i = 1:N_Im
     else
         sfid2=Gseq2.sfseq(i);
         tpid2=Gseq2.tpseq(i);
-        ctr2=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
-        sfreq2=Gseq2.sfdom(sfid);
+        ctr2=P.contrast2/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
+        sfreq2=Gseq2.sfdom(sfid2);
         tperiod2=Gseq2.tpdom(tpid2);
     end
 
