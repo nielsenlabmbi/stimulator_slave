@@ -239,7 +239,7 @@ if P.StereoDisp==0 | P.StereoDisp==1
         % Disable alpha-blending, restrict following drawing to alpha channel:
         Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
         %set alpha value at grating location to 1
-        Screen('DrawTexture',screenPTR,Masktxtr(1));
+       % Screen('DrawTexture',screenPTR,Masktxtr(1));
         %now allow plotting to all channels again; will only plot where
         %alpha is 1
         Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
@@ -286,7 +286,7 @@ if P.StereoDisp==0 | P.StereoDisp==2
         % Disable alpha-blending, restrict following drawing to alpha channel:
         Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
         %set alpha value at grating location to 1
-        Screen('DrawTexture',screenPTR,Masktxtr2(1));
+        %Screen('DrawTexture',screenPTR,Masktxtr2(1));
         %now allow plotting to all channels again; will only plot where
         %alpha is 1
         Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);

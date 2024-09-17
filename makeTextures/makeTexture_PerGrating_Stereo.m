@@ -11,6 +11,12 @@ function makeTexture_PerGrating_Stereo
 global  screenPTR screenNum  
 
 global Gtxtr  Masktxtr Gtxtr2 Masktxtr2  %'play' will use these
+load('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
+Gtxtr = [];  
+Masktxtr=[];
+Gtxtr2= [];
+Masktxtr2=[];
+
 
 %clean up
 if ~isempty(Gtxtr)
@@ -21,12 +27,13 @@ if ~isempty(Masktxtr)
     Screen('Close',Masktxtr);  %First clean up: Get rid of all textures/offscreen windows
 end
 
+if ~isempty(Gtxtr2)
+    Screen('Close',Gtxtr2);  %First clean up: Get rid of all textures/offscreen windows
+end
 
-Gtxtr = [];  
-Masktxtr=[];
-Gtxtr2= [];
-Masktxtr2=[];
-
+if ~isempty(Masktxtr2)
+    Screen('Close',Masktxtr2);  %First clean up: Get rid of all textures/offscreen windows
+end
 
 %get parameters
 P = getParamStruct;
@@ -62,13 +69,17 @@ Screen('SelectStereoDrawBuffer', screenPTR, 0);
 
 mN=deg2pix(P.mask_radius1,'round');
 mask=makeMask(screenRes2,x_pos1,P.y_pos1,xN,yN,mN,P.mask_type1,P.background);
-
 % %we need to invert the mask if this is a surround stimulus
 % if P.surround_bit==1 && P.plaid_bit==0
     mask=1-mask;
 % end
-
+% 
+mask=ones([1920 1080 2]);
 Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
+crashLog(end+1, 1)={'mask1'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
+
+save('/home/nielsenlab/Documents/crashmask.mat', 'mask')
 
 % if P.plaid_bit==1 || P.surround_bit==1
 %     mN=deg2pix(P.mask_radius2,'round');
@@ -107,7 +118,6 @@ if strcmp(P.s_profile1,'square')
     thresh = cos(P.s_duty1*pi);
     grating=sign(grating-thresh);
 end
-
 %need to change contrast here if this a center/surround situation (can't
 %use the alpha channel like usually)
 % if P.surround_bit==1 && P.plaid_bit==0
@@ -116,6 +126,8 @@ end
 % end
 
 Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
+crashLog(end, 2)={'grating1'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 %generate second grating (overlapping or surround)
 % if P.plaid_bit==1 || P.surround_bit==1
@@ -138,10 +150,14 @@ Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 %screenRes = Screen('Resolution',screenNum);
 
 Screen('SelectStereoDrawBuffer', screenPTR, 1);
+crashLog(end, 3)={'switchScreen'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 %convert stimulus size to pixel
 xN2=deg2pix(P.x_size2,'round');
 yN2=deg2pix(P.y_size2,'round');
+crashLog(end, 4)={'deg2pix2'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 % if P.plaid_bit==1 || P.surround_bit==1
 %     xN2=deg2pix(P2.x_size2,'round');
@@ -151,14 +167,23 @@ yN2=deg2pix(P.y_size2,'round');
 
 %create the masks 
 mN2=deg2pix(P.mask_radius2,'round');
+crashLog(end, 5)={'mdeg2pix2'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
+
 mask2=makeMask(screenRes2,x_pos2,P.y_pos2,xN2,yN2,mN2,P.mask_type2,P.background);
+crashLog(end, 6)={'makemask2'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 %we need to invert the mask if this is a surround stimulus
 % if P.surround_bit2==1 && P.plaid_bit2==0
-    mask2=1-mask2;
+   mask2=1-mask2;
 % end
+% 
+save('/home/nielsenlab/Documents/crashmask2.mat', 'mask2')
 
-Masktxtr2(1) = Screen(screenPTR, 'MakeTexture', mask2,[],[],2);  %need to specify correct mode to allow for floating point numbers
+% Masktxtr2(1) = Screen(screenPTR, 'MakeTexture', mask2,[],[],2);  %need to specify correct mode to allow for floating point numbers
+crashLog(end, 7)={'mask2'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 % if P2.plaid_bit==1 || P2.surround_bit==1
 %     mN=deg2pix(P2.mask_radius2,'round');
@@ -206,6 +231,8 @@ end
 % end
 
 Gtxtr2(1) = Screen('MakeTexture',screenPTR, grating2,[],[],2);
+crashLog(end, 8)={'grating2'};
+save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 %generate second grating (overlapping or surround)
 % if P2.plaid_bit==1 || P2.surround_bit==1

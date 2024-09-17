@@ -1,6 +1,6 @@
 function screenconfigStereo
 
-global screenPTR screenPTROff screenNum Mstate Gtxtr Masktxtr setupDefault
+global screenPTR screenPTROff screenNum Mstate Gtxtr Masktxtr Gtxtr2 Masktxtr2 setupDefault
 
 %screens=Screen('Screens');
 %screenNum=max(screens);
@@ -32,7 +32,8 @@ screenRes = Screen('Resolution',screenNum);
 %initialize pointers to textures generated in makeTexture
 Gtxtr=[]; 
 Masktxtr=[];
-
+Gtxtr2= [];
+Masktxtr2=[];
 %[screenPTR,~] = PsychImaging('OpenWindow', screenNum, 0.5, stereoMode);
 [screenPTR,~] = PsychImaging('OpenWindow', screenNum, 0, [], 32, 2, stereoMode);
 Screen(screenPTR,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

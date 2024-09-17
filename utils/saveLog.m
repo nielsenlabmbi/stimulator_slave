@@ -1,4 +1,4 @@
-function saveLog(seq,seed,trialno)
+function saveLog(seq, seed,trialno)
 
 %this function saves the sequence structure and domains for flashed stimuli; 
 %we're keeping everything in one file, so it needs to

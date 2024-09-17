@@ -13,6 +13,10 @@ Mstate.screenYcm = monitorPar.screenYcm;
 
 %load calibration
 load(monitorPar.LUT,'bufLUT');
-
+Screen('SelectStereoDrawBuffer', screenPTR, 0);
 Screen('LoadNormalizedGammaTable', screenPTR, bufLUT);  %gamma LUT
+Screen('SelectStereoDrawBuffer', screenPTR, 1);
+Screen('LoadNormalizedGammaTable', screenPTR, bufLUT);  %gamma LUT
+
+
 

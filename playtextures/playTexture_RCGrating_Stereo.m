@@ -85,8 +85,8 @@ for i = 1:N_Im
     ori=Gseq.oridom(Gseq.oriseq(i));
     p=Gseq.phasedom(Gseq.phaseseq(i));
     
-   ori2=Gseq2.oridom(Gseq2.oriseq(i));
-   p2=Gseq2.phasedom(Gseq2.phaseseq(i));
+   ori2=Gseq2.oridom2(Gseq2.oriseq2(i));
+   p2=Gseq2.phasedom2(Gseq2.phaseseq2(i));
     %adjust contrast for blank
     if Gseq.blankflag(i)==1
         sfid=1;
@@ -102,18 +102,18 @@ for i = 1:N_Im
         tperiod=Gseq.tpdom(tpid);
     end
     
-    if Gseq2.blankflag(i)==1
+    if Gseq2.blankflag2(i)==1
         sfid2=1;
         tpid2=1;
         ctr2=0;
-        sfreq2=min(Gseq2.sfdom);
-        tperiod2=min(Gseq2.tpdom);
+        sfreq2=min(Gseq2.sfdom2);
+        tperiod2=min(Gseq2.tpdom2);
     else
-        sfid2=Gseq2.sfseq(i);
-        tpid2=Gseq2.tpseq(i);
+        sfid2=Gseq2.sfseq2(i);
+        tpid2=Gseq2.tpseq2(i);
         ctr2=P.contrast2/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
-        sfreq2=Gseq2.sfdom(sfid2);
-        tperiod2=Gseq2.tpdom(tpid2);
+        sfreq2=Gseq2.sfdom2(sfid2);
+        tperiod2=Gseq2.tpdom2(tpid2);
     end
 
     

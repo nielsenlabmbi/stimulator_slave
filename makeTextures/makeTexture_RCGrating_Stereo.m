@@ -98,12 +98,12 @@ if P.KeepSame_tp==0
         tpdom2=linspace(P.min_tp2,P.max_tp2,P.n_tp2);
     end
     tpdom2 = unique(tpdom2);
-elseif P.KeepSame_tp=-1
+elseif P.KeepSame_tp==1
     tpdom2=tpdom1;
 end
 
 %make phase domain
-phasedom1 = linspace(0,360,P.n_phase1+1);
+phasedom1 = linspace(0,360,P.n_phase+1);
 phasedom1 = phasedom1(1:end-1); 
 
 if P.KeepSame_phase==0
@@ -125,10 +125,27 @@ sfseq = randi(s,[1 length(sfdom1)],1,N_Im);
 tpseq = randi(s,[1 length(tpdom1)],1,N_Im); 
 phaseseq = randi(s,[1 length(phasedom1)],1,N_Im); 
 
+if P.KeepSame_ori==0
 oriseq2 = randi(s,[1 length(oridom2)],1,N_Im); 
-sfseq2 = randi(s,[1 length(sfdom2)],1,N_Im); 
+elseif P.KeepSame_ori==1
+    oriseq2=oriseq;
+end
+if P.KeepSame_sf==0
+    sfseq2 = randi(s,[1 length(sfdom2)],1,N_Im);
+elseif P.KeepSame_sf==1
+    sfseq2=sfseq;
+end
+if P.KeepSame_tp==0    
 tpseq2 = randi(s,[1 length(tpdom2)],1,N_Im); 
+elseif P.KeepSame_tp==1
+    tpseq2=tpseq;
+end
+
+if P.KeepSame_phase==0
 phaseseq2 = randi(s,[1 length(phasedom2)],1,N_Im); 
+elseif P.KeepSame_phase==1
+    phaseseq2=phaseseq;
+end
 
 % elseif P.EyeVary==1
 % oriseq = randi(s,[1 length(oridom)],1,N_Im); 
@@ -154,6 +171,7 @@ phaseseq2 = randi(s,[1 length(phasedom2)],1,N_Im);
 % end
 %add blanks
 blankflag = zeros(1,N_Im);
+blankflag2=blankflag;
 if P.blankProb > 0
     nblanks = round(P.blankProb*N_Im);
     dumseq = randperm(s,N_Im);
@@ -185,15 +203,15 @@ Gseq.tpseq=tpseq;
 Gseq.phaseseq=phaseseq;
 Gseq.blankflag=blankflag;
 
-Gseq2.oridom=oridom2;
-Gseq2.sfdom=sfdom2;
-Gseq2.tpdom=tpdom2;
-Gseq2.phasedom=phasedom2:
-Gseq2.oriseq=oriseq2;
-Gseq2.sfseq=sfseq2;
-Gseq2.tpseq=tpseq2;
-Gseq2.phaseseq=phaseseq2;
-Gseq2.blankflag=blankflag2;
+Gseq2.oridom2=oridom2;
+Gseq2.sfdom2=sfdom2;
+Gseq2.tpdom2=tpdom2;
+Gseq2.phasedom2=phasedom2;
+Gseq2.oriseq2=oriseq2;
+Gseq2.sfseq2=sfseq2;
+Gseq2.tpseq2=tpseq2;
+Gseq2.phaseseq2=phaseseq2;
+Gseq2.blankflag2=blankflag2;
 
 %now generate textures - we need one per spatial frequency
 
@@ -244,8 +262,8 @@ end
 
 %save sequence data
 if Mstate.running
-    saveLog(Gseq,P.rseed,loopTrial)  %append log file with the latest sequence
-   saveLog(Gseq2,P.rseed,loopTrial) 
+    saveLog(Gseq, P.rseed,loopTrial)  %append log file with the latest sequence
+   saveLog2(Gseq2,P.rseed,loopTrial) 
 end
 
 
