@@ -1,12 +1,13 @@
-function makeTexture_PerGratingColor
+function makeTexture_PerGratingColor_Stereo
 
 %make periodic grating with color
 %only generates one drifting grating, no plaid or surrounr
 %this assumes a normalized color scale from 0 to 1 for each gun
+%Stereo Config but currently only does the same for each side. 
 
 global  screenPTR screenNum 
 
-global Gtxtr  Masktxtr   %'play' will use these
+global Gtxtr Gtxtr2 Masktxtr Masktxtr2 %'play' will use these
 
 %clean up
 if ~isempty(Gtxtr)
@@ -19,7 +20,8 @@ end
 
 Gtxtr = [];  
 Masktxtr=[];
-
+Gtxtr2 = [];  
+Masktxtr2=[];
 
 %get parameters
 P = getParamStruct;
@@ -34,9 +36,11 @@ yN=deg2pix(P.y_size,'round');
 %create the masks 
 mN=deg2pix(P.mask_radius,'round');
 mask=makeMask(screenRes,P.x_pos,P.y_pos,xN,yN,mN,P.mask_type);
-
+Screen('SelectStereoDrawBuffer', screenPTR, 0);
 Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
 
+Screen('SelectStereoDrawBuffer', screenPTR, 1);
+Masktxtr2(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
 
 %generate texture
 
@@ -90,9 +94,11 @@ for i=1:3
 end
 
 
-
+Screen('SelectStereoDrawBuffer', screenPTR, 0);
 Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 
+Screen('SelectStereoDrawBuffer', screenPTR, 1);
+Gtxtr2(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 
 
 

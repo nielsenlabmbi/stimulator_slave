@@ -1,13 +1,12 @@
 function makeTexture_PerGrating_Stereo
 
 %make periodic grating for stereo (r/l eye) 
+%Attempting a color option to test color filter glasses
 %Options for surround/plaid currently commented out and not usable as
 %written, may delete later
 %this just generates the basic grating and mask, movement and visibility is
 %handled in playtexture
-%this assumes a normalized color scale from 0 to 1, and only generates b/w
-%gratings
-
+%
 global  screenPTR screenNum  
 
 global Gtxtr  Masktxtr Gtxtr2 Masktxtr2  %'play' will use these
@@ -74,19 +73,8 @@ mask=makeMask(screenRes2,x_pos1,P.y_pos1,xN,yN,mN,P.mask_type1,P.background);
     mask=1-mask;
 % end
 % 
-mask=ones([1920 1080 2]);
+%mask=ones([1920 1080 2]);
 Masktxtr(1) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
-% crashLog(end+1, 1)={'mask1'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
-% 
-% save('/home/nielsenlab/Documents/crashmask.mat', 'mask')
-
-% if P.plaid_bit==1 || P.surround_bit==1
-%     mN=deg2pix(P.mask_radius2,'round');
-%     mask=makeMask(screenRes,P.x_pos,P.y_pos,xN2,yN2,mN,P.mask_type2,P.background);
-%     Masktxtr(2) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
-% end
-
 
 
 %generate texture
@@ -100,12 +88,6 @@ stimsize=stimsize+1/P.s_freq1; %deg
 %use ceil to make sure that we definitely have enough pixels
 stimsizeN=deg2pix(stimsize,'ceil'); %pixel
 
-% if P.plaid_bit==1 || P.surround_bit==1
-%     stimsize2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
-%     stimsize2=stimsize2+1/P.s_freq2;
-%     stimsizeN2=deg2pix(stimsize2,'ceil');
-% end
-% 
 
 
 %generate first grating
@@ -115,81 +97,43 @@ grating = cos(sdom);
 
 
 if strcmp(P.s_profile1,'square')
-    thresh = cos(P.s_duty1*pi);
-    grating=sign(grating-thresh);
+    %sigma <1= sine, sigma>1= square with smoothing. 0= square, no smooth
+    sigma=0;
+else
+    sigma=-1.0;
 end
-%need to change contrast here if this a center/surround situation (can't
-%use the alpha channel like usually)
-% if P.surround_bit==1 && P.plaid_bit==0
-%     gAmp=min(P.background,1-P.background);
-%     grating=P.contrast/100*gAmp*grating+P.background;
-% end
 
-Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
-% crashLog(end, 2)={'grating1'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
+texture1 = CreateProceduralColorGrating(screenPTR, stimSizeN, stimSizeN,...
+     color1, color2, stimSizeN);
+Gtxtr(1) = Screen('DrawTexture',screenPTR, texture1, [], [], angle, [], [], ...
+    baseColor, [], [], [phase, P.s_freq, sigma] );
 
-%generate second grating (overlapping or surround)
-% if P.plaid_bit==1 || P.surround_bit==1
-%     x_ecc=linspace(-stimsize2/2,stimsize2/2,stimsizeN2);
-%     sdom = x_ecc*P.s_freq2*2*pi; %radians
-%     grating = cos(sdom);
-% 
-%     if strcmp(P.s_profile2,'square')
-%         thresh = cos(P.s_duty2*pi);
-%         grating=sign(grating-thresh);
-%     end
-%     Gtxtr(2) = Screen('MakeTexture',screenPTR, grating,[],[],2);
-%     
-%     
-% end
-    
+ 
     
 %Do it again for other side? 
    %get parameters
 %screenRes = Screen('Resolution',screenNum);
 
 Screen('SelectStereoDrawBuffer', screenPTR, 1);
-% crashLog(end, 3)={'switchScreen'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
-% 
+
 %convert stimulus size to pixel
 xN2=deg2pix(P.x_size2,'round');
 yN2=deg2pix(P.y_size2,'round');
-% crashLog(end, 4)={'deg2pix2'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
-
-% if P.plaid_bit==1 || P.surround_bit==1
-%     xN2=deg2pix(P2.x_size2,'round');
-%     yN2=deg2pix(P2.y_size2,'round');
-% end
 
 
 %create the masks 
 mN2=deg2pix(P.mask_radius2,'round');
-% crashLog(end, 5)={'mdeg2pix2'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
 mask2=makeMask(screenRes2,x_pos2,P.y_pos2,xN2,yN2,mN2,P.mask_type2,P.background);
-% crashLog(end, 6)={'makemask2'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
+
 
 %we need to invert the mask if this is a surround stimulus
 % if P.surround_bit2==1 && P.plaid_bit2==0
    mask2=1-mask2;
 % end
-% 
-% save('/home/nielsenlab/Documents/crashmask2.mat', 'mask2')
 
-% Masktxtr2(1) = Screen(screenPTR, 'MakeTexture', mask2,[],[],2);  %need to specify correct mode to allow for floating point numbers
-% crashLog(end, 7)={'mask2'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
-% if P2.plaid_bit==1 || P2.surround_bit==1
-%     mN=deg2pix(P2.mask_radius2,'round');
-%     mask=makeMask(screenRes,P2.x_pos,P.y_pos,xN2,yN2,mN,P2.mask_type2,P2.background);
-%     Masktxtr(4) = Screen(screenPTR, 'MakeTexture', mask,[],[],2);  %need to specify correct mode to allow for floating point numbers
-% end
+Masktxtr2(1) = Screen(screenPTR, 'MakeTexture', mask2,[],[],2);  %need to specify correct mode to allow for floating point numbers
 
 
 
@@ -219,33 +163,17 @@ grating2 = cos(sdom2);
 
 
 if strcmp(P.s_profile2,'square')
-    thresh2 = cos(P.s_duty2*pi);
-    grating2=sign(grating2-thresh2);
+    sigma=0;
+else
+    sigma=-1.0;
 end
 
-%need to change contrast here if this a center/surround situation (can't
-% %use the alpha channel like usually)
-% if P2.surround_bit==1 && P2.plaid_bit==0
-%     gAmp2=min(P2.background,1-P2.background);
-%     grating2=P2.contrast/100*gAmp*grating+P2.background;
-% end
+texture2 = CreateProceduralColorGrating(screenPTR, stimSizeN_2, stimSizeN_2,...
+     color1, color2, stimSizeN_2);
+Gtxtr2(1) = Screen('DrawTexture',screenPTR, texture2, [], [], angle, [], [], ...
+    baseColor, [], [], [phase, P.s_freq2, sigma] );
 
-Gtxtr2(1) = Screen('MakeTexture',screenPTR, grating2,[],[],2);
-% crashLog(end, 8)={'grating2'};
-% save('/home/nielsenlab/Documents/crashLog.mat', 'crashLog')
 
-%generate second grating (overlapping or surround)
-% if P2.plaid_bit==1 || P2.surround_bit==1
-%     x_ecc2=linspace(-stimsize2_2/2,stimsize2_2/2,stimsizeN2_2);
-%     sdom2 = x_ecc2*P2.s_freq2*2*pi; %radians
-%     grating2 = cos(sdom);
-% 
-%     if strcmp(P2.s_profile2,'square')
-%         thresh2 = cos(P2.s_duty2*pi);
-%         grating2=sign(grating2-thresh2);
-%     end
-%     Gtxtr(4) = Screen('MakeTexture',screenPTR, grating2,[],[],2);
-% end
 
 
 
