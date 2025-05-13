@@ -22,6 +22,7 @@ global Mstate DotFrame screenNum loopTrial
 DotFrame={};
 
 
+
 %get parameters
 P = getParamStruct;
 
@@ -312,7 +313,7 @@ end
 
 %Save it if 'running' experiment
 if Mstate.running
-    
+    disp(loopTrial)
     %saveLog_Dots(DotFrame,loopTrial);
 end
 

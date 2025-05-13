@@ -49,7 +49,8 @@ shiftperframe=pixpercycle/P.t_period;
 %equiluminant to the background. maximum amplitude the grating can have is
 %either the background (if smaller than 0.5), or 1-background.
 
-ctrBase=P.contrast/100*min(P.background,1-P.background);
+%ctrBase=P.contrast/100*max(P.background,1-P.background);
+ctrBase=P.contrast/100*0.5;
 if P.tmod_bit==0
     %static contrast
     ctrFrame=repmat(ctrBase,1,Nstimframes);
@@ -95,7 +96,7 @@ end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 if loopTrial ~= -1 && ~isempty(daq)
-    digWord = 1;  %Make 1st bit high
+    digWord =  17;%1;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
     %stop ventilator
     if vSyncState==1
@@ -112,7 +113,7 @@ end
 Screen(screenPTR, 'FillRect', P.background) %sets the level that the gratings will be added to
 
 for i = 1:Nstimframes
-    
+    %Screen(screenPTR, 'FillRect', 0.5)
     %get parameters for grating 1   
     xoffset = mod((i-1)*shiftperframe+P.phase/360*pixpercycle,pixpercycle);
     stimSrc=[xoffset 0 xoffset + stimsizeN-1 stimsizeN-1];
@@ -167,15 +168,15 @@ for i = 1:Nstimframes
     if ~isempty(daq)
         if P.use_ch3==1   %indicate cycles using the 3rd channel
             if mod(i-1,P.t_period)==0 && loopTrial ~= -1
-                digWord = 7;  %toggle 2nd and 3rd bit high to signal stim on
+                digWord = 23;%7;  %toggle 2nd and 3rd bit high to signal stim on
                 DaqDOut(daq, 0, digWord);
             elseif mod(i-1,P.t_period)==10 && loopTrial ~=-1
-                digWord=3;
+                digWord=19; %3;
                 DaqDOut(daq, 0, digWord);
             end
         else %just signal stimulus on/off
             if i==1 && loopTrial ~= -1
-                digWord=3;
+                digWord=19;%3;
                 DaqDOut(daq, 0, digWord);
             end
         end
@@ -190,7 +191,7 @@ for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
     if i==1 && loopTrial ~= -1 && ~isempty(daq)
-        digWord = 1;  %toggle 2nd bit to signal stim on
+        digWord = 17;%1;  %toggle 2nd bit to signal stim on
         DaqDOut(daq, 0, digWord);
         %start ventilator
         if vSyncState==1
