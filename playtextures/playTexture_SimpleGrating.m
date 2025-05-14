@@ -57,12 +57,13 @@ switch P.contrast_mode
         if strcmp(P.tmod_tprofile,'square')
             ctr=sign(ctr);
         end
-        %scale between min and max
-        ctrBase=P.contrast/100*0.5;
-        ctramp=1/2*(P.tmod_max-P.tmod_min)/100*ctrBase;
-        ctroff=1/2*(P.tmod_max+P.tmod_min)/100*ctrBase;
-        ctrFrame=ctroff+ctramp*ctr;
-        offsetLum=0.5;
+        %ctr goes between -1 and 1; scale to go between min and max
+        %contrast
+        ctrMin=P.tmod_min/100*0.5;
+        ctrMax=P.tmod_max/100*0.5;
+        ctrFrame=ctrMin+(ctrMax-ctrMin)/2*(1+ctr);
+        offsetLum=P.tmod_mean;
+    
 end
 
     
@@ -107,7 +108,7 @@ for i = 1:Nstimframes
 
     %plot grating; need to simply remove background to allow separate
     %scaling
-    Screen('BlendFunction', screenPTR, GL_ONE, GL_ONE);
+    Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
     Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctrFrame(i));
 
     %add mask
