@@ -57,6 +57,14 @@ elseif strcmp(P.tp_domain,'lin')
     tpdom=linspace(P.min_tp,P.max_tp,P.n_tp);
 end
 tpdom = unique(tpdom);
+
+%make contrast domain
+if strcmp(P.ctr_domain,'log')
+    ctrdom = logspace(log10(P.min_ctr),log10(P.max_ctr),P.n_ctr);
+elseif strcmp(P.ctr_domain,'lin')
+    ctrdom=linspace(P.min_ctr,P.max_ctr,P.n_ctr);
+end
+ctrdom = unique(ctrdom);
     
 %make phase domain
 phasedom = linspace(0,360,P.n_phase+1);
@@ -71,6 +79,7 @@ s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2do
 oriseq = randi(s,[1 length(oridom)],1,N_Im); 
 sfseq = randi(s,[1 length(sfdom)],1,N_Im); 
 tpseq = randi(s,[1 length(tpdom)],1,N_Im); 
+ctrseq = randi(s,[1 length(ctrdom)],1,N_Im); 
 phaseseq = randi(s,[1 length(phasedom)],1,N_Im); 
 
 %add blanks
@@ -84,6 +93,7 @@ if P.blankProb > 0
     oriseq(bidx) = 1;
     sfseq(bidx) = length(sfdom) + 1;
     tpseq(bidx) = length(tpdom) + 1;
+    ctrseq(bidx) = length(ctrdom) + 1;
     phaseseq(bidx) = 1;
     blankflag(bidx) = 1;
 end
@@ -93,10 +103,12 @@ end
 Gseq.oridom=oridom;
 Gseq.sfdom=sfdom;
 Gseq.tpdom=tpdom;
+Gseq.ctrdom=ctrdom;
 Gseq.phasedom=phasedom;
 Gseq.oriseq=oriseq;
 Gseq.sfseq=sfseq;
 Gseq.tpseq=tpseq;
+Gseq.ctrseq=ctrseq;
 Gseq.phaseseq=phaseseq;
 Gseq.blankflag=blankflag;
 
