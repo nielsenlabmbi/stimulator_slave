@@ -6,7 +6,9 @@ function getSetup
 %defaultMonitor: XXX
 %monitorList: name of monitor file (do not include path!!!)
 %logRoot: root folder for log file
+%analyzerRoot: root folder for analyzer file
 %useDaq: use measurement computing daq device?
+%TCPforParams: tcp or analyzer file for params
 %
 %do not change the names of these fields!!!
 
@@ -52,6 +54,17 @@ if isfield(setupDefault,'useSecondGfx')
     setupDefault.useSecondGfx=str2num(setupDefault.useSecondGfx);
 else
     setupDefault.useSecondGfx=0;
+end
+
+if isfield(setupDefault,'TCPforParams')
+    setupDefault.TCPforParams=str2num(setupDefault.TCPforParams);
+    %hack
+    if setupDefault.TCPforParams==0
+        if exist('/home/nielsenlab/Zdrive/EphysNew/processedSpikes','dir')==0
+            disp('Warning! Z needs to be mounted!')
+            return;
+        end
+    end
 end
 
 fclose(fId);
