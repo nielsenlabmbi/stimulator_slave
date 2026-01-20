@@ -75,7 +75,7 @@ try
         case 'PF'  %use analyzer file to set parameters
             
             configurePstate(modID)
-            loadPstate
+            loadPstate(modID)
             
         case 'B'  %Build stimulus; update looper info and buffer to video card.
             

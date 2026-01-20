@@ -6,12 +6,12 @@ function loadPstate(modID)
 global Pstate Mstate setupDefault
 
 %load analyzer file
-expt = [Mstate.anim '_' Mstate.unit '_' Mstate.expt];
-fname=fullfile(setupDefault.analyzerRoot,[expt '.analyzer']);
+expt = [Mstate.anim '_u' Mstate.unit '_' Mstate.expt];
+fname=fullfile(setupDefault.analyzerRoot,Mstate.anim,[expt '.analyzer']);
 Pnew=load(fname,'-mat');
 
 if ~strcmp(Pnew.Analyzer.P.type{1},modID)
-    disp('Mismatch in module type, could not update parameters from Analyer file!');
+    disp('Mismatch in module type, could not update parameters from Analyzer file!');
     return;
 end
 

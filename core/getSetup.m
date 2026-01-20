@@ -56,8 +56,5 @@ else
     setupDefault.useSecondGfx=0;
 end
 
-if isfield(setupDefault,'TCPforParams')
-    setupDefault.TCPforParams=str2num(setupDefault.TCPforParams);
-end
 
 fclose(fId);
