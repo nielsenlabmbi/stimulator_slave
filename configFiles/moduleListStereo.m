@@ -26,7 +26,7 @@ Mlist{end+1} = {'SK' 'configPstate_Kalatsky_Stereo' 'makeTexture_Kalatsky_Stereo
 Mlist{end+1} = {'SB' 'configPstate_RCBars_Stereo' 'makeTexture_RCBars_Stereo' 'playTexture_RCBars_Stereo' };
 Mlist{end+1} = {'CK' 'configPstate_CheckerBoard' 'makeTexture_CheckerBoard' 'playTexture_CheckerBoard' };
 Mlist{end+1} = {'MS' 'configPstate_MSeq' 'makeTexture_MSeq' 'playTexture_MSeq'};
-Mlist{end+1} = {'CG' 'configPstate_PerGratingColor_Stereo' 'makeTexture_PerGratingColor_Stereo' 'playTexture_erGratingColor_Stereo'};
+Mlist{end+1} = {'CG' 'configPstate_PerGratingColor_Stereo' 'makeTexture_PerGratingColor_Stereo' 'playTexture_PerGratingColor_Stereo'};
 
 
 %playfile for the manual mapper

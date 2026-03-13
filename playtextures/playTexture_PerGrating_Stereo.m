@@ -66,8 +66,8 @@ shiftperframe=pixpercycle/P.t_period1;
 %to the background, the range remains between 0 and 1 and the grating is
 %equiluminant to the background. maximum amplitude the grating can have is
 %either the background (if smaller than 0.5), or 1-background.
-
-ctrBase=P.contrast1/100*min(P.background,1-P.background);
+P.contrast1
+ctrBase=P.contrast1/100*min(P.background,1-P.background)
 if P.tmod_bit1==0
     %static contrast
     ctrFrame=repmat(ctrBase,1,Nstimframes);
@@ -237,13 +237,14 @@ if P.StereoDisp==0 | P.StereoDisp==1
 
         %surround case; clear part where grating 1 will go 
         % Disable alpha-blending, restrict following drawing to alpha channel:
-        Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
+        %Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
         %set alpha value at grating location to 1
        % Screen('DrawTexture',screenPTR,Masktxtr(1));
         %now allow plotting to all channels again; will only plot where
         %alpha is 1
-        Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
-        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori1);
+        %Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
+        Screen('BlendFunction', screenPTR, GL_SRC_ALPHA,GL_ONE);
+        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori1,[],ctrBase);
    % end
 end
     %add sync
@@ -284,13 +285,14 @@ if P.StereoDisp==0 | P.StereoDisp==2
 
         %surround case; clear part where grating 1 will go 
         % Disable alpha-blending, restrict following drawing to alpha channel:
-        Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
+       %Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
         %set alpha value at grating location to 1
         %Screen('DrawTexture',screenPTR,Masktxtr2(1));
         %now allow plotting to all channels again; will only plot where
         %alpha is 1
-        Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
-        Screen('DrawTexture', screenPTR, Gtxtr2(1), stimSrc_2, stimDst_2,P.ori2);
+       %Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
+       Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
+        Screen('DrawTexture', screenPTR, Gtxtr2(1), stimSrc_2, stimDst_2,P.ori2,[],ctrBase2);
 %     end
 end
     %add sync

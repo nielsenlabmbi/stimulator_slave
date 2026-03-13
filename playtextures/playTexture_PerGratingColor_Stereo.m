@@ -139,10 +139,7 @@ for i = 1:Npostframes-1
     if i==1 && loopTrial ~= -1 && ~isempty(daq)
         digWord = 1;  %toggle 2nd bit to signal stim on
         DaqDOut(daq, 0, digWord);
-        %start ventilator
-        if vSyncState==1
-            setVentilator(1);
-        end
+       
     end
 end
 
