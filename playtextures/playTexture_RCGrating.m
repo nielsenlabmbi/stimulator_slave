@@ -79,9 +79,11 @@ for i = 1:N_Im
     else
         sfid=Gseq.sfseq(i);
         tpid=Gseq.tpseq(i);
-        ctr=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
+        ctrid=Gseq.ctrseq(i); 
+       
         sfreq=Gseq.sfdom(sfid);
         tperiod=Gseq.tpdom(tpid);
+        ctr=Gseq.ctrdom(ctrid)/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
     end
     
     %get shift per frame

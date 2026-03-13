@@ -42,7 +42,7 @@ end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 if ~isempty(daq)
-    digWord = 1;  %Make 1st bit high
+    digWord = 17; %1;  %Make 1st bit high
     DaqDOut(daq, 0, digWord);
 end
 for i = 2:Npreframes
@@ -54,7 +54,7 @@ end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 if ~isempty(daq)
-    digWord = 3;  %toggle 2nd bit to signal stim on
+    digWord = 19;%3;  %toggle 2nd bit to signal stim on
     DaqDOut(daq, 0, digWord);
 end
 for i=2:Nstimframes
@@ -68,7 +68,7 @@ for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
     if i==1 && ~isempty(daq)
-        digWord = 1;  %toggle 2nd bit to signal stim off
+        digWord = 17;%1;  %toggle 2nd bit to signal stim off
         DaqDOut(daq, 0, digWord);
     end
 end

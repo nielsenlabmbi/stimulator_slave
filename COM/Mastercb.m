@@ -61,7 +61,7 @@ try
                 
             end
             
-        case 'P'  %Update sent info from "param" window.
+        case 'P'  %full list of parameters
             
             configurePstate(modID)
             for i = 1:length(delims)-1
@@ -71,6 +71,11 @@ try
                 pval = dumstr(id+1:end);
                 updatePstate(psymbol,pval)
             end
+
+        case 'PF'  %use analyzer file to set parameters
+            
+            configurePstate(modID)
+            loadPstate(modID)
             
         case 'B'  %Build stimulus; update looper info and buffer to video card.
             
