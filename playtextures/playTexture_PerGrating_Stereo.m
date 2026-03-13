@@ -8,7 +8,7 @@ function playTexture_PerGrating_Stereo
 
 global Mstate screenPTR screenNum daq loopTrial
 
-global Gtxtr Masktxtr Gtxtr2 Masktxtr2 %Created in makeTexture
+global Gtxtr Gtxtr2 %Created in makeTexture
 
 global Stxtr %Created in makeSyncTexture
 
@@ -83,26 +83,11 @@ else
     ctrFrame=ctroff+ctramp*ctr;
 end
     
-% if P.plaid_bit==1 || P.surround_bit==1
-%     stimsize2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
-%     stimsizeN2=deg2pix(stimsize2,'round');
-%     stimDst2=[P.x_pos-floor(stimsizeN2/2)+1 P.y_pos-floor(stimsizeN2/2)+1 ...
-%         P.x_pos+ceil(stimsizeN2/2) P.y_pos+ceil(stimsizeN2/2)]';
-%     
-%     ctr2=P.contrast2/100*min(P.background,1-P.background);
-%     pixpercycle2=deg2pix(1/P.s_freq2,'none');
-%     shiftperframe2=pixpercycle2/P.t_period2;
-% end
-
 %Other side
 
 %grating 1 parameters
 pixpercycle2=deg2pix(1/P.s_freq2,'none');
 shiftperframe2=pixpercycle2/P.t_period2;
-%grating goes from -1 to 1. contrast sets scaling so that after adding the grating 
-%to the background, the range remains between 0 and 1 and the grating is
-%equiluminant to the background. maximum amplitude the grating can have is
-%either the background (if smaller than 0.5), or 1-background.
 
 ctrBase2=P.contrast2/100*min(P.background,1-P.background);
 if P.tmod_bit2==0
@@ -119,18 +104,7 @@ else
     ctroff2=1/2*(P.tmod_max2+P.tmod_min2)/100*ctrBase2;
     ctrFrame2=ctroff2+ctramp2*ctr_2;
 end
-    
-% if P2.plaid_bit==1 || P2.surround_bit==1
-%     stimsize2_2=2*sqrt((P2.x_size2/2).^2+(P2.y_size2/2).^2);
-%     stimsizeN2_2=deg2pix(stimsize2_2,'round');
-%     stimDst2_2=[P2.x_pos-floor(stimsizeN2_2/2)+1 P2.y_pos-floor(stimsizeN2_2/2)+1 ...
-%         P2.x_pos+ceil(stimsizeN2_2/2) P2.y_pos+ceil(stimsizeN2_2/2)]';
-%     
-%     ctr2_2=P2.contrast2/100*min(P2.background,1-P2.background);
-%     pixpercycle2_2=deg2pix(1/P2.s_freq2,'none');
-%     shiftperframe2_2=pixpercycle2_2/P2.t_period2;
-% end
-%disp(P.background)
+
 
 %set background
 Screen('SelectStereoDrawBuffer', screenPTR, 0);
@@ -185,120 +159,30 @@ for i = 1:Nstimframes
     xoffset = mod((i-1)*shiftperframe+P.phase1/360*pixpercycle,pixpercycle);
     stimSrc=[xoffset 0 xoffset + stimsizeN-1 stimsizeN-1];
     
-%     %get parameters for second grating if necessary
-%     if P.plaid_bit==1 || P.surround_bit==1
-%         xoffset2 = mod((i-1)*shiftperframe2+P.phase2/360*pixpercycle2,pixpercycle2);
-%         stimSrc2=[xoffset2 0 xoffset2 + stimsizeN2 stimsizeN2];
-%     end
-    
-
-%andother side
-    %get parameters for grating 1   
+    %and other side
     xoffset_2 = mod((i-1)*shiftperframe+P.phase2/360*pixpercycle,pixpercycle);
     stimSrc_2=[xoffset_2 0 xoffset_2 + stimsizeN_2-1 stimsizeN_2-1];
-    
-%     %get parameters for second grating if necessary
-%     if P2.plaid_bit==1 || P2.surround_bit==1
-%         xoffset2_2 = mod((i-1)*shiftperframe2+P2.phase2/360*pixpercycle2,pixpercycle2);
-%         stimSrc2_2 =[xoffset2_2  0 xoffset2_2  + stimsizeN2_2  stimsizeN2_2 ];
-%     end
-    
-  
-  
-    %we plot grating2 first, b/c it is the larger of the 2 in the surround
-    %case;set blend function so that the global alpha can scale the contrast
-%     if P.plaid_bit==1 || P.surround_bit==1
-%             Screen('SelectStereoDrawBuffer', screenPTR, 0);
-% 
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-%         Screen('DrawTexture', screenPTR, Gtxtr(2), stimSrc2, stimDst2,P.ori2,[],ctr2);
-%     
-%         %add mask
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-%         Screen('DrawTexture', screenPTR, Masktxtr(2));  
-%     end
-%     
-%     if P.surround_bit==0 || P.plaid_bit==1
-%         Screen('SelectStereoDrawBuffer', screenPTR, 0);
-% 
-%         %for individual grating or plaid, plot grating1
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-%         Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori,[],ctrFrame(i));
-%     
-%         %add mask
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-%         Screen('DrawTexture', screenPTR, Masktxtr(1)); 
-%         
-%     else
-Screen('SelectStereoDrawBuffer', screenPTR, 0);
 
-if P.StereoDisp==0 | P.StereoDisp==1
-    
 
-        %surround case; clear part where grating 1 will go 
-        % Disable alpha-blending, restrict following drawing to alpha channel:
-        %Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
-        %set alpha value at grating location to 1
-       % Screen('DrawTexture',screenPTR,Masktxtr(1));
-        %now allow plotting to all channels again; will only plot where
-        %alpha is 1
-        %Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
+    Screen('SelectStereoDrawBuffer', screenPTR, 0);
+
+    if P.StereoDisp==0 | P.StereoDisp==1
         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA,GL_ONE);
-        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori1,[],ctrBase);
-   % end
-end
+        Screen('DrawTexture', screenPTR, Gtxtr(1), stimSrc, stimDst,P.ori1,[],ctrBase);   
+    end
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 
     %And draw the other one
+    Screen('SelectStereoDrawBuffer', screenPTR,1 );
 
-    %we plot grating2 first, b/c it is the larger of the 2 in the surround
-    %case;set blend function so that the global alpha can scale the contrast
-  %  if P2.plaid_bit==1 || P2.surround_bit==1
-%         Screen('SelectStereoDrawBuffer', screenPTR,1 );
-% 
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-%         Screen('DrawTexture', screenPTR, Gtxtr(4), stimSrc2, stimDst2,P.ori2,[],ctr2);
-%     
-%         %add mask
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-%         Screen('DrawTexture', screenPTR, Masktxtr(4));  
-%     end
-%     
-%     if P2.surround_bit==0 || P2.plaid_bit==1
-%         Screen('SelectStereoDrawBuffer', screenPTR,1 );
-%                     
-%         %for individual grating or plaid, plot grating1
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-%         Screen('DrawTexture', screenPTR, Gtxtr(3), stimSrc, stimDst,P.ori,[],ctrFrame(i));
-%     
-%         %add mask
-%         Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-%         Screen('DrawTexture', screenPTR, Masktxtr(3)); 
-%         
-%     else      
-Screen('SelectStereoDrawBuffer', screenPTR,1 );
-
-
-if P.StereoDisp==0 | P.StereoDisp==2
-
-
-        %surround case; clear part where grating 1 will go 
-        % Disable alpha-blending, restrict following drawing to alpha channel:
-       %Screen('BlendFunction', screenPTR, GL_ONE, GL_ZERO, [0 0 0 1]);
-        %set alpha value at grating location to 1
-        %Screen('DrawTexture',screenPTR,Masktxtr2(1));
-        %now allow plotting to all channels again; will only plot where
-        %alpha is 1
-       %Screen('BlendFunction', screenPTR, GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, [1 1 1 1]);
-       Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
+    if P.StereoDisp==0 | P.StereoDisp==2
+        Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
         Screen('DrawTexture', screenPTR, Gtxtr2(1), stimSrc_2, stimDst_2,P.ori2,[],ctrBase2);
-%     end
-end
+    end
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
-   
-    
+       
     %flip
     Screen(screenPTR, 'Flip');
         
