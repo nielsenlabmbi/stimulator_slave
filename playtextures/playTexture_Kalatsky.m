@@ -51,20 +51,38 @@ end
 ori=oriB + P.dir*180;
 
 %set starting position
-if P.axis==0 %vertical grating, dir=0: moving right to left
-    if P.dir==0
-        xpos=screenRes.width-xN/2;
-    else
-        xpos=xN/2;
-    end
-    ypos=screenRes.height/2;
-else %horizontal grating, dir=0: moving up
-    xpos=screenRes.width/2;
-    if P.dir==0
-        ypos=screenRes.height-yN/2;
-    else
-        ypos=yN/2;
-    end
+switch P.axis
+    case 0 %vertical grating
+        if P.dir==0
+            xpos=screenRes.width-xN/2;
+        else
+            xpos=xN/2;
+        end
+        ypos=screenRes.height/2;
+    case 1 %horizontal grating
+        xpos=screenRes.width/2;
+        if P.dir==0
+            ypos=screenRes.height-yN/2;
+        else
+            ypos=yN/2;
+        end
+    case 2 %45
+        if P.dir==0
+            xpos=screenRes.width-xN/2;
+            ypos=screenRes.height-yN/2;
+        else
+            xpos=xN/2;
+            ypos=yN/2;
+        end
+    case 3 %135
+        if P.dir==0
+            xpos=screenRes.width-xN/2;
+            ypos=yN/2;
+        else
+            xpos=xN/2;
+            ypos=screenRes.height-yN/2;
+        end
+
 end
     
 
