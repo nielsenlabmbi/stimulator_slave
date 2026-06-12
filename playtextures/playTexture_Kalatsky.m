@@ -37,7 +37,18 @@ stimSrc=[0 0 xN yN];
 deltaFrame = P.speed/fps;   
 
 %set orientation based on axis and direction
-ori=P.axis*90 + P.dir*180;
+switch P.axis
+    case 0
+        oriB=0;
+    case 1
+        oriB=90;
+    case 2
+        oriB=45;
+    case 3
+        oriB=135;
+end
+
+ori=oriB + P.dir*180;
 
 %set starting position
 if P.axis==0 %vertical grating, dir=0: moving right to left

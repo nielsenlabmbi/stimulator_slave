@@ -39,9 +39,11 @@ r=P.redgun;
 g=P.greengun;
 b=P.bluegun;
 
+NpreBlankframes = ceil(P.predelayBlank*screenRes.hz);
 Npreframes = ceil(P.predelay*screenRes.hz);
 Nstimframes = ceil(P.stim_time*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
+NpostBlankframes = ceil(P.postdelayBlank*screenRes.hz);
 
 
 %set background
@@ -53,6 +55,22 @@ Screen(screenPTR, 'Flip');
 
 %Wake up the daq to improve timing later
 DaqDOut(daq, 0, 0); 
+
+%%%Play predelay without dots%%%%
+Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+Screen(screenPTR, 'Flip');
+if loopTrial ~= -1
+    digWord = 1;  %Make 1st bit high
+    DaqDOut(daq, 0, digWord);
+end
+for i = 2:NpreBlankframes
+    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    if loopTrial ~= -1 && i==10
+        digWord = 0;  %reset 1st bit so that next pre-period can set it high again
+        DaqDOut(daq, 0, digWord);
+    end
+end
 
 
 %%%Play predelay %%%%
@@ -94,11 +112,17 @@ for i = 2:Nstimframes
             [P.x_pos P.y_pos],P.dotType);
     end
         
-    if mod(i,10) == 0
-        Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+    if i<Nstimframes
+        if mod(i,10) == 0
+            Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+        else
+            Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+        end
     else
-        Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+        Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst); %make sure we end on the correct one
     end
+    
+    
     Screen(screenPTR, 'Flip');
     
     if mod(i,10) ==0 && loopTrial ~= -1
@@ -122,14 +146,32 @@ for i = 1:Npostframes-1
     end
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
-    if i==i && loopTrial ~= -1
+    
+    if i==1 && loopTrial ~= -1
         digWord = 1;  %toggle 2nd bit to signal stim off
         DaqDOut(daq, 0, digWord);
     end
+    if NpostBlankframes>0 && i==10 && loopTrial ~= -1
+        digWord = 0;  %toggle 2nd bit so next one can set it to 1 again
+        DaqDOut(daq, 0, digWord);
+    end
+
 end
 if ~isempty(DotFrame{Nstimframes})
     Screen('DrawDots', screenPTR, DotFrame{Nstimframes}, sizeDotsPx, [r g b],...
         [P.x_pos P.y_pos],P.dotType);
+end
+Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
+Screen(screenPTR, 'Flip');
+
+%%%Play postdelay without dots %%%%
+for i = 1:NpostBlankframes-1
+    Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
+    Screen(screenPTR, 'Flip');
+    if i==i && loopTrial ~= -1
+        digWord = 1;  %toggle 2nd bit to signal stim off
+        DaqDOut(daq, 0, digWord);
+    end
 end
 Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');

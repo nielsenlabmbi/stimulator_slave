@@ -199,7 +199,12 @@ for i=1:nrFrames
         %get projection of movement vector onto axes 
         xproj=-cos(dotdir(idx(j))*pi/180);
         yproj=-sin(dotdir(idx(j))*pi/180);
-        if rvec(j)<= abs(xproj)/(abs(xproj)+abs(yproj))
+
+        % Scale the projections by the opposite dimension lengths to account for aspect ratio
+        x_weight = abs(xproj) * stimSizePx(2); % X-flux scaled by Height
+        y_weight = abs(yproj) * stimSizePx(1); % Y-flux scaled by Width
+
+        if rvec(j)<= x_weight / (x_weight + y_weight)
             %y axis chosen, so place stimulus at the other x axis and a
             %random y location
             xypos(1,idx(j))=-1*sign(xproj)*stimSizePx(1)/2;
