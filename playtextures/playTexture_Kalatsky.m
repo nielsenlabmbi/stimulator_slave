@@ -24,14 +24,9 @@ syncSrc = [0 0 syncWX-1 syncWY-1]';
 syncDst = [0 0 syncWX-1 syncWY-1]';
 
 %stimulus source window (destination happens below to incorporate movement)
-if P.axis==0
-    yN=screenRes.width;
-    xN=deg2pix(P.width,'round');
-else
-    xN=screenRes.width;
-    yN=deg2pix(P.width,'round');
-end
-stimSrc=[0 0 xN yN];
+heightN=round(sqrt(2*screenRes.width.^2)); %need this to deal with the diagonals
+widthN=deg2pix(P.width,'round');
+stimSrc=[0 0 widthN heightN];
 
 %diplacement per frame in pixels
 deltaFrame = P.speed/fps;   
@@ -50,37 +45,38 @@ end
 
 ori=oriB + P.dir*180;
 
+
 %set starting position
 switch P.axis
-    case 0 %vertical grating
+    case 0 %0
         if P.dir==0
-            xpos=screenRes.width-xN/2;
+            xpos=screenRes.width-widthN/2;
         else
-            xpos=xN/2;
+            xpos=widthN/2;
         end
         ypos=screenRes.height/2;
-    case 1 %horizontal grating
+    case 1 %90
         xpos=screenRes.width/2;
         if P.dir==0
-            ypos=screenRes.height-yN/2;
+            ypos=screenRes.height-widthN/2;
         else
-            ypos=yN/2;
+            ypos=widthN/2;
         end
     case 2 %45
         if P.dir==0
-            xpos=screenRes.width-xN/2;
-            ypos=screenRes.height-yN/2;
+            xpos=screenRes.width-widthN/2;
+            ypos=screenRes.height-widthN/2;
         else
-            xpos=xN/2;
-            ypos=yN/2;
+            xpos=widthN/2;
+            ypos=widthN/2;
         end
     case 3 %135
         if P.dir==0
-            xpos=screenRes.width-xN/2;
-            ypos=yN/2;
+            xpos=screenRes.width-widthN/2;
+            ypos=widthN/2;
         else
-            xpos=xN/2;
-            ypos=screenRes.height-yN/2;
+            xpos=widthN/2;
+            ypos=screenRes.height-widthN/2;
         end
 
 end
@@ -125,6 +121,8 @@ for i = 1:Nstimframes
         xpos=xpos-deltaFrame*cos(ori*pi/180);
         ypos=ypos-deltaFrame*sin(ori*pi/180);
         
+        %note on wrapping: screen is longer than high, so we won't hit the
+        %x limits, just the y limits
         if xpos<0
             xpos=screenRes.width;
         end
@@ -133,17 +131,25 @@ for i = 1:Nstimframes
         end
         if ypos<0
             ypos=screenRes.height;
+            if P.axis==2
+                xpos=screenRes.width;
+            elseif P.axis==3
+                xpos=0;
+            end
         end
         if ypos>screenRes.height
             ypos=0;
+            if P.axis==2
+                xpos=0;
+            elseif P.axis==3
+                xpos=screenRes.width;
+            end
         end
-            
-        
     end  
     stimDst=CenterRectOnPoint(stimSrc,xpos,ypos);
    
     %draw bar
-    Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst);
+    Screen('DrawTextures', screenPTR,Gtxtr,stimSrc,stimDst,ori);
     
     %add sync
     Screen('DrawTexture', screenPTR, Stxtr(1),syncSrc,syncDst);
