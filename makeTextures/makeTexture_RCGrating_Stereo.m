@@ -113,6 +113,12 @@ elseif P.KeepSame_phase==1
     phasedom2=phasedom1;
 end
 
+if P.EyeVary==1
+    eyedom=[1 2];
+else 
+    eyedom=P.StereoDisp;
+end
+
 %number of images to present per trial
 N_Im = round(P.stim_time*screenRes.hz/P.h_per); 
 
@@ -123,7 +129,8 @@ s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2do
 oriseq = randi(s,[1 length(oridom1)],1,N_Im); 
 sfseq = randi(s,[1 length(sfdom1)],1,N_Im); 
 tpseq = randi(s,[1 length(tpdom1)],1,N_Im); 
-phaseseq = randi(s,[1 length(phasedom1)],1,N_Im); 
+phaseseq = randi(s,[1 length(phasedom1)],1,N_Im);
+eyeseq= randi(s,[1 length(eyedom)],1,N_Im);
 
 if P.KeepSame_ori==0
 oriseq2 = randi(s,[1 length(oridom2)],1,N_Im); 
@@ -147,28 +154,7 @@ elseif P.KeepSame_phase==1
     phaseseq2=phaseseq;
 end
 
-% elseif P.EyeVary==1
-% oriseq = randi(s,[1 length(oridom)],1,N_Im); 
-% sfseq = randi(s,[1 length(sfdom)],1,N_Im); 
-% tpseq = randi(s,[1 length(tpdom)],1,N_Im); 
-% phaseseq = randi(s,[1 length(phasedom)],1,N_Im);   
-% 
-% oriseq2 = ones(1, N_Im); 
-% sfseq2 = ones(1, N_Im); 
-% tpseq2 = ones(1, N_Im); 
-% phaseseq2 = ones(1, N_Im); 
-% 
-% elseif P.EyeVary==2
-% oriseq = ones(1, N_Im);  
-% sfseq = ones(1, N_Im); 
-% tpseq = ones(1, N_Im); 
-% phaseseq = ones(1, N_Im); 
-% 
-% oriseq2 = randi(s,[1 length(oridom)],1,N_Im); 
-% sfseq2 = randi(s,[1 length(sfdom)],1,N_Im); 
-% tpseq2 = randi(s,[1 length(tpdom)],1,N_Im); 
-% phaseseq2 = randi(s,[1 length(phasedom)],1,N_Im);    
-% end
+
 %add blanks
 blankflag = zeros(1,N_Im);
 blankflag2=blankflag;
@@ -182,8 +168,9 @@ if P.blankProb > 0
     sfseq(bidx) = length(sfdom1) + 1;
     tpseq(bidx) = length(tpdom1) + 1;
     phaseseq(bidx) = 1;
+    eyeseq(bidx) = 1;
     blankflag(bidx) = 1;
-    
+
     oriseq2(bidx) = 1;
     sfseq2(bidx) = length(sfdom2) + 1;
     tpseq2(bidx) = length(tpdom2) + 1;
@@ -201,6 +188,7 @@ Gseq.oriseq=oriseq;
 Gseq.sfseq=sfseq;
 Gseq.tpseq=tpseq;
 Gseq.phaseseq=phaseseq;
+Gseq.eyeseq=eyeseq;
 Gseq.blankflag=blankflag;
 
 Gseq2.oridom2=oridom2;

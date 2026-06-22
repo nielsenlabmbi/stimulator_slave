@@ -44,19 +44,19 @@ N_Im = round(P.stim_time*screenRes.hz/P.h_per); %number of images to present
 Screen('SelectStereoDrawBuffer', screenPTR, 0);
 %set background
 Screen(screenPTR, 'FillRect', 0.5)
-%set sync to black 
-Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst); 
+%set sync to black
+Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
 
- Screen('SelectStereoDrawBuffer', screenPTR, 1);
+Screen('SelectStereoDrawBuffer', screenPTR, 1);
 % %set background
- Screen(screenPTR, 'FillRect', 0.5)
-% %set sync to black 
- Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+Screen(screenPTR, 'FillRect', 0.5)
+% %set sync to black
+Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 
 %Wake up the daq to improve timing later
-DaqDOut(daq, 0, 0); 
- 
+DaqDOut(daq, 0, 0);
+
 
 %%%Play predelay %%%%
 Screen('SelectStereoDrawBuffer', screenPTR, 0);
@@ -84,9 +84,9 @@ for i = 1:N_Im
     %get orientation, spatial frequency and temporal frequency
     ori=Gseq.oridom(Gseq.oriseq(i));
     p=Gseq.phasedom(Gseq.phaseseq(i));
-    
-   ori2=Gseq2.oridom2(Gseq2.oriseq2(i));
-   p2=Gseq2.phasedom2(Gseq2.phaseseq2(i));
+
+    ori2=Gseq2.oridom2(Gseq2.oriseq2(i));
+    p2=Gseq2.phasedom2(Gseq2.phaseseq2(i));
     %adjust contrast for blank
     if Gseq.blankflag(i)==1
         sfid=1;
@@ -101,7 +101,7 @@ for i = 1:N_Im
         sfreq=Gseq.sfdom(sfid);
         tperiod=Gseq.tpdom(tpid);
     end
-    
+
     if Gseq2.blankflag2(i)==1
         sfid2=1;
         tpid2=1;
@@ -116,65 +116,66 @@ for i = 1:N_Im
         tperiod2=Gseq2.tpdom2(tpid2);
     end
 
-    
+
     %get shift per frame
     pixpercycle=deg2pix(1/sfreq,'none');
     if P.drift==1
         shiftperframe=pixpercycle/tperiod;
     end
-   
-    for j = 1:P.h_per 
-       if P.StereoDisp== 0 | P.StereoDisp==1
-        %determine which part of stimulus to draw
-        if P.drift==1
-            xoffset = mod((j-1)*shiftperframe+p/360*pixpercycle,pixpercycle);
-        else
-            xoffset = p/360*pixpercycle;
+
+    for j = 1:P.h_per
+        %if P.StereoDisp== 0 | P.StereoDisp==1
+        if Gseq.eyeseq==0 || Gseq.eyeseq==1
+            %determine which part of stimulus to draw
+            if P.drift==1
+                xoffset = mod((j-1)*shiftperframe+p/360*pixpercycle,pixpercycle);
+            else
+                xoffset = p/360*pixpercycle;
+            end
+            stimSrc=[xoffset 0 xoffset + stimsizeN stimsizeN];
+            Screen('SelectStereoDrawBuffer', screenPTR, 0);
+
+            %need to set blend function so that the global alpha can scale the
+            %contrast
+            Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
+
+            %draw stimulus
+            Screen('DrawTexture', screenPTR, Gtxtr(sfid), stimSrc, stimDst,ori,[],ctr);
+
+            %         %add mask
+            Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            Screen('DrawTexture', screenPTR, Masktxtr);
+
+            %add sync
+            Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
         end
-        stimSrc=[xoffset 0 xoffset + stimsizeN stimsizeN];   
-        Screen('SelectStereoDrawBuffer', screenPTR, 0);
+        %if P.StereoDisp== 0 | P.StereoDisp==2
+        if Gseq.eyeseq==0 || Gseq.eyeseq==2
+            Screen('SelectStereoDrawBuffer', screenPTR, 1);
+            if P.drift==1
+                xoffset2 = mod((j-1)*shiftperframe+p2/360*pixpercycle,pixpercycle);
+            else
+                xoffset2 = p2/360*pixpercycle;
+            end
+            stimSrc2=[xoffset2 0 xoffset2 + stimsizeN2 stimsizeN2];
+            %         need to set blend function so that the global alpha can scale the
+            %         contrast
+            Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
 
-        %need to set blend function so that the global alpha can scale the
-        %contrast
-        Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-        
-        %draw stimulus
-        Screen('DrawTexture', screenPTR, Gtxtr(sfid), stimSrc, stimDst,ori,[],ctr);
-    
-%         %add mask
-       Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Screen('DrawTexture', screenPTR, Masktxtr);
+            %         draw stimulus
+            Screen('DrawTexture', screenPTR, Gtxtr2(sfid2), stimSrc2, stimDst2,ori2,[],ctr2);
 
-        %add sync
-        Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
+            %         add mask
+            Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            Screen('DrawTexture', screenPTR, Masktxtr2);
+
+            %         add sync
+            Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
         end
-       if P.StereoDisp== 0 | P.StereoDisp==2
-
-       Screen('SelectStereoDrawBuffer', screenPTR, 1);
-        if P.drift==1
-            xoffset2 = mod((j-1)*shiftperframe+p2/360*pixpercycle,pixpercycle);
-        else
-            xoffset2 = p2/360*pixpercycle;
-        end
-        stimSrc2=[xoffset2 0 xoffset2 + stimsizeN2 stimsizeN2];
-%         need to set blend function so that the global alpha can scale the
-%         contrast
-        Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE);
-        
-%         draw stimulus
-       Screen('DrawTexture', screenPTR, Gtxtr2(sfid2), stimSrc2, stimDst2,ori2,[],ctr2);
-
-%         add mask
-       Screen('BlendFunction', screenPTR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-       Screen('DrawTexture', screenPTR, Masktxtr2);
-  
-%         add sync
-        Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
-       end
         %flip
         Screen(screenPTR, 'Flip');
-        
-        %generate event 
+
+        %generate event
         if j==1 && loopTrial ~= -1
             digWord = 7;  %toggle 2nd bit high to signal stim on
             DaqDOut(daq, 0, digWord);
@@ -187,7 +188,7 @@ for i = 1:N_Im
 end
 
 
-    
+
 
 %%%Play postdelay %%%%
 for i = 1:Npostframes-1
@@ -216,9 +217,9 @@ end
 
 %set sync to black for next stimulus
 Screen('SelectStereoDrawBuffer', screenPTR, 0);
-Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
 Screen('SelectStereoDrawBuffer', screenPTR, 1);
-Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);  
+Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
 Screen(screenPTR, 'Flip');
 
 
