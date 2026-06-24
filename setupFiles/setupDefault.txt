@@ -1,0 +1,8 @@
+setupID: EP
+masterIP: 172.30.11.143
+defaultMonitor: Predator
+monitorList: monitorListNielsenlab
+logRoot: /home/nielsenlab/log_files/
+useMCDaq: 1
+analyzerRoot: /home/nielsenlab/Zdrive/EphysNew/analyzer/
+TCPforParams: 0
