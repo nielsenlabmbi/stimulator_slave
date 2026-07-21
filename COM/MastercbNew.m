@@ -1,27 +1,16 @@
-function Mastercb(obj,event)
-%Callback function 'Stimulator' PC
-
-global comState screenPTR loopTrial vSyncState blankFlag optoInfo Mstate daq
-
-
-try
-    n = get(comState.serialPortHandle,'BytesAvailable');
-     
-    if n > 0
-        inString = fread(comState.serialPortHandle,n);
-        inString = char(inString');
-    else
-        return
-    end
-    %inString
-    %ind = strfind(inString,'8000');
+function MastercbNew(src, ~)
     
-    %for ii=1:length(ind)
-    %    ind = strfind(inString,'8000');
-    %    inString(ind(1):ind(1)+3) = '';
-    %end
-    
-    inString = inString(1:end-1);  %Get rid of the terminator
+%Callback function control PC using new tcp commands
+
+global CtrlCom screenPTR loopTrial vSyncState blankFlag optoInfo Mstate daq
+
+
+% Check if data is available (safety verification)
+if src.NumBytesAvailable > 0
+    % Read the incoming ASCII data line
+    inString = readline(src);
+    inString = char(inString);
+
     disp(['Message received from master: ' inString]);
         
     %parse string
@@ -99,23 +88,23 @@ try
             %Use the callback terminator here...
             %disp('test')
             if loopTrial ~= -1
-                fwrite(comState.serialPortHandleSender,'nextT~') %running actual experiment
+                write(CtrlCom,'nextT~') %running actual experiment
                 disp('Message sent to master: nextT');
             else
-                fwrite(comState.serialPortHandleSender,'nextS~') %playing sample
-                disp('Message sent to master: nextS');
+                write(CtrlCom,'nextS') %playing sample - do not tap into callback
+                disp('Message sent to master: nextS'); 
             end
             
         case 'F'  %get refresh rate
                      
-            fwrite(comState.serialPortHandleSender,['r' num2str(Mstate.refresh_rate) '~']) %return refresh rate
+            write(CtrlCom,['r' num2str(Mstate.refresh_rate) '~']) %return refresh rate
             disp('Message sent to master: rate');
                       
         case 'MM'  %Go for manual mapper - necessary because the blankflag otherwise remains unset
             
             blankFlag=0;
             playstimulus(modID)
-            fwrite(comState.serialPortHandleSender,'nextS~') %playing sample
+            write(CtrlCom,'nextS') %playing sample
             
             
         case 'MON'  %Monitor info
@@ -189,21 +178,10 @@ try
     end
     
     if ~strcmp(msgID,'G')
-        fwrite(comState.serialPortHandleSender,'a')  %dummy so that Master knows it finished - this gets sent without terminator to trigger other fct than callback
+        write(CtrlCom,'a')  %dummy so that Master knows it finished - don't use ~ so that it doesn't trigger callback
         disp('Message sent to master: Acknowledge');
     end
     
-    
-catch
-    
-    Screen('CloseAll');
-    ShowCursor;
-    
-    msg = lasterror;
-    msg.message
-    msg.stack.file
-    msg.stack.line
-    
-    fwrite(comState.serialPortHandleSender,'a')  %dummy so that Master knows it finished
-    
+
+end
 end

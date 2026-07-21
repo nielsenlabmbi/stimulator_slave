@@ -16,7 +16,7 @@ mList=moduleListSlave;
 configurePstate(mList{1}{1}) %Use grater as the default when opening
 configureMstate;
 
-configCom_tcp; %configures communication to master
+configCom_tcpNew; %configures communication to master
 
 configSync; %configures TTL device
 
