@@ -11,7 +11,7 @@ switch monitorID
         monitorPar.screenYcm = 30;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/Acer160617/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/code/stimulator_slave/calibration/Nielsenlab/Acer160617/luminance.mat';
         
     case {'Viewsonic','VSN'} %120 hz viewsonic
         
@@ -22,6 +22,8 @@ switch monitorID
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
         monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/ViewSonicR071224/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/code/stimulator_slave/calibration/Nielsenlab/ViewSonic210531/luminance.mat';
+
         
     case {'Viewpixx','VPX'} %Viewpixx 120Hz monitor
         
@@ -31,7 +33,7 @@ switch monitorID
         monitorPar.screenYcm = 29.5;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/general/simpleGammaLut.mat';
+        monitorPar.LUT='/home/nielsenlab/code/stimulator_slave/calibration/general/simpleGammaLut.mat';
         
     case {'Linear','LIN'} %just standard linear lookup table
         
@@ -41,7 +43,7 @@ switch monitorID
         monitorPar.screenYcm = 30;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/general/linearLut.mat';
+        monitorPar.LUT='/home/nielsenlab/code/stimulator_slave/calibration/general/linearLut.mat';
         
     case {'LG','LGL'} %large LG screen
 
@@ -51,7 +53,7 @@ switch monitorID
         monitorPar.screenYcm = 53.4;
         monitorPar.xpixels = 1920;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/LG43_210531/luminance.mat';
+        monitorPar.LUT='/home/nielsenlab/code/stimulator_slave/calibration/Nielsenlab/LG43_210531/luminance.mat';
         
      case {'Predator','PDT'} %large LG screen
 
@@ -61,5 +63,15 @@ switch monitorID
         monitorPar.screenYcm = 33.7;
         monitorPar.xpixels = 2560;
         monitorPar.ypixels = 1440;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/Predator080921/luminance.mat';  
+        monitorPar.LUT='/home/nielsenlab/code/stimulator_slave/calibration/Nielsenlab/Predator080921/luminance.mat';
+
+    case {'HP', 'HP'}
+        monitorPar.ID='HP';
+        monitorPar.Name='HP';
+        monitorPar.screenXcm=52.5;
+        monitorPar.screenYcm=29.5;
+        monitorPar.xpixels=1920;
+        monitorPar.ypixels=1080;
+        monitorPar.LUT= '/home/nielsenlab/code/stimulator_slave/calibration/Nielsenlab/HP x24ih 092324/luminance.mat';
+
 end
