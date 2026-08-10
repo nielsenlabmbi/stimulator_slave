@@ -69,14 +69,14 @@ for i = 1:Nstimframes
     %turn light on with preset frequency
     if mod(i-1,Nrepframes)==0 && statePulse==0
         statePulse=1;
-        optoStim(1);
+        optoStim(P.pulse_ch,1);
         countPulse=1;
     end
     
     %turn light off after preset duration
     if mod(countPulse,Npulseframes)==0 && statePulse==1
         statePulse=0;
-        optoStim(0);
+        optoStim(P.pulse_ch,0);
     end
     
     %draw indicator stimulus if selected
@@ -102,6 +102,10 @@ end
 for i = 1:Npostframes-1
     Screen('DrawTexture', screenPTR, Stxtr(2),syncSrc,syncDst);
     Screen(screenPTR, 'Flip');
+
+    %make sure we end low in terms of opto stim
+    optoStim(P.pulse_ch,0);
+
     if i==1 && loopTrial ~= -1
         digWord = 1;  %toggle 2nd bit to signal stim on
         DaqDOut(daq, 0, digWord);

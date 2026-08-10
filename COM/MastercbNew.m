@@ -2,7 +2,7 @@ function MastercbNew(src, ~)
     
 %Callback function control PC using new tcp commands
 
-global CtrlCom screenPTR loopTrial vSyncState blankFlag optoInfo Mstate daq
+global CtrlCom screenPTR loopTrial vSyncState blankFlag Mstate daq
 
 
 % Check if data is available (safety verification)
@@ -21,7 +21,7 @@ if src.NumBytesAvailable > 0
     msgID = inString(1:delims(1)-1); 
     
     %parse parameters accordingly
-    if ismember(msgID,{'M','C','S','OP','L','F','FG','ZS'})
+    if ismember(msgID,{'M','C','S','L','F','FG','ZS'})
         paramstring = inString(delims(1):end); %parameters start immediately after message string
     elseif strcmp(msgID,'B')        
         modID = inString(delims(1)+1:delims(2)-1); %stimulus module follows message string, then trial ID, then param
@@ -159,19 +159,7 @@ if src.NumBytesAvailable > 0
             else
                 zaberDisconnect;
             end
-            
-        case 'OP' %optoInfo parameters
-            for i = 1:length(delims)-1
-                dumstr = paramstring(delims(i)+1:delims(i+1)-1);
-                id = find(dumstr == '=');
-                psymbol = dumstr(1:id-1);
-                pval = dumstr(id+1:end);
-                optoInfo.(psymbol)=str2num(pval);
-            end
-        
-        case 'O' %start pulse or pulse train
-            optoStimM(optoInfo,str2num(modID));
-            
+                        
         case 'TTL' % send a ttl pulse on the daq
             DaqDOut(daq, 0, 1); pause(0.5); DaqDOut(daq, 0, 0);
             
