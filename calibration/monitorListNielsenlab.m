@@ -64,8 +64,8 @@ switch monitorID
         monitorPar.ypixels = 1440;
         monitorPar.LUT=fullfile(setupDefault.monitorRoot,'Predator080921','luminance.mat');
 
-    case {'HP', 'HP'}
-        monitorPar.ID='HP';
+    case {'HP', 'HP1'}
+        monitorPar.ID='HP1';
         monitorPar.Name='HP';
         monitorPar.screenXcm=52.5;
         monitorPar.screenYcm=29.5;
