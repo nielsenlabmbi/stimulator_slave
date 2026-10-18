@@ -73,6 +73,7 @@ switch monitorID
         monitorPar.ypixels=1080;
         monitorPar.LUT=fullfile(setupDefault.monitorRoot,'HP x24ih 092324','luminance.mat');
 
+
     case {'ViewStereo','VSS'} %120 hz viewsonic in stereo
         
         monitorPar.ID='VSS';
@@ -81,6 +82,6 @@ switch monitorID
         monitorPar.screenYcm = 30;
         monitorPar.xpixels = 3840;
         monitorPar.ypixels = 1080;
-        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/ViewSonicR071224/luminance.mat';
+        monitorPar.LUT=fullfile(setupDefault.monitorRoot, 'ViewSonicR071224','luminance.mat');
 
 end
