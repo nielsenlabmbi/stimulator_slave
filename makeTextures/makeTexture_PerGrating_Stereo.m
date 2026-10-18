@@ -8,7 +8,7 @@ function makeTexture_PerGrating_Stereo
 %this assumes a normalized color scale from 0 to 1, and only generates b/w
 %gratings
 
-global  screenPTR screenNum  
+global  screenPTR   
 
 global Gtxtr   Gtxtr2   %'play' will use these
 Gtxtr = [];  

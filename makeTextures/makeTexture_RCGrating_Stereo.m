@@ -32,7 +32,7 @@ screenRes = Screen('Resolution',screenNum);
 screenRes2=screenRes;
 screenRes2.width=screenRes2.width/2; 
 
-disp(screenNum)
+%disp(screenNum)
 %convert stimulus size to pixel
 xN=deg2pix(P.x_size,'round');
 yN=deg2pix(P.y_size,'round');
@@ -113,11 +113,33 @@ elseif P.KeepSame_phase==1
     phasedom2=phasedom1;
 end
 
+%make contrast domain
+if strcmp(P.ctr_domain1,'log')
+    ctrdom1 = logspace(log10(P.min_ctr1),log10(P.max_ctr1),P.n_ctr1);
+elseif strcmp(P.ctr_domain1,'lin')
+    ctrdom1=linspace(P.min_ctr1,P.max_ctr1,P.n_ctr1);
+end
+ctrdom1 = unique(ctrdom1);
+
+if P.KeepSame_ctr==0
+    if strcmp(P.ctr_domain2,'log')
+        ctrdom1 = logspace(log10(P.min_ctr2),log10(P.max_ctr2),P.n_ctr2);
+    elseif strcmp(P.ctr_domain2,'lin')
+        ctrdom1=linspace(P.min_ctr2,P.max_ctr2,P.n_ctr2);
+    end
+    ctrdom2 = unique(ctrdom2);
+else
+    ctrdom2 = ctrdom1;
+end
+
+
+%make eye sequence
 if P.EyeVary==1
     eyedom=[1 2];
 else 
     eyedom=P.StereoDisp;
 end
+
 
 %number of images to present per trial
 N_Im = round(P.stim_time*screenRes.hz/P.h_per); 
@@ -125,33 +147,37 @@ N_Im = round(P.stim_time*screenRes.hz/P.h_per);
 %create random stream for trial
 s = RandStream.create('mrg32k3a','NumStreams',1,'Seed',datenum(date)+1000*str2double(Mstate.unit)+str2double(Mstate.expt)+P.rseed);
 
-% if P.EyeVary==0
 oriseq = randi(s,[1 length(oridom1)],1,N_Im); 
 sfseq = randi(s,[1 length(sfdom1)],1,N_Im); 
 tpseq = randi(s,[1 length(tpdom1)],1,N_Im); 
 phaseseq = randi(s,[1 length(phasedom1)],1,N_Im);
 eyeseq= randi(s,[1 length(eyedom)],1,N_Im);
+ctrseq= randi(s,[1 length(ctrdom1)],1,N_Im);
 
 if P.KeepSame_ori==0
-oriseq2 = randi(s,[1 length(oridom2)],1,N_Im); 
-elseif P.KeepSame_ori==1
+    oriseq2 = randi(s,[1 length(oridom2)],1,N_Im);
+else
     oriseq2=oriseq;
 end
 if P.KeepSame_sf==0
     sfseq2 = randi(s,[1 length(sfdom2)],1,N_Im);
-elseif P.KeepSame_sf==1
+else
     sfseq2=sfseq;
 end
-if P.KeepSame_tp==0    
-tpseq2 = randi(s,[1 length(tpdom2)],1,N_Im); 
-elseif P.KeepSame_tp==1
+if P.KeepSame_tp==0
+    tpseq2 = randi(s,[1 length(tpdom2)],1,N_Im);
+else
     tpseq2=tpseq;
 end
-
 if P.KeepSame_phase==0
-phaseseq2 = randi(s,[1 length(phasedom2)],1,N_Im); 
-elseif P.KeepSame_phase==1
+    phaseseq2 = randi(s,[1 length(phasedom2)],1,N_Im);
+else
     phaseseq2=phaseseq;
+end
+if P.KeepSame_ctr==0
+    ctrseq2 = randi(s,[1 length(ctrdom2)],1,N_Im);
+else
+    ctrseq2=ctrseq;
 end
 
 
@@ -169,12 +195,14 @@ if P.blankProb > 0
     tpseq(bidx) = length(tpdom1) + 1;
     phaseseq(bidx) = 1;
     eyeseq(bidx) = 1;
+    ctrseq(bidx) = 1;
     blankflag(bidx) = 1;
 
     oriseq2(bidx) = 1;
     sfseq2(bidx) = length(sfdom2) + 1;
     tpseq2(bidx) = length(tpdom2) + 1;
     phaseseq2(bidx) = 1;
+    ctrseq2(bidx) = 1;
     blankflag2(bidx) = 1;
 end
 
@@ -184,21 +212,29 @@ Gseq.oridom=oridom1;
 Gseq.sfdom=sfdom1;
 Gseq.tpdom=tpdom1;
 Gseq.phasedom=phasedom1;
+Gseq.ctrdom=ctrdom1;
+
+Gseq.eyedom=eyedom;
+
 Gseq.oriseq=oriseq;
 Gseq.sfseq=sfseq;
 Gseq.tpseq=tpseq;
 Gseq.phaseseq=phaseseq;
-Gseq.eyeseq=eyeseq;
+Gseq.phaseseq=phaseseq;
+Gseq.ctrseq=ctrseq;
 Gseq.blankflag=blankflag;
 
 Gseq2.oridom2=oridom2;
 Gseq2.sfdom2=sfdom2;
 Gseq2.tpdom2=tpdom2;
 Gseq2.phasedom2=phasedom2;
+Gseq2.ctrdom2=ctrdom2;
+
 Gseq2.oriseq2=oriseq2;
 Gseq2.sfseq2=sfseq2;
 Gseq2.tpseq2=tpseq2;
 Gseq2.phaseseq2=phaseseq2;
+Gseq2.ctrseq2=ctrseq2;
 Gseq2.blankflag2=blankflag2;
 
 %now generate textures - we need one per spatial frequency
@@ -251,7 +287,7 @@ end
 %save sequence data
 if Mstate.running
     saveLog(Gseq, P.rseed,loopTrial)  %append log file with the latest sequence
-   saveLog2(Gseq2,P.rseed,loopTrial) 
+    saveLog2(Gseq2,P.rseed,loopTrial)
 end
 
 

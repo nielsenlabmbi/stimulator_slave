@@ -18,7 +18,7 @@ global vSyncState %ventilator sync
 P = getParamStruct;
 
 screenRes = Screen('Resolution',screenNum);
-disp(screenRes)
+%disp(screenRes)
 pixpercmX = screenRes.width/Mstate.screenXcm;
 pixpercmY = screenRes.height/Mstate.screenYcm;
 
@@ -77,8 +77,8 @@ shiftperframe=pixpercycle/P.t_period1;
 %to the background, the range remains between 0 and 1 and the grating is
 %equiluminant to the background. maximum amplitude the grating can have is
 %either the background (if smaller than 0.5), or 1-background.
-P.contrast1
-ctrBase=P.contrast1/100*min(P.background,1-P.background)
+%P.contrast1
+ctrBase=P.contrast1/100*min(P.background,1-P.background);
 if P.tmod_bit1==0
     %static contrast
     ctrFrame=repmat(ctrBase,1,Nstimframes);

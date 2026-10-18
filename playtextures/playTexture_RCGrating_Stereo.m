@@ -84,6 +84,7 @@ for i = 1:N_Im
     %get orientation, spatial frequency and temporal frequency
     ori=Gseq.oridom(Gseq.oriseq(i));
     p=Gseq.phasedom(Gseq.phaseseq(i));
+   
 
     ori2=Gseq2.oridom2(Gseq2.oriseq2(i));
     p2=Gseq2.phasedom2(Gseq2.phaseseq2(i));
@@ -94,12 +95,16 @@ for i = 1:N_Im
         ctr=0;
         sfreq=min(Gseq.sfdom);
         tperiod=min(Gseq.tpdom);
+        eyedom=0;
     else
         sfid=Gseq.sfseq(i);
         tpid=Gseq.tpseq(i);
-        ctr=P.contrast/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
+        ctrid=Gseq.ctrseq(i); 
+        
         sfreq=Gseq.sfdom(sfid);
         tperiod=Gseq.tpdom(tpid);
+        ctr=Gseq.ctrdom(ctrid)/100*0.5;
+        eyedom=Gseq.eyedom(eyeseq(i));
     end
 
     if Gseq2.blankflag2(i)==1
@@ -111,9 +116,11 @@ for i = 1:N_Im
     else
         sfid2=Gseq2.sfseq2(i);
         tpid2=Gseq2.tpseq2(i);
-        ctr2=P.contrast2/100*0.5;  %full contrast = .5 (grating goes from -0.5 to 0.5, and is added to background of 0.5)
+        ctrid2=Gseq.ctrseq2(i); 
+
         sfreq2=Gseq2.sfdom2(sfid2);
         tperiod2=Gseq2.tpdom2(tpid2);
+        ctr2=Gseq.ctrdom2(ctrid2)/100*0.5;
     end
 
 
@@ -125,7 +132,7 @@ for i = 1:N_Im
 
     for j = 1:P.h_per
         %if P.StereoDisp== 0 | P.StereoDisp==1
-        if Gseq.eyeseq(i)==0 || Gseq.eyeseq(i)==1
+        if eyedom==0 || eyedom==1
             %determine which part of stimulus to draw
             if P.drift==1
                 xoffset = mod((j-1)*shiftperframe+p/360*pixpercycle,pixpercycle);
@@ -150,7 +157,7 @@ for i = 1:N_Im
             Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
         end
         %if P.StereoDisp== 0 | P.StereoDisp==2
-        if Gseq.eyeseq(i)==0 || Gseq.eyeseq(i)==2
+        if eyedom==0 || eyedom==2
             Screen('SelectStereoDrawBuffer', screenPTR, 1);
             if P.drift==1
                 xoffset2 = mod((j-1)*shiftperframe+p2/360*pixpercycle,pixpercycle);
