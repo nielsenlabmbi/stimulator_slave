@@ -125,7 +125,7 @@ for i = 1:N_Im
 
     for j = 1:P.h_per
         %if P.StereoDisp== 0 | P.StereoDisp==1
-        if Gseq.eyeseq==0 || Gseq.eyeseq==1
+        if Gseq.eyeseq(i)==0 || Gseq.eyeseq(i)==1
             %determine which part of stimulus to draw
             if P.drift==1
                 xoffset = mod((j-1)*shiftperframe+p/360*pixpercycle,pixpercycle);
@@ -150,7 +150,7 @@ for i = 1:N_Im
             Screen('DrawTexture', screenPTR, Stxtr(2-rem(i,2)),syncSrc,syncDst);
         end
         %if P.StereoDisp== 0 | P.StereoDisp==2
-        if Gseq.eyeseq==0 || Gseq.eyeseq==2
+        if Gseq.eyeseq(i)==0 || Gseq.eyeseq(i)==2
             Screen('SelectStereoDrawBuffer', screenPTR, 1);
             if P.drift==1
                 xoffset2 = mod((j-1)*shiftperframe+p2/360*pixpercycle,pixpercycle);

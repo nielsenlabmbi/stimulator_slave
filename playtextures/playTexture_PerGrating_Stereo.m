@@ -18,6 +18,7 @@ global vSyncState %ventilator sync
 P = getParamStruct;
 
 screenRes = Screen('Resolution',screenNum);
+disp(screenRes)
 pixpercmX = screenRes.width/Mstate.screenXcm;
 pixpercmY = screenRes.height/Mstate.screenYcm;
 
@@ -44,15 +45,25 @@ elseif P.mirrorXCoord==2
 end
 
 
-stimsize=2*sqrt((P.x_size1/2).^2+(P.y_size1/2).^2);
-stimsizeN=deg2pix(stimsize,'round');
-stimDst=[x_pos1-floor(stimsizeN/2)+1 P.y_pos1-floor(stimsizeN/2)+1 ...
-    x_pos1+ceil(stimsizeN/2) P.y_pos1+ceil(stimsizeN/2)]';
+%stimsize=2*sqrt((P.x_size1/2).^2+(P.y_size1/2).^2);
+%stimsizeN=deg2pix(stimsize,'round');
+stimsizeX=deg2pix(P.x_size1,'round');
+stimsizeY=deg2pix(P.y_size1,'round');
 
-stimsize_2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
-stimsizeN_2=deg2pix(stimsize_2,'round');
-stimDst_2=[x_pos2-floor(stimsizeN_2/2)+1 P.y_pos2-floor(stimsizeN_2/2)+1 ...
-    x_pos2+ceil(stimsizeN_2/2) P.y_pos2+ceil(stimsizeN_2/2)]';
+%stimDst=[x_pos1-floor(stimsizeN/2)+1 P.y_pos1-floor(stimsizeN/2)+1 ...
+%    x_pos1+ceil(stimsizeN/2) P.y_pos1+ceil(stimsizeN/2)]';
+stimDst=[x_pos1-floor(stimsizeX/2)+1 P.y_pos1-floor(stimsizeY/2)+1 ...
+    x_pos1+ceil(stimsizeX/2) P.y_pos1+ceil(stimsizeY/2)]';
+
+%stimsize_2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2);
+%stimsizeN_2=deg2pix(stimsize_2,'round');
+%stimDst_2=[x_pos2-floor(stimsizeN_2/2)+1 P.y_pos2-floor(stimsizeN_2/2)+1 ...
+%    x_pos2+ceil(stimsizeN_2/2) P.y_pos2+ceil(stimsizeN_2/2)]';
+stimsizeX2=deg2pix(P.x_size2,'round');
+stimsizeY2=deg2pix(P.y_size2,'round');
+stimDst_2=[x_pos2-floor(stimsizeX2/2)+1 P.y_pos2-floor(stimsizeY2/2)+1 ...
+    x_pos2+ceil(stimsizeX2/2) P.y_pos2+ceil(stimsizeY2/2)]';
+
 %get timing information
 Npreframes = ceil(P.predelay*screenRes.hz);
 Npostframes = ceil(P.postdelay*screenRes.hz);
@@ -157,11 +168,12 @@ for i = 1:Nstimframes
     
     %get parameters for grating 1   
     xoffset = mod((i-1)*shiftperframe+P.phase1/360*pixpercycle,pixpercycle);
-    stimSrc=[xoffset 0 xoffset + stimsizeN-1 stimsizeN-1];
+    %stimSrc=[xoffset 0 xoffset + stimsizeN-1 stimsizeN-1];
+    stimSrc=[xoffset 0 xoffset + stimsizeX-1 1];
     
     %and other side
     xoffset_2 = mod((i-1)*shiftperframe+P.phase2/360*pixpercycle,pixpercycle);
-    stimSrc_2=[xoffset_2 0 xoffset_2 + stimsizeN_2-1 stimsizeN_2-1];
+    stimSrc_2=[xoffset_2 0 xoffset_2 + stimsizeX2-1 1];
 
 
     Screen('SelectStereoDrawBuffer', screenPTR, 0);

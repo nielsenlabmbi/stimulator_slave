@@ -54,7 +54,7 @@ switch monitorID
         monitorPar.ypixels = 1080;
         monitorPar.LUT=fullfile(setupDefault.monitorRoot,'LG43_210531','luminance.mat');
         
-     case {'Predator','PDT'} %large LG screen
+    case {'Predator','PDT'} %large LG screen
 
         monitorPar.ID='PDT';
         monitorPar.Name='Predator';
@@ -72,5 +72,15 @@ switch monitorID
         monitorPar.xpixels=1920;
         monitorPar.ypixels=1080;
         monitorPar.LUT=fullfile(setupDefault.monitorRoot,'HP x24ih 092324','luminance.mat');
+
+    case {'ViewStereo','VSS'} %120 hz viewsonic in stereo
+        
+        monitorPar.ID='VSS';
+        monitorPar.Name='ViewStereo';
+        monitorPar.screenXcm = 54.5*2;
+        monitorPar.screenYcm = 30;
+        monitorPar.xpixels = 3840;
+        monitorPar.ypixels = 1080;
+        monitorPar.LUT='/home/nielsenlab/stimulator_slave/calibration/Nielsenlab/ViewSonicR071224/luminance.mat';
 
 end

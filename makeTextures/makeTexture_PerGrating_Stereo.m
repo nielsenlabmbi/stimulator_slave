@@ -27,32 +27,13 @@ end
 
 %get parameters
 P = getParamStruct;
-screenRes = Screen('Resolution',screenNum);
-screenRes2=screenRes;
-screenRes2.width=screenRes2.width/2; 
-
-%convert stimulus size to pixel
-xN=deg2pix(P.x_size1,'round');
-yN=deg2pix(P.y_size1,'round');
-
-if P.mirrorXCoord==0
-    x_pos1=P.x_pos1;
-    x_pos2=P.x_pos2; 
-    
-elseif P.mirrorXCoord==1
-    x_pos1=P.x_pos1;
-    x_pos2=1920-P.x_pos1;
-   
-elseif P.mirrorXCoord==2
-    x_pos1=1920-P.x_pos2;
-    x_pos2=P.x_pos2; 
-end
 
 
 Screen('SelectStereoDrawBuffer', screenPTR, 0);
 
 %stimuli will need to be larger to deal with rotation
-stimsize=2*sqrt((P.x_size1/2).^2+(P.y_size1/2).^2); %deg
+%stimsize=2*sqrt((P.x_size1/2).^2+(P.y_size1/2).^2); %deg
+stimsize=P.x_size1;
 
 %add extra so that we can slide the window to generate motion 
 stimsize=stimsize+1/P.s_freq1; %deg
@@ -75,12 +56,9 @@ Gtxtr(1) = Screen('MakeTexture',screenPTR, grating,[],[],2);
 % second grating
 Screen('SelectStereoDrawBuffer', screenPTR, 1);
 
-xN2=deg2pix(P.x_size2,'round');
-yN2=deg2pix(P.y_size2,'round');
-
-
 %generate texture
-stimsize_2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2); %deg
+%stimsize_2=2*sqrt((P.x_size2/2).^2+(P.y_size2/2).^2); %deg
+stimsize_2=P.x_size2;
 stimsize_2=stimsize_2+1/P.s_freq2; %deg
 stimsizeN_2=deg2pix(stimsize_2,'ceil'); %pixel
 
