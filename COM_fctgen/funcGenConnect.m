@@ -23,7 +23,8 @@ if ~isfield(funcGen,'port')
     end
 
     %fprintf('\npname = %s\n', pname);
-    funcGen.port = serialport(pname, BaudRate);
+    % JK 10 Aug funcGen.port = serialport(pname, BaudRate);
+    funcGen.port = serialport('/dev/ttyACM1', BaudRate);
 end
 
 % the serial command processor is looking for both
